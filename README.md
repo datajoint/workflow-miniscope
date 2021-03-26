@@ -1,17 +1,16 @@
-# DataJoint Workflow - Calcium Imaging
-Workflow for calcium imaging data acquired with ScanImage or ScanBox software and analyzed with Suite2p or CaImAn
+# Workflow for calcium imaging data acquired with Miniscope
 
 A complete imaging workflow can be built using the DataJoint elements:
 + [element-lab](https://github.com/datajoint/element-lab)
 + [element-animal](https://github.com/datajoint/element-animal)
 + [element-session](https://github.com/datajoint/element-session)
-+ [element-calcium-imaging](https://github.com/datajoint/element-calcium-imaging)
++ [element-miniscope](https://github.com/datajoint/element-miniscope)
 
 This repository provides demonstrations for:
-1. Set up a workflow using different elements (see [workflow_calcium_imaging/pipeline.py](workflow_calcium_imaging/pipeline.py))
+1. Set up a workflow using different elements (see [workflow_miniscope/pipeline.py](workflow_miniscope/pipeline.py))
 2. Ingestion of data/metadata based on:
     + predefined file/folder structure and naming convention
-    + predefined directory lookup methods (see [workflow_calcium_imaging/paths.py](workflow_calcium_imaging/paths.py))
+    + predefined directory lookup methods (see [workflow_miniscope/paths.py](workflow_miniscope/paths.py))
 3. Ingestion of clustering results (built-in routine from the imaging element)
 
 + This workflow provides support for calcium imaging data acquired with the `ScanImage`, `ScanBox`, or `Miniscope-DAQ` systems.  And for data processed with `Suite2p`, `CaImAn`, or `Miniscope Analysis`.
@@ -20,7 +19,7 @@ This repository provides demonstrations for:
 ## Workflow architecture
 
 The Calcium imaging workflow presented here uses pipeline components from 4 DataJoint Elements, 
-`element-lab`, `element-animal`, `element-session` and `element-calcium-imaging`, assembled together to form a fully functional workflow. 
+`element-lab`, `element-animal`, `element-session` and `element-miniscope`, assembled together to form a fully functional workflow. 
 
 ### elements-lab
 
@@ -46,11 +45,11 @@ The Calcium imaging workflow presented here uses pipeline components from 4 Data
     ```
 + Clone the repository
     ```
-    git clone https://github.com/datajoint/workflow-calcium-imaging
+    git clone https://github.com/datajoint/workflow-miniscope
     ```
-+ Change directory to `workflow-calcium-imaging`
++ Change directory to `workflow-miniscope`
     ```
-    cd workflow-calcium-imaging
+    cd workflow-miniscope
     ```
 
 ### Step 2 - Setup a virtual environment
@@ -90,20 +89,13 @@ Note: the `-e` flag will install this repository in editable mode,
 in case there's a need to modify the code (e.g. the `pipeline.py` or `paths.py` scripts). 
 If no such modification required, using `pip install .` is sufficient
 
-### Step 4 - Install `sbxreader` module
-
-+ If you are planning on working with data acquired with the ScanBox system, you will need to install the [sbxreader](https://github.com/jcouto/sbxreader) module.
-    ```
-    pip install sbxreader
-    ```
-
-### Step 5 - Jupyter Notebook
+### Step 4 - Jupyter Notebook
 + Register an IPython kernel with Jupyter
     ```
-    ipython kernel install --name=workflow-calcium-imaging
+    ipython kernel install --name=workflow-miniscope
     ```
 
-### Step 6 - Configure the `dj_local_conf.json`
+### Step 5 - Configure the `dj_local_conf.json`
 
 At the root of the repository folder, 
 create a new file `dj_local_conf.json` with the following template:
@@ -139,8 +131,8 @@ create a new file `dj_local_conf.json` with the following template:
 
 The workflow presented here is designed to work with the directory structure and file naming convention as described below.
 
-Note: the `element-calcium-imaging` is designed to accommodate multiple scans per session, 
-however, in this particular `workflow-calcium-imaging`, we take the assumption that there is only ***one scan per session***.
+Note: the `element-miniscope` is designed to accommodate multiple scans per session, 
+however, in this particular `workflow-miniscope`, we take the assumption that there is only ***one scan per session***.
 
 + The `imaging_root_data_dir` directory is configurable in the `dj_local_conf.json`, under the `custom/imaging_root_data_dir` variable
 
@@ -201,12 +193,12 @@ populating the workflow with your data amounts to these 3 steps:
 
 2. Import session data - run:
     ```
-    python workflow_calcium_imaging/ingest.py
+    python workflow_miniscope/ingest.py
     ```
    
 3. Import scan data and populate downstream analyses - run:
     ```
-    python workflow_calcium_imaging/populate.py
+    python workflow_miniscope/populate.py
     ```
 
 + For inserting new subjects, sessions or new analysis parameters, step 1 needs to be repeated.
@@ -219,7 +211,7 @@ populating the workflow with your data amounts to these 3 steps:
 
 + Connect to database and import tables
     ```
-    from workflow_calcium_imaging.pipeline import *
+    from workflow_miniscope.pipeline import *
     ```
 
 + Query ingested data
@@ -234,7 +226,7 @@ populating the workflow with your data amounts to these 3 steps:
 
 + If required to drop all schemas, the following is the dependency order. 
     ```
-    from workflow_calcium_imaging.pipeline import *
+    from workflow_miniscope.pipeline import *
 
     imaging.schema.drop()
     scan.schema.drop()
@@ -248,8 +240,8 @@ populating the workflow with your data amounts to these 3 steps:
 
 ## Development mode installation
 
-This method allows you to modify the source code for `workflow-calcium-imaging`, 
-`element-calcium-imaging`, `element-animal`, `element-session`, and `element-lab`.
+This method allows you to modify the source code for `workflow-miniscope`, 
+`element-miniscope`, `element-animal`, `element-session`, and `element-lab`.
 
 + Launch a new terminal and change directory to where you want to clone the repositories
     ```
@@ -260,14 +252,14 @@ This method allows you to modify the source code for `workflow-calcium-imaging`,
     git clone https://github.com/datajoint/element-lab
     git clone https://github.com/datajoint/element-animal
     git clone https://github.com/datajoint/element-session
-    git clone https://github.com/datajoint/element-calcium-imaging
-    git clone https://github.com/datajoint/workflow-calcium-imaging
+    git clone https://github.com/datajoint/element-miniscope
+    git clone https://github.com/datajoint/workflow-miniscope
     ```
 + Install each package with the `-e` option
     ```
-    pip install -e ./workflow-calcium-imaging
+    pip install -e ./workflow-miniscope
     pip install -e ./element-session
     pip install -e ./element-lab
     pip install -e ./element-animal
-    pip install -e ./element-calcium-imaging
+    pip install -e ./element-miniscope
     ```

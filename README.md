@@ -13,8 +13,10 @@ This repository provides demonstrations for:
     + predefined directory lookup methods (see [workflow_miniscope/paths.py](workflow_miniscope/paths.py))
 3. Ingestion of clustering results (built-in routine from the imaging element)
 
-+ This workflow provides support for calcium imaging data acquired with the `ScanImage`, `ScanBox`, or `Miniscope-DAQ` systems.  And for data processed with `Suite2p`, `CaImAn`, or `Miniscope Analysis`.
++ This workflow provides support for miniscope calcium imaging data acquired with the `Miniscope-DAQ` systems.  And for data processed with `Suite2p`, `CaImAn`, or `Miniscope Analysis`.
     + Note the [`Miniscope Analysis`](https://github.com/etterguillaume/MiniscopeAnalysis) package is not currently maintained.
+
++ See [DataJoint Elements](https://github.com/datajoint/datajoint-elements) for descriptions of the other `elements` and `workflows` developed as part of this initiative.
 
 ## Workflow architecture
 

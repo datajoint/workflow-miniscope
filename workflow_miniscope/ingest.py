@@ -49,21 +49,6 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
             except Exception as e:
                 print(f'Miniscope-DAQ-V3 loading error: {scan_filepaths}\n{str(e)}')
                 continue
-        # elif acq_software == 'Miniscope-DAQ-V4':
-        #     try:  # attempt to read Miniscope DAQ V4 file (.json)
-        #         import json
-        #         for fp in sess_dir.glob('*.json'):
-        #             with open(fp) as config_file:
-        #                 miniscope_daq_meta = json.load(config_file)
-        #             if 'directoryStructure' in miniscope_daq_meta:
-        #                 try:
-        #                     recording_time = miniscope_daq_meta['directoryStructure']['date'] + miniscope_daq_meta['directoryStructure']['time'] # TODO: format as datetime
-        #                     scanner = miniscope_daq_meta['devices']['miniscopes']['miniscopeDeviceName']['deviceType']
-        #                     break
-        #     except Exception as e:
-        #         print(f'Miniscope-DAQ-V4 loading error: {scan_filepaths}\n{str(e)}')
-        #         continue
-
         else:
             raise NotImplementedError(f'Processing scan from acquisition software of type {acq_software} is not yet implemented')
 

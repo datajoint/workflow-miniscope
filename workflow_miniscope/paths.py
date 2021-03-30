@@ -21,7 +21,7 @@ def get_scan_image_files(scan_key):
     if tiff_filepaths:
         return tiff_filepaths
     else:
-        raise FileNotFoundError(f'No tiff file found in {sess_dir}')
+        raise FileNotFoundError(f'No .tif file found in {sess_dir}')
 
 
 def get_scan_box_files(scan_key):
@@ -39,3 +39,20 @@ def get_scan_box_files(scan_key):
         return sbx_filepaths
     else:
         raise FileNotFoundError(f'No .sbx file found in {sess_dir}')
+
+def get_miniscope_daq_v3_files(scan_key):
+    # Folder structure: root / subject / session / .avi
+    data_dir = get_imaging_root_data_dir()
+
+    from .pipeline import session
+    sess_dir = data_dir / (session.SessionDirectory & scan_key).fetch1('session_dir')
+
+    if not sess_dir.exists():
+        raise FileNotFoundError(f'Session directory not found ({sess_dir})')
+
+    miniscope_filepaths = [fp.as_posix() for fp in sess_dir.glob('ms*.avi')]
+    miniscope_filepaths.append((sess_dir / 'timestamp.dat').as_posix())
+    if miniscope_filepaths:
+        return miniscope_filepaths
+    else:
+        raise FileNotFoundError(f'No .avi files found in {sess_dir}')

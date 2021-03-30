@@ -18,15 +18,15 @@ with open(path.join(here, 'requirements.txt')) as f:
     requirements = f.read().splitlines()
 
 setup(
-    name='workflow-imaging',
+    name='workflow-miniscope',
     version='0.0.1',
-    description="Calcium imaging workflow using the DataJoint elements",
+    description="Miniscope calcium imaging workflow using the DataJoint elements",
     long_description=long_description,
     author='DataJoint NEURO',
     author_email='info@vathes.com',
     license='MIT',
-    url='https://github.com/datajoint/workflow-imaging',
-    keywords='neuroscience datajoint calcium-imaging',
+    url='https://github.com/datajoint/workflow-miniscope',
+    keywords='neuroscience datajoint calcium-imaging miniscope',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     install_requires=requirements,
 )

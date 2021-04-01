@@ -144,7 +144,7 @@ however, in this particular `workflow-miniscope`, we take the assumption that th
     
 + Each `session` directory should contain:
  
-    + All `.tif` or `.sbx` or `.json` files for the scan, with any naming convention
+    + All `.tif` or `.dat` or `.json` files for the scan, with any naming convention
     
     + One `caiman` subfolder per `session` folder, containing the `CaImAn` analysis output `.hdf5` file, with any naming convention
 

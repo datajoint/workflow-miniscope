@@ -108,88 +108,8 @@ def testdata_paths():
     return {
         'scanimage_2d': 'subject1/20200609_171646',
         'scanimage_3d': 'subject2/20200420_1843959',
-        'scanbox_3d': 'subject3/210107_run00_orientation_8dir',
-        'suite2p_2d': 'subject1/20200609_171646/suite2p',
-        'suite2p_3d_a': 'subject2/20200420_1843959/suite2p',
-        'suite2p_3d_b': 'subject3/210107_run00_orientation_8dir/suite2p',
         'caiman_2d': 'subject1/20200609_170519/caiman'
     }
-
-
-@pytest.fixture
-def suite2p_paramset(pipeline):
-    imaging = pipeline['imaging']
-
-    params_suite2p = {'look_one_level_down': 0.0,
-                      'fast_disk': [],
-                      'delete_bin': False,
-                      'mesoscan': False,
-                      'h5py': [],
-                      'h5py_key': 'data',
-                      'save_path0': [],
-                      'subfolders': [],
-                      'nplanes': 1,
-                      'nchannels': 1,
-                      'functional_chan': 1,
-                      'tau': 1.0,
-                      'fs': 10.0,
-                      'force_sktiff': False,
-                      'preclassify': 0.0,
-                      'save_mat': False,
-                      'combined': True,
-                      'aspect': 1.0,
-                      'do_bidiphase': False,
-                      'bidiphase': 0.0,
-                      'do_registration': True,
-                      'keep_movie_raw': False,
-                      'nimg_init': 300,
-                      'batch_size': 500,
-                      'maxregshift': 0.1,
-                      'align_by_chan': 1,
-                      'reg_tif': False,
-                      'reg_tif_chan2': False,
-                      'subpixel': 10,
-                      'smooth_sigma': 1.15,
-                      'th_badframes': 1.0,
-                      'pad_fft': False,
-                      'nonrigid': True,
-                      'block_size': [128, 128],
-                      'snr_thresh': 1.2,
-                      'maxregshiftNR': 5.0,
-                      '1Preg': False,
-                      'spatial_hp': 50.0,
-                      'pre_smooth': 2.0,
-                      'spatial_taper': 50.0,
-                      'roidetect': True,
-                      'sparse_mode': False,
-                      'diameter': 12,
-                      'spatial_scale': 0,
-                      'connected': True,
-                      'nbinned': 5000,
-                      'max_iterations': 20,
-                      'threshold_scaling': 1.0,
-                      'max_overlap': 0.75,
-                      'high_pass': 100.0,
-                      'inner_neuropil_radius': 2,
-                      'min_neuropil_pixels': 350,
-                      'allow_overlap': False,
-                      'chan2_thres': 0.65,
-                      'baseline': 'maximin',
-                      'win_baseline': 60.0,
-                      'sig_baseline': 10.0,
-                      'prctile_baseline': 8.0,
-                      'neucoeff': 0.7,
-                      'xrange': np.array([0, 0]),
-                      'yrange': np.array([0, 0])}
-
-    # doing the insert here as well, since most of the test will require this paramset inserted
-    imaging.ProcessingParamSet.insert_new_params(
-        'suite2p', 0, 'Calcium imaging analysis with'
-                      ' Suite2p using default Suite2p parameters', params_suite2p)
-
-    yield params_suite2p
-
-    (imaging.ProcessingParamSet & 'paramset_idx = 0').delete()
 
 
 @pytest.fixture
@@ -608,7 +528,7 @@ def scan_info(pipeline, ingest_sessions):
 
 
 @pytest.fixture
-def processing_tasks(pipeline, suite2p_paramset, caiman2D_paramset, caiman3D_paramset, scan_info):
+def processing_tasks(pipeline, caiman2D_paramset, caiman3D_paramset, scan_info):
     imaging = pipeline['imaging']
     scan = pipeline['scan']
     get_imaging_root_data_dir = pipeline['get_imaging_root_data_dir']
@@ -617,12 +537,7 @@ def processing_tasks(pipeline, suite2p_paramset, caiman2D_paramset, caiman3D_par
     for scan_key in (scan.Scan & scan.ScanInfo - imaging.ProcessingTask).fetch('KEY'):
         scan_file = root_dir / (scan.ScanInfo.ScanFile & scan_key).fetch('file_path')[0]
         recording_dir = scan_file.parent
-        # suite2p
-        suite2p_dir = recording_dir / 'suite2p'
-        if suite2p_dir.exists():
-            imaging.ProcessingTask.insert1({**scan_key,
-                                            'paramset_idx': 0,
-                                            'processing_output_dir': suite2p_dir.as_posix()})
+
         # caiman
         caiman_dir = recording_dir / 'caiman'
         if caiman_dir.exists():

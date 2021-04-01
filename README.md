@@ -11,9 +11,9 @@ This repository provides demonstrations for:
 2. Ingestion of data/metadata based on:
     + predefined file/folder structure and naming convention
     + predefined directory lookup methods (see [workflow_miniscope/paths.py](workflow_miniscope/paths.py))
-3. Ingestion of clustering results (built-in routine from the imaging element)
+3. Ingestion of processed results (built-in routine from the imaging element)
 
-+ This workflow provides support for miniscope calcium imaging data acquired with the `Miniscope-DAQ` systems.  And for data processed with `Suite2p`, `CaImAn`, or `Miniscope Analysis`.
++ This workflow provides support for miniscope calcium imaging data acquired with the `Miniscope-DAQ` systems.  And for data processed with `CaImAn`, or `Miniscope Analysis`.
     + Note the [`Miniscope Analysis`](https://github.com/etterguillaume/MiniscopeAnalysis) package is not currently maintained.
 
 + See [DataJoint Elements](https://github.com/datajoint/datajoint-elements) for descriptions of the other `elements` and `workflows` developed as part of this initiative.
@@ -146,8 +146,6 @@ however, in this particular `workflow-miniscope`, we take the assumption that th
  
     + All `.tif` or `.sbx` or `.json` files for the scan, with any naming convention
     
-    + One `suite2p` subfolder per `session` folder, containing the `Suite2p` analysis outputs
-
     + One `caiman` subfolder per `session` folder, containing the `CaImAn` analysis output `.hdf5` file, with any naming convention
 
     + One `miniscope_analysis` subfolder per `session` folder, containing the `Miniscope Analysis` output `ms.mat` and `SFP.mat` files
@@ -160,20 +158,12 @@ imaging_root_data_dir/
 │   │   │   scan_0002.tif
 │   │   │   scan_0003.tif
 │   │   │   ...
-│   │   └───suite2p/
-│   │       │   ops1.npy
-│   │       └───plane0/
-│   │       │   │   ops.npy
-│   │       │   │   spks.npy
-│   │       │   │   stat.npy
-│   │       │   │   ...
-│   │       └───plane1/
-│   │           │   ops.npy
-│   │           │   spks.npy
-│   │           │   stat.npy
-│   │           │   ...
+│   │   │   timestamp.dat           # Miniscope-DAQ-V3
 │   │   └───caiman/
 │   │       │   analysis_results.hdf5
+│   │   └───miniscope_analysis/
+│   │       │   ms.mat
+│   │       │   SFP.mat
 │   └───<session1>/                 # Session directory in `sessions.csv`
 │   │   │   scan_0001.tif
 │   │   │   scan_0002.tif
@@ -189,7 +179,7 @@ See `notebooks/run_workflow.ipynb` for detailed instructions on running this wor
 Once you have your data directory (`imaging_root_data_dir`) configured with the above convention, 
 populating the workflow with your data amounts to these 3 steps:
 
-1. Insert meta information (e.g. subject, sessions, equipment, Suite2p analysis parameters etc.) - modify:
+1. Insert meta information (e.g. subject, sessions, equipment, analysis parameters etc.) - modify:
     + user_data/subjects.csv
     + user_data/sessions.csv
 

@@ -19,14 +19,28 @@
 #
 # + The following script outlines the steps to ingest UCLA Miniscope data (acquired metadata and processed data) into the DataJoint `workflow-miniscope`.
 #
-# + To ingest with a completely automated workflow, see `run4_automated.ipynb`.
+# + To ingest with a completely automated workflow, see `03automate.ipynb`.
 
 import numpy as np
 import os
 os.chdir('..')
 from workflow_miniscope.pipeline import *
 
-# # TODO: Add ERD
+# ## Schema diagrams
+#
+# + The following outputs are the diagrams of the schemas comprising this workflow.
+#
+# + Please refer back to these diagrams to visualize the relationships of different tables.
+
+dj.Diagram(lab)
+
+dj.Diagram(subject)
+
+dj.Diagram(session)
+
+dj.Diagram(scan)
+
+dj.Diagram(imaging)
 
 # ## Insert an entry into `subject.Subject`
 
@@ -35,7 +49,7 @@ subject.Subject.insert1(dict(subject='subject1',
                              subject_birth_date='2019-01-01 00:00:01', 
                              subject_description='no description'))
 
-# ## Insert an entry into `Equipment`
+# ## Insert an entry into `lab.Equipment`
 
 Equipment.insert1(dict(scanner='Miniscope-DAQ-V3'))
 
@@ -138,6 +152,6 @@ imaging.Fluorescence.populate(**populate_settings)
 
 imaging.Activity.populate(**populate_settings)
 
-# ## Proceed to the `run3_explore.ipynb` Jupyter Notebook
+# ## Proceed to the `02explore.ipynb` Jupyter Notebook
 #
 # + This notebook describes the steps to query, fetch, and visualize the imaging data.

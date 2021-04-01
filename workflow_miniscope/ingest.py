@@ -33,7 +33,7 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
         # Search for Miniscope-DAQ-V3 files (in that order)
         for scan_pattern, scan_type, glob_func in zip(['ms*.avi'],
                                                       ['Miniscope-DAQ-V3'],
-                                                      [sess_dir.glob, sess_dir.rglob]):
+                                                      [sess_dir.glob]):
             scan_filepaths = [fp.as_posix() for fp in glob_func(scan_pattern)]
             if len(scan_filepaths):
                 acq_software = scan_type

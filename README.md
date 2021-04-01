@@ -1,17 +1,17 @@
 # Workflow for calcium imaging data acquired with Miniscope
 
-A complete imaging workflow can be built using the DataJoint elements:
-+ [element-lab](https://github.com/datajoint/element-lab)
-+ [element-animal](https://github.com/datajoint/element-animal)
-+ [element-session](https://github.com/datajoint/element-session)
-+ [element-miniscope](https://github.com/datajoint/element-miniscope)
++ A complete imaging workflow can be built using the DataJoint elements:
+    + [element-lab](https://github.com/datajoint/element-lab)
+    + [element-animal](https://github.com/datajoint/element-animal)
+    + [element-session](https://github.com/datajoint/element-session)
+    + [element-miniscope](https://github.com/datajoint/element-miniscope)
 
-This repository provides demonstrations for:
-1. Set up a workflow using different elements (see [workflow_miniscope/pipeline.py](workflow_miniscope/pipeline.py))
-2. Ingestion of data/metadata based on:
-    + predefined file/folder structure and naming convention
-    + predefined directory lookup methods (see [workflow_miniscope/paths.py](workflow_miniscope/paths.py))
-3. Ingestion of processed results (built-in routine from the imaging element)
++ This repository provides demonstrations for:
+    + Set up a workflow using different elements (see [workflow_miniscope/pipeline.py](workflow_miniscope/pipeline.py))
+    + Ingestion of data/metadata based on:
+        + predefined file/folder structure and naming convention
+        + predefined directory lookup methods (see [workflow_miniscope/paths.py](workflow_miniscope/paths.py))
+    + Ingestion of processed results (built-in routine from the imaging element)
 
 + This workflow provides support for miniscope calcium imaging data acquired with the `Miniscope-DAQ` systems.  And for data processed with `CaImAn`, or `Miniscope Analysis`.
     + Note the [`Miniscope Analysis`](https://github.com/etterguillaume/MiniscopeAnalysis) package is not currently maintained.

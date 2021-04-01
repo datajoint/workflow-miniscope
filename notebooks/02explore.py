@@ -15,7 +15,7 @@
 #     name: python3
 # ---
 
-# # DataJoint U24 Workflow Imaging
+# # [WIP] DataJoint U24 Workflow Imaging
 # This notebook will describe the steps for interacting with the data ingested into `workflow-miniscope`.  
 #
 # Prior to using this notebook, please refer to the [README](https://github.com/datajoint/workflow-imaging) for the topics listed below.  

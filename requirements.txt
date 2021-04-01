@@ -1,5 +1,4 @@
 datajoint>=0.13
-datajoint-connection-hub
 element-miniscope @ git+https://github.com/datajoint/element-miniscope.git
 element-lab @ git+https://github.com/datajoint/element-lab.git
 element-animal @ git+https://github.com/datajoint/element-animal.git

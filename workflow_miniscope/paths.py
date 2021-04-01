@@ -38,7 +38,7 @@ def get_miniscope_daq_v3_files(scan_key):
     dat_filepath = sess_dir / 'timestamp.dat'
     miniscope_filepaths = avi_filepaths + [dat_filepath.as_posix()]
 
-    if avi_filepaths and dat_filepaths:
+    if avi_filepaths and dat_filepath.exists():
         return miniscope_filepaths
     else:
         raise FileNotFoundError(f'No .avi and .dat files found in {sess_dir}')

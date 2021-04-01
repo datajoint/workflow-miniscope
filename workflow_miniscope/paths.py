@@ -34,9 +34,11 @@ def get_miniscope_daq_v3_files(scan_key):
     if not sess_dir.exists():
         raise FileNotFoundError(f'Session directory not found ({sess_dir})')
 
-    miniscope_filepaths = [fp.as_posix() for fp in sess_dir.glob('ms*.avi')]
-    miniscope_filepaths.append((sess_dir / 'timestamp.dat').as_posix())
-    if miniscope_filepaths:
+    avi_filepaths = [fp.as_posix() for fp in sess_dir.glob('ms*.avi')]
+    dat_filepaths = [fp.as_posix() for fp in sess_dir.glob('timestamp.dat')]
+    miniscope_filepaths = avi_filepaths + dat_filepaths
+
+    if avi_filepaths and dat_filepaths:
         return miniscope_filepaths
     else:
-        raise FileNotFoundError(f'No .avi files found in {sess_dir}')
+        raise FileNotFoundError(f'No .avi and .dat files found in {sess_dir}')

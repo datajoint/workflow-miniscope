@@ -31,7 +31,7 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
         sess_dir = pathlib.Path(sess['session_dir'])
 
         # Search for Miniscope-DAQ-V3 files (in that order)
-        for scan_pattern, scan_type, glob_func in zip(['*.avi'],
+        for scan_pattern, scan_type, glob_func in zip(['ms*.avi'],
                                                       ['Miniscope-DAQ-V3'],
                                                       [sess_dir.glob, sess_dir.rglob]):
             scan_filepaths = [fp.as_posix() for fp in glob_func(scan_pattern)]

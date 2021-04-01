@@ -42,13 +42,9 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
             raise FileNotFoundError(f'Unable to identify scan files from the supported acquisition softwares (Miniscope-DAQ-V3) at: {sess_dir}')
 
         if acq_software == 'Miniscope-DAQ-V3':
-            try:  # attempt to read Miniscope DAQ V3 file (.avi)
-                daq_v3_fp = pathlib.Path(scan_filepaths[0])
-                recording_time = datetime.fromtimestamp(daq_v3_fp.stat().st_ctime)
-                scanner = 'Miniscope-DAQ-V3'
-            except Exception as e:
-                print(f'Miniscope-DAQ-V3 loading error: {scan_filepaths}\n{str(e)}')
-                continue
+            daq_v3_fp = pathlib.Path(scan_filepaths[0])
+            recording_time = datetime.fromtimestamp(daq_v3_fp.stat().st_ctime)
+            scanner = 'Miniscope-DAQ-V3'
         else:
             raise NotImplementedError(f'Processing scan from acquisition software of type {acq_software} is not yet implemented')
 

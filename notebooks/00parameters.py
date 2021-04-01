@@ -21,7 +21,7 @@
 #
 # + If the same parameters are used to analyze multiple datasets, the parameters only need to be inserted once.
 #
-# + This step is in a separate Jupyter Notebook because the parameters would otherwise clutter the next main notebook (`run2_ingestion.ipynb`).
+# + This step is in a separate Jupyter Notebook because the parameters would otherwise clutter the next main notebook (`01ingest.ipynb`).
 
 import numpy as np
 import os
@@ -76,16 +76,14 @@ params = dict(pars_envs = ['memory_size_to_use', 12, 'memory_size_per_patch', 0.
 
 # ## Insert the `MiniscopeAnalysis` parameters
 #
-# + The `insert_new_params` is a utility function as part of the imaging.ProcessingParamSet table is used ...
+# + The `insert_new_params` is a utility function as part of the `imaging.ProcessingParamSet` table that is used to verify the parameter set does not already exist in the table.
 
 imaging.ProcessingParamSet.insert_new_params(
-                            processing_method='miniscope_analysis', 
+                            processing_method='mcgill_miniscope_analysis', 
                             paramset_idx=0, 
                             paramset_desc='Calcium imaging analysis with Miniscope Analysis using default parameters', 
                             params=params)
 
-# ## Proceed to the `run2_ingestion.ipynb` Jupyter Notebook
+# ## Proceed to the `01ingest.ipynb` Jupyter Notebook
 #
 # + This notebook describes the steps to ingest the imaging metadata and processed data.
-
-

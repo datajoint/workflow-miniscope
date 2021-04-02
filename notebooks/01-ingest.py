@@ -21,9 +21,12 @@
 #
 # + To ingest with a completely automated workflow, see `03automate.ipynb`.
 
-import numpy as np
+# Change into the parent directory to find the `dj_local_conf.json` file. 
+# When you type `import datajoint as dj` the credentials from `dj_local_conf.json` will be used to log into the database.
 import os
 os.chdir('..')
+
+import numpy as np
 from workflow_miniscope.pipeline import *
 
 # ## Schema diagrams

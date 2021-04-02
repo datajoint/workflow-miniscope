@@ -23,8 +23,11 @@
 #     + Directory structure and file naming convention  
 #     + Running the workflow  
 
+# Change into the parent directory to find the `dj_local_conf.json` file. 
+# When you type `import datajoint as dj` the credentials from `dj_local_conf.json` will be used to log into the database.
 import os
 os.chdir('..')
+
 from workflow_imaging.pipeline import *
 
 # ## Workflow architecture

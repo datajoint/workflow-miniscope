@@ -18,10 +18,15 @@
 # # Drop schemas
 #
 # + This notebook is NOT required.
-# + If required to drop all schemas, the following is the dependency order.
+# + Schemas are not typically dropped in a production workflow with real data in it. 
+# + At the developmental phase, it might be required for the table redesign.
+# + When dropping all schemas is needed, the following is the dependency order.
 
+# Change into the parent directory to find the `dj_local_conf.json` file. 
+# When you type `import datajoint as dj` the credentials from `dj_local_conf.json` will be used to log into the database.
 import os
 os.chdir('..')
+
 from workflow_miniscope.pipeline import *
 
 # +

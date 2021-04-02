@@ -80,6 +80,7 @@ scan.Scan.insert1(dict(subject='subject1',
 #
 # + This imported table stores information about the acquired image (e.g. image dimensions, file paths, etc.).
 # + `populate` automatically calls `make` for every key for which the auto-populated table is missing data.
+# + `populate_settings` passes arguments to the `populate` method.
 # + `display_progress=True` reports the progress bar
 
 populate_settings = {'display_progress': True}

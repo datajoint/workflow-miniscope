@@ -21,47 +21,30 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
     root_data_dir = get_imaging_root_data_dir()
 
     # ---------- Insert new "Session" and "Scan" ---------
-    with open(session_csv_path, newline= '') as f:
+    with open(session_csv_path, newline='') as f:
         input_sessions = list(csv.DictReader(f, delimiter=','))
 
-    # Folder structure: root / subject / session / .tif (raw)
+    # Folder structure: root / subject / session / .avi (raw)
     session_list, session_dir_list, scan_list, scanner_list = [], [], [], []
 
     for sess in input_sessions:
         sess_dir = pathlib.Path(sess['session_dir'])
 
-        # search for either ScanImage or ScanBox files (in that order)
-        for scan_pattern, scan_type, glob_func in zip(['*.tif', '*.sbx'],
-                                                      ['ScanImage', 'ScanBox'],
-                                                      [sess_dir.glob, sess_dir.rglob]):
+        # Search for Miniscope-DAQ-V3 files (in that order)
+        for scan_pattern, scan_type, glob_func in zip(['ms*.avi'],
+                                                      ['Miniscope-DAQ-V3'],
+                                                      [sess_dir.glob]):
             scan_filepaths = [fp.as_posix() for fp in glob_func(scan_pattern)]
             if len(scan_filepaths):
                 acq_software = scan_type
                 break
         else:
-            raise FileNotFoundError(f'Unable to identify scan files from the supported acquisition softwares (ScanImage, ScanBox) at: {sess_dir}')
+            raise FileNotFoundError(f'Unable to identify scan files from the supported acquisition softwares (Miniscope-DAQ-V3) at: {sess_dir}')
 
-        if acq_software == 'ScanImage':
-            import scanreader
-            from element_calcium_imaging.readers import get_scanimage_acq_time, parse_scanimage_header
-            try:  # attempt to read .tif as a scanimage file
-                loaded_scan = scanreader.read_scan(scan_filepaths)
-                recording_time = get_scanimage_acq_time(loaded_scan)
-                header = parse_scanimage_header(loaded_scan)
-                scanner = header['SI_imagingSystem'].strip('\'')
-            except Exception as e:
-                print(f'ScanImage loading error: {scan_filepaths}\n{str(e)}')
-                continue
-        elif acq_software == 'ScanBox':
-            import sbxreader
-            try:  # attempt to load scanbox
-                sbx_fp = pathlib.Path(scan_filepaths[0])
-                sbx_meta = sbxreader.sbx_get_metadata(sbx_fp)
-                recording_time = datetime.fromtimestamp(sbx_fp.stat().st_ctime)  # read from file when scanbox support this
-                scanner = sbx_meta.get('imaging_system', 'ScanBox')
-            except Exception as e:
-                print(f'ScanBox loading error: {scan_filepaths}\n{str(e)}')
-                continue
+        if acq_software == 'Miniscope-DAQ-V3':
+            daq_v3_fp = pathlib.Path(scan_filepaths[0])
+            recording_time = datetime.fromtimestamp(daq_v3_fp.stat().st_ctime)
+            scanner = 'Miniscope-DAQ-V3'
         else:
             raise NotImplementedError(f'Processing scan from acquisition software of type {acq_software} is not yet implemented')
 

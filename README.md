@@ -1,18 +1,22 @@
 # Workflow for calcium imaging data acquired with Miniscope
 
-A complete imaging workflow can be built using the DataJoint elements:
-+ [element-lab](https://github.com/datajoint/element-lab)
-+ [element-animal](https://github.com/datajoint/element-animal)
-+ [element-session](https://github.com/datajoint/element-session)
-+ [element-miniscope](https://github.com/datajoint/element-miniscope)
++ A complete imaging workflow can be built using the DataJoint elements:
+    + [element-lab](https://github.com/datajoint/element-lab)
+    + [element-animal](https://github.com/datajoint/element-animal)
+    + [element-session](https://github.com/datajoint/element-session)
+    + [element-miniscope](https://github.com/datajoint/element-miniscope)
 
-This repository provides demonstrations for:
-1. Set up a workflow using different elements (see [workflow_miniscope/pipeline.py](workflow_miniscope/pipeline.py))
-2. Ingestion of data/metadata based on:
-    + predefined file/folder structure and naming convention
-    + predefined directory lookup methods (see [workflow_miniscope/paths.py](workflow_miniscope/paths.py))
-3. Ingestion of clustering results (built-in routine from the imaging element)
++ This repository provides demonstrations for:
+    + Set up a workflow using different elements (see [workflow_miniscope/pipeline.py](workflow_miniscope/pipeline.py))
+    + Ingestion of data/metadata based on:
+        + predefined file/folder structure and naming convention
+        + predefined directory lookup methods (see [workflow_miniscope/paths.py](workflow_miniscope/paths.py))
+    + Ingestion of processed results (built-in routine from the imaging element)
 
++ This workflow provides support for miniscope calcium imaging data acquired with the `Miniscope-DAQ` systems.  And for data processed with `CaImAn`, or `Miniscope Analysis`.
+    + Note the [`Miniscope Analysis`](https://github.com/etterguillaume/MiniscopeAnalysis) package is not currently maintained.
+
++ See [DataJoint Elements](https://github.com/datajoint/datajoint-elements) for descriptions of the other `elements` and `workflows` developed as part of this initiative.
 
 ## Workflow architecture
 
@@ -35,6 +39,8 @@ The Calcium imaging workflow presented here uses pipeline components from 4 Data
 
 ### Step 1 - Clone this repository
 
++ It is recommended to fork this repository and install a clone of your fork.
+
 + Launch a new terminal and change directory to where you want to clone the repository
     ```
     cd C:/Projects
@@ -49,7 +55,7 @@ The Calcium imaging workflow presented here uses pipeline components from 4 Data
     ```
 
 ### Step 2 - Setup a virtual environment
-It is highly recommended (though not strictly required) to create a virtual environment to run the pipeline.
++ It is highly recommended (though not strictly required) to create a virtual environment to run the pipeline.
 
 + If you are planning on running CaImAn from within this pipeline, you can install this pipeline within the `conda` environment created for the CaImAn installation.
     + [CaImAn installation instructions](https://caiman.readthedocs.io/en/master/Installation.html)
@@ -138,11 +144,11 @@ however, in this particular `workflow-miniscope`, we take the assumption that th
     
 + Each `session` directory should contain:
  
-    + All `.tif` files for the scan, with any naming convention
+    + All `.tif` or `.dat` or `.json` files for the scan, with any naming convention
     
-    + One `suite2p` subfolder per `session` folder, containing the `Suite2p` analysis outputs
-
     + One `caiman` subfolder per `session` folder, containing the `CaImAn` analysis output `.hdf5` file, with any naming convention
+
+    + One `miniscope_analysis` subfolder per `session` folder, containing the `Miniscope Analysis` output `ms.mat` and `SFP.mat` files
 
 ```
 imaging_root_data_dir/
@@ -152,20 +158,12 @@ imaging_root_data_dir/
 │   │   │   scan_0002.tif
 │   │   │   scan_0003.tif
 │   │   │   ...
-│   │   └───suite2p/
-│   │       │   ops1.npy
-│   │       └───plane0/
-│   │       │   │   ops.npy
-│   │       │   │   spks.npy
-│   │       │   │   stat.npy
-│   │       │   │   ...
-│   │       └───plane1/
-│   │           │   ops.npy
-│   │           │   spks.npy
-│   │           │   stat.npy
-│   │           │   ...
+│   │   │   timestamp.dat           # Miniscope-DAQ-V3
 │   │   └───caiman/
 │   │       │   analysis_results.hdf5
+│   │   └───miniscope_analysis/
+│   │       │   ms.mat
+│   │       │   SFP.mat
 │   └───<session1>/                 # Session directory in `sessions.csv`
 │   │   │   scan_0001.tif
 │   │   │   scan_0002.tif
@@ -181,7 +179,7 @@ See `notebooks/run_workflow.ipynb` for detailed instructions on running this wor
 Once you have your data directory (`imaging_root_data_dir`) configured with the above convention, 
 populating the workflow with your data amounts to these 3 steps:
 
-1. Insert meta information (e.g. subject, sessions, equipment, Suite2p analysis parameters etc.) - modify:
+1. Insert meta information (e.g. subject, sessions, equipment, analysis parameters etc.) - modify:
     + user_data/subjects.csv
     + user_data/sessions.csv
 
@@ -195,9 +193,9 @@ populating the workflow with your data amounts to these 3 steps:
     python workflow_miniscope/populate.py
     ```
 
-+ For inserting new subjects, sessions or new analysis parameters, step 1 needs to be re-executed.
++ For inserting new subjects, sessions or new analysis parameters, step 1 needs to be repeated.
 
-+ Rerun step 2 and 3 every time new sessions or clustering data become available.
++ Rerun step 2 and 3 every time new sessions or processed data becomes available.
 
 + In fact, step 2 and 3 can be executed as scheduled jobs that will automatically process any data newly placed into the `imaging_root_data_dir`.
 

@@ -1,4 +1,4 @@
-from workflow_calcium_imaging.pipeline import imaging, scan
+from workflow_miniscope.pipeline import imaging, scan
 import warnings
 
 warnings.filterwarnings('ignore')

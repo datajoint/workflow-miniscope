@@ -8,7 +8,7 @@ import datajoint as dj
 import importlib
 import numpy as np
 
-from workflow_calcium_imaging.paths import get_imaging_root_data_dir
+from workflow_miniscope.paths import get_imaging_root_data_dir
 
 
 @pytest.fixture(autouse=True)
@@ -26,7 +26,7 @@ def dj_config():
 
 @pytest.fixture
 def pipeline():
-    from workflow_calcium_imaging import pipeline
+    from workflow_miniscope import pipeline
 
     yield {'subject': pipeline.subject,
            'lab': pipeline.lab,
@@ -45,11 +45,10 @@ def subjects_csv():
     input_subjects = pd.DataFrame(columns=['subject', 'sex',
                                            'subject_birth_date',
                                            'subject_description'])
-    input_subjects.subject = ['subject1', 'subject2', 'subject3']
-    input_subjects.sex = ['F', 'M', 'F']
-    input_subjects.subject_birth_date = ['2020-01-01 00:00:01', '2020-01-01 00:00:01',
-                                         '2020-01-01 00:00:01']
-    input_subjects.subject_description = ['91760', '90853', 'sbx-JC015']
+    input_subjects.subject = ['subject1']
+    input_subjects.sex = ['F']
+    input_subjects.subject_birth_date = ['2020-01-01 00:00:01']
+    input_subjects.subject_description = ['91760']
     input_subjects = input_subjects.set_index('subject')
 
     subjects_csv_path = pathlib.Path('./tests/user_data/subjects.csv')
@@ -62,7 +61,7 @@ def subjects_csv():
 
 @pytest.fixture
 def ingest_subjects(pipeline, subjects_csv):
-    from workflow_calcium_imaging.ingest import ingest_subjects
+    from workflow_miniscope.ingest import ingest_subjects
     _, subjects_csv_path = subjects_csv
     ingest_subjects(subjects_csv_path)
     return
@@ -73,16 +72,10 @@ def sessions_csv():
     """ Create a 'sessions.csv' file"""
     root_dir = pathlib.Path(get_imaging_root_data_dir())
 
-    sessions_dirs = ['U24/workflow_imaging_data/subject1/20200609_170519',
-                     'U24/workflow_imaging_data/subject1/20200609_171646',
-                     'U24/workflow_imaging_data/subject2/20200420_1843959',
-                     'U24/workflow_imaging_data/subject3/210107_run00_orientation_8dir']
+    sessions_dirs = ['U24/workflow_imaging_data/subject1/20200609_170519']
 
     input_sessions = pd.DataFrame(columns=['subject', 'session_dir'])
-    input_sessions.subject = ['subject1',
-                              'subject1',
-                              'subject2',
-                              'subject3']
+    input_sessions.subject = ['subject1']
     input_sessions.session_dir = [(root_dir / sess_dir).as_posix()
                                   for sess_dir in sessions_dirs]
     input_sessions = input_sessions.set_index('subject')
@@ -97,7 +90,7 @@ def sessions_csv():
 
 @pytest.fixture
 def ingest_sessions(ingest_subjects, sessions_csv):
-    from workflow_calcium_imaging.ingest import ingest_sessions
+    from workflow_miniscope.ingest import ingest_sessions
     _, sessions_csv_path = sessions_csv
     ingest_sessions(sessions_csv_path)
     return

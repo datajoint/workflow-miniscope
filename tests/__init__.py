@@ -72,7 +72,7 @@ def sessions_csv():
     """ Create a 'sessions.csv' file"""
     root_dir = pathlib.Path(get_imaging_root_data_dir())
 
-    sessions_dirs = ['U24/workflow_imaging_data/subject1/20200609_170519']
+    sessions_dirs = ['U24/workflow_miniscope_data/subject1/20200609_170519']
 
     input_sessions = pd.DataFrame(columns=['subject', 'session_dir'])
     input_sessions.subject = ['subject1']

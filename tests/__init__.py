@@ -48,7 +48,7 @@ def subjects_csv():
     input_subjects.subject = ['subject1']
     input_subjects.sex = ['F']
     input_subjects.subject_birth_date = ['2020-01-01 00:00:01']
-    input_subjects.subject_description = ['91760']
+    input_subjects.subject_description = ['']
     input_subjects = input_subjects.set_index('subject')
 
     subjects_csv_path = pathlib.Path('./tests/user_data/subjects.csv')

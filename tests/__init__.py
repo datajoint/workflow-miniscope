@@ -1,4 +1,4 @@
-# run tests: pytest -sv --cov-report term-missing --cov=workflow-calcium-imaging -p no:warnings
+# run tests: pytest -sv --cov-report term-missing --cov=workflow-miniscope -p no:warnings
 
 import os
 import pytest
@@ -72,7 +72,7 @@ def sessions_csv():
     """ Create a 'sessions.csv' file"""
     root_dir = pathlib.Path(get_imaging_root_data_dir())
 
-    sessions_dirs = ['U24/workflow_imaging_data/subject1/20200609_170519']
+    sessions_dirs = ['U24/workflow_imaging_data/subject1/20200609_171646']
 
     input_sessions = pd.DataFrame(columns=['subject', 'session_dir'])
     input_sessions.subject = ['subject1']
@@ -99,9 +99,7 @@ def ingest_sessions(ingest_subjects, sessions_csv):
 @pytest.fixture
 def testdata_paths():
     return {
-        'scanimage_2d': 'subject1/20200609_171646',
-        'scanimage_3d': 'subject2/20200420_1843959',
-        'caiman_2d': 'subject1/20200609_170519/caiman'
+        'miniscope_2d': 'subject1/20200609_171646',
     }
 
 

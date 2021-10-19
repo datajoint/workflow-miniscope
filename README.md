@@ -229,29 +229,3 @@ populating the workflow with your data amounts to these 3 steps:
 
 + For a more in-depth exploration of ingested data, please refer to the example [notebook](notebooks/explore_workflow.ipynb).
 
-
-## Development mode installation
-
-This method allows you to modify the source code for `workflow-miniscope`, 
-`element-miniscope`, `element-animal`, `element-session`, and `element-lab`.
-
-+ Launch a new terminal and change directory to where you want to clone the repositories
-    ```
-    cd C:/Projects
-    ```
-+ Clone the repositories
-    ```
-    git clone https://github.com/datajoint/element-lab
-    git clone https://github.com/datajoint/element-animal
-    git clone https://github.com/datajoint/element-session
-    git clone https://github.com/datajoint/element-miniscope
-    git clone https://github.com/datajoint/workflow-miniscope
-    ```
-+ Install each package with the `-e` option
-    ```
-    pip install -e ./workflow-miniscope
-    pip install -e ./element-session
-    pip install -e ./element-lab
-    pip install -e ./element-animal
-    pip install -e ./element-miniscope
-    ```

@@ -1,4 +1,4 @@
-# run tests: pytest -sv --cov-report term-missing --cov=workflow-calcium-imaging -p no:warnings
+# run tests: pytest -sv --cov-report term-missing --cov=workflow-miniscope -p no:warnings
 
 import os
 import pytest
@@ -45,11 +45,10 @@ def subjects_csv():
     input_subjects = pd.DataFrame(columns=['subject', 'sex',
                                            'subject_birth_date',
                                            'subject_description'])
-    input_subjects.subject = ['subject1', 'subject2', 'subject3']
-    input_subjects.sex = ['F', 'M', 'F']
-    input_subjects.subject_birth_date = ['2020-01-01 00:00:01', '2020-01-01 00:00:01',
-                                         '2020-01-01 00:00:01']
-    input_subjects.subject_description = ['91760', '90853', 'sbx-JC015']
+    input_subjects.subject = ['subject1']
+    input_subjects.sex = ['F']
+    input_subjects.subject_birth_date = ['2020-01-01 00:00:01']
+    input_subjects.subject_description = ['']
     input_subjects = input_subjects.set_index('subject')
 
     subjects_csv_path = pathlib.Path('./tests/user_data/subjects.csv')
@@ -73,16 +72,9 @@ def sessions_csv():
     """ Create a 'sessions.csv' file"""
     root_dir = pathlib.Path(get_imaging_root_data_dir())
 
-    sessions_dirs = ['U24/workflow_imaging_data/subject1/20200609_170519',
-                     'U24/workflow_imaging_data/subject1/20200609_171646',
-                     'U24/workflow_imaging_data/subject2/20200420_1843959',
-                     'U24/workflow_imaging_data/subject3/210107_run00_orientation_8dir']
-
+    sessions_dirs = ['U24/workflow_imaging_data/subject1/20200609_171646']
     input_sessions = pd.DataFrame(columns=['subject', 'session_dir'])
-    input_sessions.subject = ['subject1',
-                              'subject1',
-                              'subject2',
-                              'subject3']
+    input_sessions.subject = ['subject1']
     input_sessions.session_dir = [(root_dir / sess_dir).as_posix()
                                   for sess_dir in sessions_dirs]
     input_sessions = input_sessions.set_index('subject')
@@ -106,9 +98,7 @@ def ingest_sessions(ingest_subjects, sessions_csv):
 @pytest.fixture
 def testdata_paths():
     return {
-        'scanimage_2d': 'subject1/20200609_171646',
-        'scanimage_3d': 'subject2/20200420_1843959',
-        'caiman_2d': 'subject1/20200609_170519/caiman'
+        'miniscope_2d': 'subject1/20200609_171646'
     }
 
 

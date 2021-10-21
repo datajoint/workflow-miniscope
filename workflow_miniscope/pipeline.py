@@ -2,7 +2,7 @@ import datajoint as dj
 from element_animal import subject
 from element_lab import lab
 from element_session import session
-from element_miniscope import scan, imaging
+from element_miniscope import miniscope
 
 from element_lab.lab import Source, Lab, Protocol, User, Location, Project
 from element_animal.subject import Subject
@@ -36,5 +36,5 @@ class Equipment(dj.Manual):
     """
 
 
-# ------------- Activate "imaging" schema -------------
-imaging.activate(db_prefix + 'imaging',  db_prefix + 'scan',  linking_module=__name__)
+# ------------- Activate "miniscope" schema -------------
+miniscope.activate(db_prefix + 'miniscope', linking_module=__name__)

@@ -30,8 +30,7 @@ def pipeline():
 
     yield {'subject': pipeline.subject,
            'lab': pipeline.lab,
-           'imaging': pipeline.imaging,
-           'scan': pipeline.scan,
+           #'miniscope': pipeline.miniscope,
            'session': pipeline.session,
            'Equipment': pipeline.Equipment,
            'get_imaging_root_data_dir': pipeline.get_imaging_root_data_dir}

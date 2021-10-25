@@ -2,8 +2,8 @@ import pathlib
 import csv
 from datetime import datetime
 
-from .pipeline import subject, imaging, scan, session, Equipment
-from .paths import get_imaging_root_data_dir
+from .pipeline import subject, miniscope, session, Equipment
+from .paths import get_miniscope_root_data_dir
 
 
 def ingest_subjects(subject_csv_path='./user_data/subjects.csv'):
@@ -18,7 +18,7 @@ def ingest_subjects(subject_csv_path='./user_data/subjects.csv'):
 
 
 def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
-    root_data_dir = get_imaging_root_data_dir()
+    root_data_dir = get_miniscope_root_data_dir()
 
     # ---------- Insert new "Session" and "Scan" ---------
     with open(session_csv_path, newline='') as f:
@@ -32,7 +32,7 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
 
         # Search for Miniscope-DAQ-V3 files (in that order)
         for scan_pattern, scan_type, glob_func in zip(['ms*.avi'],
-                                                      ['Miniscope-DAQ-V3'],
+                                                      ['Miniscope-DAQ-V4'],
                                                       [sess_dir.glob]):
             scan_filepaths = [fp.as_posix() for fp in glob_func(scan_pattern)]
             if len(scan_filepaths):
@@ -41,10 +41,10 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
         else:
             raise FileNotFoundError(f'Unable to identify scan files from the supported acquisition softwares (Miniscope-DAQ-V3) at: {sess_dir}')
 
-        if acq_software == 'Miniscope-DAQ-V3':
+        if acq_software == 'Miniscope-DAQ-V4':
             daq_v3_fp = pathlib.Path(scan_filepaths[0])
             recording_time = datetime.fromtimestamp(daq_v3_fp.stat().st_ctime)
-            scanner = 'Miniscope-DAQ-V3'
+            scanner = 'Miniscope-DAQ-V4'
         else:
             raise NotImplementedError(f'Processing scan from acquisition software of type {acq_software} is not yet implemented')
 

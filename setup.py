@@ -12,7 +12,7 @@ long_description = """"
 Build a complete imaging workflow using the DataJoint elements
 + [elements-lab](https://github.com/datajoint/elements-lab)
 + [elements-animal](https://github.com/datajoint/elements-animal)
-+ [elements-imaging](https://github.com/datajoint/elements-imaging)
++ [element-miniscope](https://github.com/datajoint/element-miniscope)
 """
 
 with open(path.join(here, 'requirements.txt')) as f:
@@ -26,6 +26,7 @@ setup(
     version=__version__,
     description="Miniscope calcium imaging workflow using the DataJoint elements",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     author='DataJoint NEURO',
     author_email='info@vathes.com',
     license='MIT',

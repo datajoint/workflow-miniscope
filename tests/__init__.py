@@ -8,7 +8,9 @@ import datajoint as dj
 import importlib
 import numpy as np
 
-from workflow_miniscope.paths import get_imaging_root_data_dir
+
+from workflow_miniscope.paths import get_miniscope_root_data_dir
+
 
 
 @pytest.fixture(autouse=True)
@@ -18,8 +20,8 @@ def dj_config():
     dj.config['custom'] = {
         'database.prefix': os.environ.get('DATABASE_PREFIX',
                                           dj.config['custom']['database.prefix']),
-        'imaging_root_data_dir': os.environ.get('IMAGING_ROOT_DATA_DIR',
-                                                dj.config['custom']['imaging_root_data_dir'])
+        'miniscope_root_data_dir': os.environ.get('MINISCOPE_ROOT_DATA_DIR',
+                                                dj.config['custom']['miniscope_root_data_dir'])
     }
     return
 
@@ -30,10 +32,10 @@ def pipeline():
 
     yield {'subject': pipeline.subject,
            'lab': pipeline.lab,
-           #'miniscope': pipeline.miniscope,
+           'miniscope': pipeline.miniscope,
            'session': pipeline.session,
            'Equipment': pipeline.Equipment,
-           'get_imaging_root_data_dir': pipeline.get_imaging_root_data_dir}
+           'get_miniscope_root_data_dir': pipeline.get_miniscope_root_data_dir}
 
     pipeline.subject.Subject.delete()
 
@@ -44,7 +46,8 @@ def subjects_csv():
     input_subjects = pd.DataFrame(columns=['subject', 'sex',
                                            'subject_birth_date',
                                            'subject_description'])
-    input_subjects.subject = ['subject1']
+
+    input_subjects.subject = ['LO012']
     input_subjects.sex = ['F']
     input_subjects.subject_birth_date = ['2020-01-01 00:00:01']
     input_subjects.subject_description = ['']
@@ -69,12 +72,15 @@ def ingest_subjects(pipeline, subjects_csv):
 @pytest.fixture
 def sessions_csv():
     """ Create a 'sessions.csv' file"""
-    root_dir = pathlib.Path(get_imaging_root_data_dir())
+    root_dir = pathlib.Path(get_miniscope_root_data_dir())
 
     sessions_dirs = ['U24/workflow_imaging_data/subject1/20200609_171646']
 
+    sessions_dirs = ['Miniscope-DAQ-V4/LO012/20210825_234544/miniscope']
     input_sessions = pd.DataFrame(columns=['subject', 'session_dir'])
-    input_sessions.subject = ['subject1']
+
+    input_sessions.subject = ['LO012']
+
     input_sessions.session_dir = [(root_dir / sess_dir).as_posix()
                                   for sess_dir in sessions_dirs]
     input_sessions = input_sessions.set_index('subject')
@@ -98,7 +104,9 @@ def ingest_sessions(ingest_subjects, sessions_csv):
 @pytest.fixture
 def testdata_paths():
     return {
-        'miniscope_2d': 'subject1/20200609_171646',
+
+        'miniscope_2d': 'subject1/20200609_171646'
+
     }
 
 

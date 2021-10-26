@@ -74,13 +74,10 @@ def sessions_csv():
     """ Create a 'sessions.csv' file"""
     root_dir = pathlib.Path(get_miniscope_root_data_dir())
 
-    sessions_dirs = ['U24/workflow_imaging_data/subject1/20200609_171646']
-
     sessions_dirs = ['Miniscope-DAQ-V4/LO012/20210825_234544/miniscope']
+
     input_sessions = pd.DataFrame(columns=['subject', 'session_dir'])
-
     input_sessions.subject = ['LO012']
-
     input_sessions.session_dir = [(root_dir / sess_dir).as_posix()
                                   for sess_dir in sessions_dirs]
     input_sessions = input_sessions.set_index('subject')

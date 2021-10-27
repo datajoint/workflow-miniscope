@@ -74,7 +74,7 @@ def sessions_csv():
     """ Create a 'sessions.csv' file"""
     root_dir = pathlib.Path(get_miniscope_root_data_dir())
 
-    sessions_dirs = ['Miniscope-DAQ-V4/LO012/20210825_234544/miniscope']
+    sessions_dirs = ['LO012/20210825_234544/miniscope']
 
     input_sessions = pd.DataFrame(columns=['subject', 'session_dir'])
     input_sessions.subject = ['LO012']
@@ -109,7 +109,7 @@ def testdata_paths():
 
 @pytest.fixture
 def caiman2D_paramset(pipeline):
-    imaging = pipeline['imaging']
+    imaging = pipeline['miniscope']
 
     params_caiman_2d = {'fnames': None,
                         'dims': None,
@@ -548,13 +548,13 @@ def processing_tasks(pipeline, caiman2D_paramset, caiman3D_paramset, scan_info):
 
 @pytest.fixture
 def processing(processing_tasks, pipeline):
-    imaging = pipeline['imaging']
+    miniscope = pipeline['miniscope']
 
-    imaging.Processing.populate()
+    miniscope.RecordingInfo.populate()
 
     yield
 
-    imaging.Processing.delete()
+    miniscope.RecordingInfo.delete()
 
 
 @pytest.fixture

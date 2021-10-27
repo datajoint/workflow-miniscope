@@ -1,5 +1,5 @@
 from . import (dj_config, pipeline, subjects_csv, ingest_subjects, sessions_csv, ingest_sessions,
-               testdata_paths, caiman2D_paramset, processing_tasks, processing, curations)
+               testdata_paths, minian_paramset, processing_tasks, processing, curations)
 
 
 def test_generate_pipeline(pipeline):

@@ -13,7 +13,7 @@ def test_generate_pipeline(pipeline):
     # test elements connection from lab, subject to Session
     assert subject_tbl.full_table_name == subject.Subject.full_table_name
 
-    # # test elements connection from Session to miniscope
+    # test elements connection from Session to miniscope
     session_tbl, equipment_tbl, acquisitionsoftware_tbl = miniscope.Recording.parents(as_objects=True)
     assert session_tbl.full_table_name == session.Session.full_table_name
     assert equipment_tbl.full_table_name == Equipment.full_table_name

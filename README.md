@@ -31,7 +31,7 @@ The Calcium imaging workflow presented here uses pipeline components from 4 Data
 
 ![element-animal](images/elements_subject_diagram.svg)
 
-### element-calcium-imaging
+### element-miniscope
 
 ![element_calcium_imaging](images/attached_imaging_element.svg)
 

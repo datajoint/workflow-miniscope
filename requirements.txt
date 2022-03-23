@@ -1,7 +1,7 @@
-datajoint>=0.13
+datajoint>=0.13.0
+element-lab==0.1.0b0
+element-animal==0.1.0b0
+element-session==0.1.0b0
 element-miniscope @ git+https://github.com/datajoint/element-miniscope.git
-element-lab @ git+https://github.com/datajoint/element-lab.git
-element-animal @ git+https://github.com/datajoint/element-animal.git
-element-session @ git+https://github.com/datajoint/element-session.git
-ipykernel
-jupytext
+element-interface @ git+https://github.com/datajoint/element-interface.git
+djarchive-client @ git+https://github.com/datajoint/djarchive-client.git

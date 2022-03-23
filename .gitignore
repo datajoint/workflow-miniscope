@@ -1,117 +1,74 @@
-# User data
-.DS_Store
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
-*.so
-
-# Distribution / packaging
+# Distribution, packaging, PyInstaller
 .Python
 env/
 build/
-develop-eggs/
-dist/
+*egg*/
+*dist/
 downloads/
-eggs/
-.eggs/
-lib/
-lib64/
+lib*/
 parts/
-sdist/
 var/
 wheels/
-*.egg-info/
 .installed.cfg
 *.egg
-.idea/
-
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+pip-*.txt
 
 # Unit test / coverage reports
 htmlcov/
 .tox/
-.coverage
-.coverage.*
+*.cov*
 .cache
 nosetests.xml
 coverage.xml
-*.cover
 .hypothesis/
+.pytest_cache/
+docker-compose.y*ml
 
-# Translations
+# C extension, Translations
+# editors: vscode, emacs, Mac
+*.so
 *.mo
 *.pot
-
-# Django stuff:
-*.log
-local_settings.py
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-scratchpaper.*
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# SageMath parsed files
-*.sage.py
-
-# dotenv
-./.env
-
-# virtualenv
-.venv
-venv/
-ENV/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-
-# datajoint
-dj_local_conf.json
-dj_local_conf_old.json
-
-# emacs
+.vscode
 **/*~
 **/#*#
 **/.#*
-docker-compose.yml
-Diagram.ipynb
+.DS_Store
+
+# Django, Flask, Scrapy, Sphinx, mkdocs
+# PyBuilder, Jupyter, SageMath, celery beat
+*.log
+local_settings.py
+instance/
+.webassets-cache
+.scrapy
+scratchpaper.*
+docs/_build/
+/site
+target/
+.*checkpoints
+celerybeat-schedule
+*.sage.py
+
+# dotenv, virtualenv, pyenv, mypy
+.*env
+venv/
+ENV/
+.python-version
+.mypy_cache/
+
+# Spyder/Rope project settings
+.spy*project
+.ropeproject
+
+# datajoint, notes, nwb export
+dj_local_c*.json
+temp*
+*nwb

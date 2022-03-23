@@ -1,0 +1,38 @@
+# docker-compose -f ./docker/docker-compose-dev.yaml up --build -d
+# docker-compose -f ./docker/docker-compose-dev.yaml down
+
+version: "2.4"
+x-net: &net
+  networks:
+      - main
+services:
+  db:
+    <<: *net
+    image: datajoint/mysql:5.7
+    container_name: workflow-miniscope-dev-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=simple
+  workflow:
+    <<: *net
+    build:
+      context: ../../
+      dockerfile: ./workflow-miniscope/docker/Dockerfile.dev
+    env_file: .env
+    image: workflow-miniscope-dev:0.1.0a2
+    container_name: workflow-miniscope-dev
+    environment:
+      - MINISCOPE_ROOT_DATA_DIR=/main/test_data/workflow_miniscope/
+    volumes:
+      - ${TEST_DATA_DIR}:/main/test_data
+      - ./apt_requirements.txt:/tmp/apt_requirements.txt
+      - ../../element-lab:/main/element-lab
+      - ../../element-animal:/main/element-animal
+      - ../../element-session:/main/element-session
+      - ../../element-interface:/main/element-interface
+      - ../../element-miniscope:/main/element-miniscope
+      - ..:/main/workflow-miniscope
+    depends_on:
+      db:
+        condition: service_healthy
+networks:
+  main:

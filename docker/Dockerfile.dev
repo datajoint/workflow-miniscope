@@ -1,0 +1,45 @@
+FROM datajoint/djbase:py3.8-debian-fcd8909
+
+USER anaconda:anaconda
+
+COPY ./workflow-miniscope/docker/apt_requirements.txt /tmp/
+RUN /entrypoint.sh echo "Installed dependencies."
+
+# Install Caiman
+RUN git clone --branch master https://github.com/datajoint-company/CaImAn 
+WORKDIR /main/CaImAn
+RUN conda install -n base -c conda-forge -y mamba
+RUN /bin/bash -c 'mamba env update --n base --file environment.yml' 
+# Suite2p requires np.__version__ == 1.21
+RUN pip install numpy==1.21
+RUN pip install .
+
+WORKDIR /main
+
+RUN mkdir /main/element-lab \
+           /main/element-animal \
+           /main/element-session \
+           /main/element-interface \
+           /main/element-miniscope \
+           /main/workflow-miniscope
+
+# Copy user's local fork of elements and workflow
+COPY --chown=anaconda:anaconda ./element-lab /main/element-lab
+COPY --chown=anaconda:anaconda ./element-animal /main/element-animal
+COPY --chown=anaconda:anaconda ./element-session /main/element-session
+COPY --chown=anaconda:anaconda ./element-interface /main/element-interface
+COPY --chown=anaconda:anaconda ./element-miniscope /main/element-miniscope
+COPY --chown=anaconda:anaconda ./workflow-miniscope /main/workflow-miniscope
+
+# Install packages
+RUN pip install -e /main/element-lab
+RUN pip install -e /main/element-animal
+RUN pip install -e /main/element-session
+RUN pip install -e /main/element-interface
+RUN pip install -e /main/element-miniscope
+RUN pip install -e /main/workflow-miniscope
+RUN pip install -r /main/workflow-miniscope/requirements_test.txt
+
+WORKDIR /main/workflow-miniscope
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]

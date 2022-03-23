@@ -3,7 +3,7 @@
 Workflow for miniscope calcium imaging data acquired with miniature microscopes (e.g. 
 [UCLA Miniscope](https://github.com/Aharoni-Lab/Miniscope-v4)) using the 
 [Miniscope-DAQ](https://github.com/Aharoni-Lab/Miniscope-DAQ-QT-Software) acquisition 
-software and processed with [MiniAn](https://github.com/denisecailab/minian).
+software and processed with [CaImAn](https://github.com/flatironinstitute/CaImAn).
 
 A complete miniscope workflow can be built using the DataJoint Elements:
 + [element-lab](https://github.com/datajoint/element-lab)

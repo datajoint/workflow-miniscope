@@ -13,7 +13,6 @@ Build a complete imaging workflow using the DataJoint elements
 + [element-lab](https://github.com/datajoint/element-lab)
 + [element-animal](https://github.com/datajoint/element-animal)
 + [element-session](https://github.com/datajoint/element-session)
-+ [element-event](https://github.com/datajoint/element-event)
 + [element-miniscope](https://github.com/datajoint/element-miniscope)
 """
 

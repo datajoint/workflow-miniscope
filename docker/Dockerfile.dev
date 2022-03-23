@@ -14,9 +14,6 @@ RUN /bin/bash -c 'mamba env update --n base --file environment.yml'
 RUN pip install numpy==1.21
 RUN pip install .
 
-# Install MiniAn
-RUN conda install -n base -y -c conda-forge minian
-
 WORKDIR /main
 
 RUN mkdir /main/element-lab \

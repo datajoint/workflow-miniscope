@@ -44,3 +44,31 @@ DataJoint Elements ([element-lab](https://github.com/datajoint/element-lab),
  [Jupyter notebooks](/notebooks) for an in-depth explanation of how to run the 
  workflow ([03-process.ipynb](notebooks/03-process.ipynb)) and explore the data 
  ([05-explore.ipynb](notebooks/05-explore.ipynb)).
+
+## Citation
+
++ If your work uses DataJoint and DataJoint Elements, please cite the respective manuscripts and RRIDs.
+
+### Manuscripts
++ DataJoint
+    ```
+    Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P, Hoenselaar A, Cotton RJ, Siapas AS, Tolias AS. DataJoint: managing big scientific data using MATLAB or Python. bioRxiv. 2015 Jan 1:031658. doi: https://doi.org/10.1101/031658
+    ```
+
+    ```
+    Yatsenko D, Walker EY, Tolias AS. DataJoint: a simpler relational data model. arXiv:1807.11104. 2018 Jul 29. doi: https://doi.org/10.48550/arXiv.1807.11104
+    ```
+
++ DataJoint Elements
+    ```
+    Yatsenko D, Nguyen T, Shen S, Gunalan K, Turner CA, Guzman R, Sasaki M, Sitonic D, Reimer J, Walker EY, Tolias AS. DataJoint Elements: Data Workflows for Neurophysiology. bioRxiv. 2021 Jan 1. doi: https://doi.org/10.1101/2021.03.30.437358
+    ```
+
+### Research Resource Identifiers (RRID)
+
+| Resource | RRID |
+|:---------|:-----|
+| DataJoint | [RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543) |
+| DataJoint Element Session | [RRID:SCR_021896](https://scicrunch.org/resolver/SCR_021896) |
+| DataJoint Element Array Electrophysiology | [RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894) |
+| DataJoint Element Calcium Imaging | [RRID:SCR_021895](https://scicrunch.org/resolver/SCR_021895) |

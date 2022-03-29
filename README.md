@@ -63,6 +63,3 @@ DataJoint Elements ([element-lab](https://github.com/datajoint/element-lab),
 | Resource | RRID |
 |:---------|:-----|
 | DataJoint | [RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543) |
-| DataJoint Element Session | [RRID:SCR_021896](https://scicrunch.org/resolver/SCR_021896) |
-| DataJoint Element Array Electrophysiology | [RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894) |
-| DataJoint Element Calcium Imaging | [RRID:SCR_021895](https://scicrunch.org/resolver/SCR_021895) |

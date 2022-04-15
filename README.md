@@ -19,7 +19,7 @@ convention, and directory lookup methods (see
 [workflow_miniscope/ingest.py](workflow_miniscope/ingest.py))
 3. Processing results.
 
-See the [DataJoint Elements project documentation](https://elements.datajoint.org) for 
+See the [DataJoint Elements documentation](https://elements.datajoint.org) for 
 descriptions of the other `elements` and `workflows` developed as part of this National 
 Institutes of Health (NIH)-funded initiative.
 

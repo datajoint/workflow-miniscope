@@ -19,9 +19,9 @@ convention, and directory lookup methods (see
 [workflow_miniscope/ingest.py](workflow_miniscope/ingest.py))
 3. Processing results.
 
-+ See the [Element Miniscope documentation](https://elements.datajoint.org/description/miniscope/) for the background information and development timeline.
+See the [Element Miniscope documentation](https://elements.datajoint.org/description/miniscope/) for the background information and development timeline.
 
-+ For more information on the DataJoint Elements project, please visit https://elements.datajoint.org.  This work is supported by the National Institutes of Health.
+For more information on the DataJoint Elements project, please visit https://elements.datajoint.org.  This work is supported by the National Institutes of Health.
 
 ## Workflow architecture
 

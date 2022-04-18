@@ -19,9 +19,9 @@ convention, and directory lookup methods (see
 [workflow_miniscope/ingest.py](workflow_miniscope/ingest.py))
 3. Processing results.
 
-See the [DataJoint Elements](https://github.com/datajoint/datajoint-elements) 
-repository for descriptions of the other `elements` and `workflows` developed as part 
-of this National Institutes of Health (NIH)-funded initiative.
+See the [Element Miniscope documentation](https://elements.datajoint.org/description/miniscope/) for the background information and development timeline.
+
+For more information on the DataJoint Elements project, please visit https://elements.datajoint.org.  This work is supported by the National Institutes of Health.
 
 ## Workflow architecture
 
@@ -35,8 +35,7 @@ DataJoint Elements ([element-lab](https://github.com/datajoint/element-lab),
 ## Installation instructions
 
 + The installation instructions can be found at the 
-[datajoint-elements repository](
-    https://github.com/datajoint/datajoint-elements/blob/main/gh-pages/docs/usage/install.md).
+[DataJoint Elements documentation](https://elements.datajoint.org/usage/install/).
 
 ## Interacting with the DataJoint workflow
 
@@ -47,22 +46,14 @@ DataJoint Elements ([element-lab](https://github.com/datajoint/element-lab),
 
 ## Citation
 
-+ If your work uses DataJoint and DataJoint Elements, please cite the respective manuscripts and RRIDs.
++ If your work uses DataJoint and DataJoint Elements, please cite the respective Research Resource Identifiers (RRIDs) and manuscripts.
 
-### Manuscripts
-+ DataJoint
++ DataJoint for Python or MATLAB
     + Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P, Hoenselaar A, Cotton RJ, Siapas AS, Tolias AS. DataJoint: managing big scientific data using MATLAB or Python. bioRxiv. 2015 Jan 1:031658. doi: https://doi.org/10.1101/031658
 
-    + Yatsenko D, Walker EY, Tolias AS. DataJoint: a simpler relational data model. arXiv:1807.11104. 2018 Jul 29. doi: https://doi.org/10.48550/arXiv.1807.11104
+    + DataJoint ([RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543)) - DataJoint for `<Select Python or MATLAB>` (version `<Enter version number>`)
 
 + DataJoint Elements
     + Yatsenko D, Nguyen T, Shen S, Gunalan K, Turner CA, Guzman R, Sasaki M, Sitonic D, Reimer J, Walker EY, Tolias AS. DataJoint Elements: Data Workflows for Neurophysiology. bioRxiv. 2021 Jan 1. doi: https://doi.org/10.1101/2021.03.30.437358
 
-### Research Resource Identifiers (RRID)
-
-| Resource | RRID |
-|:---------|:-----|
-| DataJoint | [RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543) |
-| DataJoint Element Session | [RRID:SCR_021896](https://scicrunch.org/resolver/SCR_021896) |
-| DataJoint Element Array Electrophysiology | [RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894) |
-| DataJoint Element Calcium Imaging | [RRID:SCR_021895](https://scicrunch.org/resolver/SCR_021895) |
+    + DataJoint Elements ([RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894)) - Element Miniscope (version `<Enter version number>`)

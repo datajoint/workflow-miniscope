@@ -43,7 +43,7 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
                                     f'{session_path}')
 
         # Read Miniscope DAQ *.json file
-        for metadata_filepath in session_path.glob('*.json'):
+        for metadata_filepath in session_path.glob('metaData.json'):
             try:
                 recording_time = datetime.fromtimestamp(
                                                     metadata_filepath.stat().st_ctime)

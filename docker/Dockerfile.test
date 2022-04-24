@@ -5,6 +5,12 @@ USER anaconda:anaconda
 COPY ./workflow-miniscope/docker/apt_requirements.txt /tmp/
 RUN /entrypoint.sh echo "Installed dependencies."
 
+# Install Caiman
+RUN git clone --branch master https://github.com/datajoint-company/CaImAn 
+WORKDIR /main/CaImAn
+RUN conda install -n base -c conda-forge -y mamba
+RUN /bin/bash -c 'mamba env update --n base --file environment.yml' 
+
 WORKDIR /main
 
 # Option 1 - Install DataJoint's remote fork of the workflow and elements

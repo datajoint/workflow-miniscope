@@ -21,7 +21,7 @@
 # Change into the parent directory to find the `dj_local_conf.json` file. 
 
 import os
-os.chdir('..')
+if os.path.basename(os.getcwd())=='notebooks': os.chdir('..')
 
 from workflow_miniscope.pipeline import *
 

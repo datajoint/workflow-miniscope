@@ -18,7 +18,7 @@ services:
       context: ../../
       dockerfile: ./workflow-miniscope/docker/Dockerfile.dev
     env_file: .env
-    image: workflow-miniscope-dev:0.1.0a2
+    image: workflow-miniscope-dev:0.1.0
     container_name: workflow-miniscope-dev
     environment:
       - MINISCOPE_ROOT_DATA_DIR=/main/test_data/workflow_miniscope/

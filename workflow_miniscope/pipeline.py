@@ -27,7 +27,7 @@ Experimenter = lab.User
 session.activate(db_prefix + 'session', linking_module=__name__)
 
 
-# Declare table `Equipment` for use in element_miniscope -------------------------------
+# Declare table `Equipment` and `AnatomicalLocation` for use in element_miniscope ------
 
 @lab.schema
 class Equipment(dj.Manual):
@@ -35,6 +35,13 @@ class Equipment(dj.Manual):
     acquisition_hardware: varchar(32) 
     """
 
+@lab.schema
+class AnatomicalLocation(dj.Manual):
+    definition = """
+    recording_location_id : varchar(16)
+    ----
+    anatomical_description: varchar(256)
+    """
 
 # Activate `miniscope` schema ----------------------------------------------------------
 

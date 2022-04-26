@@ -32,6 +32,8 @@ DataJoint Elements ([element-lab](https://github.com/datajoint/element-lab),
  [element-miniscope](https://github.com/datajoint/element-miniscope)) assembled 
  together to form a fully functional workflow.
 
+![element miniscope diagram](images/attached_miniscope_element.svg)
+
 ## Installation instructions
 
 + The installation instructions can be found at the 

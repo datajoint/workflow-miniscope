@@ -137,35 +137,43 @@ avi_files = [find_full_path(get_miniscope_root_data_dir(),
 
 sampling_rate = (miniscope.Recording * miniscope.RecordingInfo & recording_key).fetch1('fps')
 
-params = dict(pw_rigid=False,         # perform piecewise-rigid motion correction
-              max_shifts= (5, 5),     # maximum allowed rigid shift,
-              gSig_filt=(3, 3),       # size of high pass spatial filtering, 
-                                      # used in 1p data
-              strides=(48, 48),       # start a new patch for pw-rigid motion correction every x pixels
-              overlaps=(24, 24),      # overlap between pathes (size of patch strides+overlaps)
-              max_deviation_rigid=3,  # maximum deviation allowed for patch with respect to rigid shifts
-              border_nan='copy',       # replicate values along the boundaries
-              fnames=avi_files,
-              fr=sampling_rate,       # imaging rate (Hz)
-              decay_time=0.4,         # length of typical transient (in seconds)
-              method_init='corr_pnr', 
-              gSig=(6, 6),            # expected half size of neurons
-              gSiz=(15, 15),           # half size for neuron bounding box
-              rf=48,                  # half size of each patch
-              stride=8,               # amount of overlap between patches
-              p=0,                    # order of AR indicator dynamics
-              nb=0,
-              ssub=1,                 # spatial downsampling factor
-              min_SNR=1.5,            # minimum SNR for accepting new components
-              min_pnr=10,
-              min_corr=0.8,
-              bas_nonneg=False,
-              center_psf=True,
-              rval_thr=0.85,           # correlation threshold for new component 
-                                      # inclusion
+params = dict(fnames=avi_files,
+              fr=sampling_rate,
+              decay_time=0.4,
+              pw_rigid=False,
+              max_shifts= (5, 5),
+              gSig_filt=(3, 3),
+              strides=(48, 48),
+              overlaps=(24, 24),
+              max_deviation_rigid=3,
+              border_nan='copy',
+              method_init='corr_pnr',
+              K=None,
+              gSig=(3, 3),
+              gSiz=(13, 13),
+              merge_thr=0.7,
+              p=1,
+              tsub=2,
+              ssub=1,
+              rf=40,
+              stride=20,
               only_init=True,
-              merge_thr=0.65,         # merging threshold
-              K=None                  # initial number of components
+              nb=0,
+              nb_patch=0,
+              method_deconvolution='oasis',
+              low_rank_background=None,
+              update_background_components=True,
+              min_corr=0.8,
+              min_pnr=10,
+              normalize_init=False,
+              center_psf=True,
+              ssub_B=2,
+              ring_size_factor=1.4,
+              del_duplicates=True,
+              border_pix=0,
+              min_SNR=3,
+              rval_thr=0.85,
+              use_cnn=False,
             )
 
 # ### Insert CaImAn parameters

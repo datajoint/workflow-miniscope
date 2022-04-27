@@ -131,15 +131,7 @@ miniscope.RecordingInfo()
 #
 # ### Define CaImAn parameters
 
-avi_files = (miniscope.Recording * miniscope.RecordingInfo * miniscope.RecordingInfo.File & recording_key).fetch('recording_file_path')
-avi_files = [find_full_path(get_miniscope_root_data_dir(), 
-                         avi_file).as_posix() for avi_file in avi_files]
-
-sampling_rate = (miniscope.Recording * miniscope.RecordingInfo & recording_key).fetch1('fps')
-
-params = dict(fnames=avi_files,
-              fr=sampling_rate,
-              decay_time=0.4,
+params = dict(decay_time=0.4,
               pw_rigid=False,
               max_shifts= (5, 5),
               gSig_filt=(3, 3),

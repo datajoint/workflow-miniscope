@@ -65,15 +65,13 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
             session_list.append(session_key)
 
             session_dir_list.append(dict(**session_key, 
-                                     session_dir=
-                    session_dir.relative_to(get_miniscope_root_data_dir()).as_posix()))
+                                         session_dir=session_dir.as_posix()))
 
             recording_list.append(dict(**session_key, 
                                    recording_id=0, # Assumes one recording per session
                                    acquisition_hardware=acquisition_hardware, 
                                    acquisition_software=acquisition_software,
-                                   recording_directory= 
-                    session_dir.relative_to(get_miniscope_root_data_dir()).as_posix()))
+                                   recording_directory=session_dir.as_posix()))
 
     print(f'\n---- Insert {len(set(val for dic in hardware_list for val in dic.values()))} entry(s) into lab.Equipment ----')
     Equipment.insert(hardware_list, skip_duplicates=True)

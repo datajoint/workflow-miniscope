@@ -51,7 +51,7 @@ class ActivityAlignment(dj.Computed):
                                                      ).fetch1('session_datetime',
                                                               # 'scan_datetime',
                                                               'nframes', 'fps')
-        scan_time = None
+        scan_time = None # BEING ADDED TO ELEMENT
 
         # Estimation of frame timestamps with respect to the session-start
         # (to be replaced by timestamps retrieved from some synchronization routine)
@@ -68,7 +68,8 @@ class ActivityAlignment(dj.Computed):
         nsamples = len(aligned_timestamps)
 
         trace_keys, activity_traces = (miniscope.Activity.Trace & key
-                                       ).fetch('KEY', 'activity_trace', order_by='mask')
+                                       ).fetch('KEY', 'activity_trace',
+                                               order_by='mask_id')
         activity_traces = np.vstack(activity_traces)
 
         aligned_trial_activities = []

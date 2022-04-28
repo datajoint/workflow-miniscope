@@ -256,6 +256,8 @@ miniscope.Fluorescence.populate(**populate_settings)
 
 miniscope.Activity.populate(**populate_settings)
 
-# ## Next steps
+# <!-- ## Next steps
 #
-# + Proceed to the [05-explore](05-explore.ipynb) to learn how to  query, fetch, and visualize the imaging data.
+# + Proceed to the [05-explore](05-explore.ipynb) to learn how to  query, fetch, and visualize the imaging data. -->
+
+

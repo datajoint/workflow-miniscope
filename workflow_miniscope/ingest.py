@@ -3,9 +3,10 @@ import csv
 from datetime import datetime
 import json
 
-from .pipeline import subject, session, Equipment, miniscope
+from .pipeline import subject, session, Equipment, miniscope, trial, event
 from .paths import get_miniscope_root_data_dir
-from element_interface.utils import find_full_path, recursive_search, csv
+from element_interface.utils import find_full_path, recursive_search, \
+                                    ingest_csv_to_table
 
 
 def ingest_subjects(subject_csv_path='./user_data/subjects.csv',
@@ -110,8 +111,8 @@ def ingest_events(recording_csv_path='./user_data/behavior_recordings.csv',
               trial.BlockTrial(),
               event.EventType(), event.Event(), trial.TrialEvent()]
 
-    ingest_csv_to_table(csvs, tables, skip_duplicates=skip_duplicates, verbose=verbose)
-                   # allow_direct_insert=True)
+    ingest_csv_to_table(csvs, tables, skip_duplicates=skip_duplicates, verbose=verbose,
+                        allow_direct_insert=True)
     # Allow direct insert required bc element-trial has Imported that should be Manual
     # ISSUE: element-interface version doesn't have allow_direct_insert arg
 

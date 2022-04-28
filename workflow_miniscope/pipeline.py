@@ -3,6 +3,7 @@ import datajoint as dj
 from element_lab import lab
 from element_animal import subject
 from element_session import session_with_datetime as session
+from element_event import trial, event
 from element_miniscope import miniscope
 
 from element_lab.lab import Source, Lab, Protocol, User, Location, Project
@@ -26,6 +27,9 @@ subject.activate(db_prefix + 'subject', linking_module=__name__)
 Experimenter = lab.User
 session.activate(db_prefix + 'session', linking_module=__name__)
 
+# Activate "event" and "trial" schema ---------------------------------
+
+trial.activate(db_prefix + 'trial', db_prefix + 'event', linking_module=__name__)
 
 # Declare table `Equipment` and `AnatomicalLocation` for use in element_miniscope ------
 

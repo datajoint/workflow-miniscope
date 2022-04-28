@@ -32,10 +32,10 @@ session.activate(db_prefix + 'session', linking_module=__name__)
 @lab.schema
 class Equipment(dj.Manual):
     definition = """
-    equipment: varchar(32)
+    equipment             : varchar(32)
     ---
-    modality: varchar(256)
-    description: varchar(256)
+    modality              : varchar(64)
+    description=null      : varchar(256)
     """
 
 @lab.schema

@@ -54,8 +54,8 @@ class ActivityAlignment(dj.Computed):
 
         # Estimation of frame timestamps with respect to the session-start
         # (to be replaced by timestamps retrieved from some synchronization routine)
-        scan_start = (scan_time - sess_time).total_seconds() if scan_time else 0
-        frame_timestamps = np.arange(nframes) / frame_rate + scan_start
+        rec_start = (rec_time - sess_time).total_seconds() if rec_time else 0
+        frame_timestamps = np.arange(nframes) / frame_rate + rec_start
 
         trialized_event_times = trial.get_trialized_alignment_event_times(
             key, trial.Trial & (ActivityAlignmentCondition.Trial & key))

@@ -2,6 +2,7 @@ datajoint>=0.13.0
 element-lab==0.1.0b0
 element-animal==0.1.0b0
 element-session==0.1.0b0
-element-miniscope @ git+https://github.com/datajoint/element-miniscope.git
+element-miniscope==0.1.0
 element-interface @ git+https://github.com/datajoint/element-interface.git
 djarchive-client @ git+https://github.com/datajoint/djarchive-client.git
+jupytext==1.13.7

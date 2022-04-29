@@ -1,9 +1,17 @@
-FROM datajoint/djbase:py3.9-debian-fcd8909
+FROM datajoint/djbase:py3.9-debian-8eb1715
 
 USER anaconda:anaconda
 
 COPY ./workflow-miniscope/docker/apt_requirements.txt /tmp/
 RUN /entrypoint.sh echo "Installed dependencies."
+
+# Install CaImAn
+RUN git clone --branch master https://github.com/kabilar/CaImAn 
+WORKDIR /main/CaImAn
+RUN conda install -n base -c conda-forge -y mamba
+RUN /bin/bash -c 'mamba env update --n base --file environment.yml' 
+RUN pip install .
+RUN python caimanmanager.py install --inplace
 
 WORKDIR /main
 
@@ -45,4 +53,6 @@ RUN rm -f /main/workflow-miniscope/dj_local_conf.json
 RUN pip install /main/workflow-miniscope
 RUN pip install -r /main/workflow-miniscope/requirements_test.txt
 
+RUN pip uninstall datajoint
+RUN pip install git+
 WORKDIR /main/workflow-miniscope

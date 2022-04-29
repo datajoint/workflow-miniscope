@@ -17,7 +17,8 @@ services:
     build:
       context: ../../
       dockerfile: ./workflow-miniscope/docker/Dockerfile.test
-    image: workflow-miniscope-test:0.1.0a2
+    env_file: .env
+    image: workflow-miniscope-test:0.1.0
     container_name: workflow-miniscope-test
     environment:
       - DJ_HOST=db
@@ -30,7 +31,7 @@ services:
       - -c
       - |
         echo "------ INTEGRATION TESTS ------"
-        pytest -sv --cov-report term-missing --cov=workflow_miniscope -p no:warnings
+        pytest -sv --cov-report term-missing --cov=workflow_miniscope -p no:warnings tests/
         tail -f /dev/null
     volumes:
       - ${TEST_DATA_DIR}:/main/test_data

@@ -1,18 +1,17 @@
-FROM datajoint/djbase:py3.8-debian-fcd8909
+FROM datajoint/djbase:py3.9-debian-8eb1715
 
 USER anaconda:anaconda
 
 COPY ./workflow-miniscope/docker/apt_requirements.txt /tmp/
 RUN /entrypoint.sh echo "Installed dependencies."
 
-# Install Caiman
-RUN git clone --branch master https://github.com/datajoint-company/CaImAn 
+# Install CaImAn
+RUN git clone --branch master https://github.com/kabilar/CaImAn 
 WORKDIR /main/CaImAn
 RUN conda install -n base -c conda-forge -y mamba
-RUN /bin/bash -c 'mamba env update --n base --file environment.yml' 
-# Suite2p requires np.__version__ == 1.21
-RUN pip install numpy==1.21
+RUN /bin/bash -c 'mamba env update --n base --file environment.yml'
 RUN pip install .
+RUN python caimanmanager.py install --inplace
 
 WORKDIR /main
 

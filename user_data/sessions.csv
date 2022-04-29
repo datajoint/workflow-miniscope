@@ -1,2 +1,2 @@
-subject,session_dir
-subject1,subject1/session1
+subject,session_dir,acquisition_software
+subject1,subject1/session1,Miniscope-DAQ-V4

@@ -1,4 +1,4 @@
-# run tests: pytest -sv --cov-report term-missing --cov=workflow-calcium-imaging -p no:warnings
+# run tests: pytest -sv --cov-report term-missing --cov=workflow-miniscope -p no:warnings
 
 import os
 import pytest

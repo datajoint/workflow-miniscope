@@ -7,6 +7,7 @@ import pathlib
 import datajoint as dj
 import importlib
 import numpy as np
+import sys
 
 from workflow_miniscope.paths import get_miniscope_root_data_dir
 

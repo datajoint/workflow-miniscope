@@ -10,7 +10,28 @@ import numpy as np
 
 from workflow_miniscope.paths import get_miniscope_root_data_dir
 
+# ------------------- SOME CONSTANTS -------------------
 
+_tear_down = True
+verbose = False
+
+test_user_data_dir = pathlib.Path('./tests/user_data')
+test_user_data_dir.mkdir(exist_ok=True)
+
+# ------------------ GENERAL FUNCTIONS ------------------
+
+
+class QuietStdOut:
+    """If verbose set to false, used to quiet tear_down table.delete prints"""
+    def __enter__(self):
+        self._original_stdout = sys.stdout
+        sys.stdout = open(os.devnull, 'w')
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stdout.close()
+        sys.stdout = self._original_stdout
+
+# ------------------- FIXTURES -------------------
 @pytest.fixture(autouse=True)
 def dj_config():
     if pathlib.Path('./dj_local_conf.json').exists():

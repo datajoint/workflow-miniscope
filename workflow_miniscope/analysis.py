@@ -45,11 +45,11 @@ class ActivityAlignment(dj.Computed):
     def make(self, key):
         # DEVNOTE : caimg->miniscope, no scan_datetime. so removed scan_time from fetch
         #           safe to assume no sess-scan diff?
-        sess_time, nframes, frame_rate = (miniscope.RecordingInfo
+        sess_time, rec_time, nframes, frame_rate = (miniscope.RecordingInfo
                                                      * session.Session
                                                      & key
                                                      ).fetch1('session_datetime',
-                                                              # 'scan_datetime',
+                                                              'recording_datetime',
                                                               'nframes', 'fps')
         scan_time = None # BEING ADDED TO ELEMENT
 

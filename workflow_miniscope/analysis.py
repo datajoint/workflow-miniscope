@@ -51,7 +51,6 @@ class ActivityAlignment(dj.Computed):
                                                      ).fetch1('session_datetime',
                                                               'recording_datetime',
                                                               'nframes', 'fps')
-        scan_time = None # BEING ADDED TO ELEMENT
 
         # Estimation of frame timestamps with respect to the session-start
         # (to be replaced by timestamps retrieved from some synchronization routine)

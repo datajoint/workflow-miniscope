@@ -36,7 +36,6 @@ import numpy as np
 # + This script `activates` the DataJoint `Elements` and declares other required tables.
 
 from workflow_miniscope.pipeline import *
-from element_interface.utils import find_full_path
 
 # ## Schema diagrams
 #
@@ -66,14 +65,12 @@ session.Session.describe();
 
 session.Session.heading
 
-# +
 session_key = dict(subject='subject1', 
                    session_datetime='2021-01-01 00:00:01')
 
 session.Session.insert1(session_key)
 
 session.Session()
-# -
 
 # ## Insert an entry into `session.SessionDirectory`
 #
@@ -85,18 +82,15 @@ session.SessionDirectory.describe();
 
 session.SessionDirectory.heading
 
-# +
 session.SessionDirectory.insert1(dict(**session_key, 
                                       session_dir='subject1/session1'))
 
 session.SessionDirectory()
-# -
 
 # ## Insert an entry into `miniscope.Recording`
 
 miniscope.Recording.heading
 
-# +
 recording_key = dict(**session_key,
                      recording_id=0)
 
@@ -105,8 +99,8 @@ miniscope.Recording.insert1(dict(**recording_key,
                                  acquisition_software='Miniscope-DAQ-V4',
                                  recording_directory='subject1/session1',
                                  recording_notes='No notes for this session.'))
+
 miniscope.Recording()
-# -
 
 # ## Populate `miniscope.RecordingInfo`
 #
@@ -120,7 +114,9 @@ miniscope.RecordingInfo.describe();
 miniscope.RecordingInfo.heading
 
 populate_settings = {'display_progress': True}
+
 miniscope.RecordingInfo.populate(**populate_settings)
+
 miniscope.RecordingInfo()
 
 # ## Insert a new entry into `miniscope.ProcessingParamSet` for CaImAn

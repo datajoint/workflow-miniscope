@@ -8,9 +8,9 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.13.7
 #   kernelspec:
-#     display_name: 'Python 3.7.9 64-bit (''workflow-calcium-imaging'': conda)'
+#     display_name: venv-nwb
 #     language: python
-#     name: python3
+#     name: venv-nwb
 # ---
 
 # # Interactively run miniscope workflow
@@ -35,7 +35,9 @@ import numpy as np
 #
 # + This script `activates` the DataJoint `Elements` and declares other required tables.
 
-from workflow_miniscope.pipeline import *
+import datajoint as dj
+from workflow_miniscope.pipeline import subject, session, miniscope, Equipment, \
+                                        AnatomicalLocation
 
 # ## Schema diagrams
 #
@@ -58,8 +60,8 @@ subject.Subject.insert1(dict(subject='subject1',
 # ## Insert an entry into `lab.Equipment`
 
 Equipment.insert1(dict(equipment='UCLA Miniscope',
-                       modality='miniscope',
-                       description=''))
+                       modality='Miniscope',
+                       description='V4, >1mm field of view, 1mm working distance'))
 
 # ## Insert an entry into `session.Session`
 
@@ -191,7 +193,7 @@ miniscope.ProcessingParamSet.insert_new_params(
 miniscope.ProcessingTask.insert1(dict(**recording_key,
                                       paramset_id=0,
                                       processing_output_dir='subject1/session1/caiman',
-                                      task_mode='trigger'))
+                                      task_mode='load'))
 
 # ## Populate `miniscope.Processing`
 
@@ -250,6 +252,8 @@ miniscope.Fluorescence.populate(**populate_settings)
 
 miniscope.Activity.populate(**populate_settings)
 
-# ## Next steps
+# <!-- ## Next steps
 #
-# + Proceed to the [05-explore](05-explore.ipynb) to learn how to  query, fetch, and visualize the imaging data.
+# + Proceed to the [05-explore](05-explore.ipynb) to learn how to  query, fetch, and visualize the imaging data. -->
+
+

@@ -1,7 +1,7 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,scripts//py
+#     formats: ipynb,py_scripts//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
@@ -50,7 +50,7 @@ dj.Diagram(miniscope) + (dj.Diagram(session.Session) + 1) - 1
 #
 # + Here are some highlights of the important tables.
 #
-# ### `subject.Subject` and `session.Session` tables
+# ### `Subject` and `Session` tables
 
 subject.Subject()
 
@@ -60,9 +60,9 @@ session.Session()
 
 session_key = (session.Session & 'subject = "subject3"' & 'session_datetime = "2021-04-30 12:22:15.032"').fetch1('KEY')
 
-# ### `scan.Scan` and `scan.ScanInfo` tables
+# ### `Recording` and `RecordingInfo` tables
 #
-# + These tables stores the scan metadata within a particular session.
+# + These tables stores the recording metadata within a particular session.
 
 miniscope.Recording & session_key
 
@@ -70,11 +70,11 @@ miniscope.RecordingInfo & session_key
 
 miniscope.RecordingInfo.Field & session_key
 
-# ### `miniscope.ProcessingParamSet`, `miniscope.ProcessingTask`, `miniscope.Processing`, and `miniscope.Curation` tables
+# ### `ProcessingParamSet`, `ProcessingTask`, `Processing`, and `Curation` tables
 #
-# + The parameters used for Suite2p or CaImAn are stored in `miniscope.ProcessingParamSet` under a `paramset_idx`.
+# + The parameters used for CaImAn are stored in `miniscope.ProcessingParamSet` under a `paramset_idx`.
 #
-# + The processing details for Suite2p and CaImAn are stored in `miniscope.ProcessingTask` and `miniscope.Processing` for the utilized `paramset_idx`.
+# + The processing details for CaImAn are stored in `miniscope.ProcessingTask` and `miniscope.Processing` for the utilized `paramset_idx`.
 #
 # + After the motion correction and segmentation, the results may go through a curation process. 
 #     
@@ -92,7 +92,7 @@ miniscope.ProcessingTask * miniscope.Processing & session_key
 
 miniscope.Curation & session_key
 
-# ### `miniscope.MotionCorrection` table
+# ### `MotionCorrection` table
 #
 # + After processing and curation, results are passed to the `miniscope.MotionCorrection` and `miniscope.Segmentation` tables.
 #
@@ -130,11 +130,11 @@ average_image = (miniscope.MotionCorrection.Summary & curation_key & 'field_idx=
 
 plt.imshow(average_image);
 
-# ### `miniscope.Segmentation` table
+# ### `Segmentation` table
 #
 # + Lets fetch and plot a mask stored in the `miniscope.Segmentation.Mask` table for one `curation_id`.
 #
-# + Each mask can be associated with a field by the attribute `mask_center_z`.  For example, masks with `mask_center_z=0` are in the field identified with `field_idx=0` in `scan.ScanInfo.Field`.
+# + Each mask can be associated with a field by the attribute `mask_center_z`.  For example, masks with `mask_center_z=0` are in the field identified with `field_idx=0` in `miniscope.RecordingInfo`.
 
 mask_xpix, mask_ypix = (miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType & curation_key & 'mask_center_z=0' & 'mask_npix > 130').fetch('mask_xpix','mask_ypix')
 
@@ -145,13 +145,13 @@ for xpix, ypix in zip(mask_xpix, mask_ypix):
 plt.imshow(average_image);
 plt.contour(mask_image, colors='white', linewidths=0.5);
 
-# ### `miniscope.MaskClassification` table
+# ### `MaskClassification` table
 #
 # + This table provides the `mask_type` and `confidence` for the mask classification.
 
 miniscope.MaskClassification.MaskType & curation_key & 'mask=0'
 
-# ### `miniscope.Fluorescence` and `miniscope.Activity` tables
+# ### `Fluorescence` and `Activity` tables
 #
 # + Lets fetch and plot the flourescence and activity traces for one mask.
 

@@ -43,8 +43,6 @@ class ActivityAlignment(dj.Computed):
         """
 
     def make(self, key):
-        # DEVNOTE : caimg->miniscope, no scan_datetime. so removed scan_time from fetch
-        #           safe to assume no sess-scan diff?
         sess_time, rec_time, nframes, frame_rate = (miniscope.RecordingInfo
                                                      * session.Session
                                                      & key
@@ -115,7 +113,7 @@ class ActivityAlignment(dj.Computed):
 
         aligned_timestamps = (self & key).fetch1('aligned_timestamps')
         trial_ids, aligned_spikes = (self.AlignedTrialActivity
-                                     & key & {'mask': roi}).fetch(
+                                     & key & {'mask_id': roi}).fetch(
             'trial_id', 'aligned_trace', order_by='trial_id')
 
         aligned_spikes = np.vstack(aligned_spikes)

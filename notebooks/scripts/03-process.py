@@ -57,7 +57,9 @@ subject.Subject.insert1(dict(subject='subject1',
 
 # ## Insert an entry into `lab.Equipment`
 
-Equipment.insert1(dict(acquisition_hardware='UCLA Miniscope'))
+Equipment.insert1(dict(equipment='UCLA Miniscope',
+                       modality='miniscope',
+                       description=''))
 
 # ## Insert an entry into `session.Session`
 
@@ -95,7 +97,7 @@ recording_key = dict(**session_key,
                      recording_id=0)
 
 miniscope.Recording.insert1(dict(**recording_key, 
-                                 acquisition_hardware='UCLA Miniscope', 
+                                 equipment='UCLA Miniscope', 
                                  acquisition_software='Miniscope-DAQ-V4',
                                  recording_directory='subject1/session1',
                                  recording_notes='No notes for this session.'))

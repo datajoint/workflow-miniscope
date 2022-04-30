@@ -1,6 +1,7 @@
 # ---
 # jupyter:
 #   jupytext:
+#     formats: ipynb,py_scripts//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
@@ -164,7 +165,7 @@ analysis.ActivityAlignmentCondition()
 
 analysis.ActivityAlignmentCondition.Trial & 'trial_condition = "ctrl_center_button"'
 
-# + [markdown] jp-MarkdownHeadingCollapsed=true tags=[]
+# + [markdown] jp-MarkdownHeadingCollapsed=true jp-MarkdownHeadingCollapsed=true tags=[]
 # ### Computation
 # Just like the element itself, we can run computations with `populate()`
 # -
@@ -173,9 +174,9 @@ analysis.ActivityAlignment.populate(display_progress=True)
 
 analysis.ActivityAlignment()
 
-# The `AlignedTrialSpikes` part table captures aligned traces fore each alignment and trial condition specified in the master table.
+# The `AlignedTrialActivity` part table captures aligned traces fore each alignment and trial condition specified in the master table.
 
-analysis.ActivityAlignment.AlignedTrialSpikes()
+analysis.ActivityAlignment.AlignedTrialActivity()
 
 # ### Visualization
 
@@ -185,13 +186,16 @@ help(analysis.ActivityAlignment().plot_aligned_activities)
 
 # For a refresher on the differences between masks, we can browse the `imaging.Segmentation.Mask` table.
 
-imaging.Segmentation.Mask & 'mask<3'
+miniscope.Segmentation.Mask & 'mask_id<3'
 
 # Then, we can directly compare the stimulus and control conditions relative to center button presses.
 
-from workflow_calcium_imaging import analysis
-from workflow_calcium_imaging.pipeline import session, imaging, trial, event
-ca_activity_key = (imaging.Activity & {'subject': 'subject3', 'scan_id': 0}
+miniscope.Activity()
+
+from workflow_miniscope import analysis
+from workflow_miniscope.pipeline import session, miniscope, trial, event
+ca_activity_key = (miniscope.Activity & {'subject': 'subject1', 'recording_id': 0}
+                   & "extraction_method='caiman_dff'"
                   ).fetch1('KEY')
 alignment_key = (event.AlignmentEvent & 'alignment_name = "center_button"'
                 ).fetch1('KEY')

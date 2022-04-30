@@ -1,16 +1,16 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,scripts//py
+#     formats: ipynb,py_scripts//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
 #       jupytext_version: 1.13.7
 #   kernelspec:
-#     display_name: venv-nwb
+#     display_name: 'Python 3.7.9 64-bit (''workflow-calcium-imaging'': conda)'
 #     language: python
-#     name: venv-nwb
+#     name: python3
 # ---
 
 # # Interactively run miniscope workflow
@@ -252,8 +252,6 @@ miniscope.Fluorescence.populate(**populate_settings)
 
 miniscope.Activity.populate(**populate_settings)
 
-# <!-- ## Next steps
+# ## Next steps
 #
-# + Proceed to the [05-explore](05-explore.ipynb) to learn how to  query, fetch, and visualize the imaging data. -->
-
-
+# + Proceed to the [05-explore](05-explore.ipynb) to learn how to  query, fetch, and visualize the imaging data.

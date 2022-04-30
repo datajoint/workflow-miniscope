@@ -44,7 +44,7 @@ dj.Diagram(miniscope) + (dj.Diagram(session.Session) + 1) - 1
 
 # ## Browsing the data with DataJoint `query` and `fetch` 
 #
-# + DataJoint provides functions to query data and fetch.  For a detailed tutorials, visit our [general tutorial site](https://playground.datajoint.io/).
+# + DataJoint provides functions to query data and fetch.  For detailed tutorials, visit our [general tutorial site](https://codebook.datajoint.io/).
 #
 # + Running through the pipeline, we have ingested data of subject3 into the database.
 #

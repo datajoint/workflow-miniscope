@@ -114,7 +114,6 @@ def ingest_events(recording_csv_path='./user_data/behavior_recordings.csv',
     ingest_csv_to_table(csvs, tables, skip_duplicates=skip_duplicates, verbose=verbose,
                         allow_direct_insert=True)
     # Allow direct insert required bc element-trial has Imported that should be Manual
-    # ISSUE: element-interface version doesn't have allow_direct_insert arg
 
 
 def ingest_alignment(alignment_csv_path='./user_data/alignments.csv',

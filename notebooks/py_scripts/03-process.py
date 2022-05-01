@@ -1,7 +1,7 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,scripts//py
+#     formats: ipynb,py_scripts//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
@@ -35,7 +35,9 @@ import numpy as np
 #
 # + This script `activates` the DataJoint `Elements` and declares other required tables.
 
-from workflow_miniscope.pipeline import *
+import datajoint as dj
+from workflow_miniscope.pipeline import subject, session, miniscope, Equipment, \
+                                        AnatomicalLocation
 
 # ## Schema diagrams
 #
@@ -57,7 +59,9 @@ subject.Subject.insert1(dict(subject='subject1',
 
 # ## Insert an entry into `lab.Equipment`
 
-Equipment.insert1(dict(acquisition_hardware='UCLA Miniscope'))
+Equipment.insert1(dict(equipment='UCLA Miniscope',
+                       modality='Miniscope',
+                       description='V4, >1mm field of view, 1mm working distance'))
 
 # ## Insert an entry into `session.Session`
 
@@ -95,7 +99,7 @@ recording_key = dict(**session_key,
                      recording_id=0)
 
 miniscope.Recording.insert1(dict(**recording_key, 
-                                 acquisition_hardware='UCLA Miniscope', 
+                                 equipment='UCLA Miniscope', 
                                  acquisition_software='Miniscope-DAQ-V4',
                                  recording_directory='subject1/session1',
                                  recording_notes='No notes for this session.'))
@@ -189,7 +193,7 @@ miniscope.ProcessingParamSet.insert_new_params(
 miniscope.ProcessingTask.insert1(dict(**recording_key,
                                       paramset_id=0,
                                       processing_output_dir='subject1/session1/caiman',
-                                      task_mode='trigger'))
+                                      task_mode='load'))
 
 # ## Populate `miniscope.Processing`
 

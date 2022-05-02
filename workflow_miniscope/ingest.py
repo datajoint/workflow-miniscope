@@ -39,7 +39,7 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
         session_path = find_full_path(get_miniscope_root_data_dir(),
                                       session_dir)
         recording_filepaths = [file_path.as_posix() for file_path 
-                                            in session_path.glob('*.avi')]
+                               in session_path.glob('*.avi')]
         if not recording_filepaths:
             raise FileNotFoundError(f'No .avi files found in '
                                     f'{session_path}')
@@ -70,10 +70,10 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
                                          session_dir=session_dir.as_posix()))
 
             recording_list.append(dict(**session_key, 
-                                   recording_id=0, # Assumes one recording per session
-                                   acquisition_hardware=acquisition_hardware, 
-                                   acquisition_software=acquisition_software,
-                                   recording_directory=session_dir.as_posix()))
+                                       recording_id=0,  # Assumes 1 recording per sess
+                                       acquisition_hardware=acquisition_hardware,
+                                       acquisition_software=acquisition_software,
+                                       recording_directory=session_dir.as_posix()))
 
     new_equipment_n = len(set(val for dic in hardware_list for val in dic.values()))
     print(f'\n---- Insert {new_equipment_n} entry(s) into lab.Equipment ----')

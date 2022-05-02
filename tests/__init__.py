@@ -1,15 +1,15 @@
-# run tests: pytest -sv --cov-report term-missing --cov=workflow-miniscope -p no:warnings
+# run: pytest -sv --cov-report term-missing --cov=workflow-miniscope -p no:warnings
 
 import os
 import pytest
-import pandas as pd
+# import pandas as pd
 import pathlib
 import datajoint as dj
-import importlib
-import numpy as np
+# import importlib
+# import numpy as np
 import sys
 
-from workflow_miniscope.paths import get_miniscope_root_data_dir
+# from workflow_miniscope.paths import get_miniscope_root_data_dir
 
 # ------------------- SOME CONSTANTS -------------------
 
@@ -33,6 +33,8 @@ class QuietStdOut:
         sys.stdout = self._original_stdout
 
 # ------------------- FIXTURES -------------------
+
+
 @pytest.fixture(autouse=True)
 def dj_config():
     if pathlib.Path('./dj_local_conf.json').exists():
@@ -40,7 +42,7 @@ def dj_config():
     dj.config['safemode'] = False
     dj.config['custom'] = {
         'database.prefix': (os.environ.get('DATABASE_PREFIX') 
-                             or dj.config['custom']['database.prefix']),
+                            or dj.config['custom']['database.prefix']),
         'miniscope_root_data_dir': (os.environ.get('MINISCOPE_ROOT_DATA_DIR')
                                     or dj.config['custom']['miniscope_root_data_dir'])
     }

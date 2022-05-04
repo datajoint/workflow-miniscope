@@ -1,4 +1,9 @@
-# run: pytest -sv --cov-report term-missing --cov=workflow-miniscope -p no:warnings
+'''
+run all tests:
+    pytest -sv --cov-report term-missing --cov=workflow_miniscope -p no:warnings tests/
+run one test, debug:
+    pytest [above options] --pdb tests/tests_name.py -k function_name
+'''
 
 import os
 import pytest
@@ -6,12 +11,13 @@ import pathlib
 import datajoint as dj
 import numpy as np
 import sys
+from element_interface.utils import find_full_path
 
 # from workflow_miniscope.paths import get_miniscope_root_data_dir
 
 # ------------------- SOME CONSTANTS -------------------
 
-_tear_down = True
+_tear_down = False
 verbose = False
 
 test_user_data_dir = pathlib.Path('./tests/user_data')
@@ -96,7 +102,11 @@ def test_data(dj_config):
 @pytest.fixture
 def pipeline():
     """ Loads workflow_miniscope.pipeline lab, session, subject, miniscope"""
-    from workflow_miniscope import pipeline
+    if verbose:
+        from workflow_miniscope import pipeline
+    else:
+        with QuietStdOut():
+            from workflow_miniscope import pipeline
     
     yield {'lab': pipeline.lab,
            'subject': pipeline.subject,
@@ -129,19 +139,25 @@ def subjects_csv():
 
     yield subject_content, subject_csv_path
     if _tear_down:
-        subject_csv_path.unlink()
+        if verbose:
+            subject_csv_path.unlink()
+        else:
+            with QuietStdOut():
+                subject_csv_path.unlink()
 
 
 @pytest.fixture
 def ingest_subjects(pipeline, subjects_csv):
     from workflow_miniscope.ingest import ingest_subjects
     _, subjects_csv_path = subjects_csv
-    ingest_subjects(subjects_csv_path)
+    # if not tear_down, skip duplicates
+    skip_duplicates = not _tear_down
+    ingest_subjects(subjects_csv_path, verbose=verbose, skip_duplicates=skip_duplicates)
     return
 
 
 @pytest.fixture
-def sessions_csv(test_data):
+def sessions_csv():
     """ Create a 'sessions.csv' file"""
     session_csv_path = pathlib.Path('./tests/user_data/sessions.csv')
     session_content = ["subject,session_dir,acquisition_software",
@@ -150,21 +166,27 @@ def sessions_csv(test_data):
 
     yield session_content, session_csv_path
     if _tear_down:
-        session_csv_path.unlink()
+        if verbose:
+            session_csv_path.unlink()
+        else:
+            with QuietStdOut():
+                session_csv_path.unlink()
 
 
 @pytest.fixture
 def ingest_sessions(ingest_subjects, sessions_csv):
     from workflow_miniscope.ingest import ingest_sessions
     _, sessions_csv_path = sessions_csv
-    ingest_sessions(sessions_csv_path)
+    # if not tear_down, skip duplicates
+    skip_duplicates = not _tear_down
+    ingest_sessions(sessions_csv_path, skip_duplicates=skip_duplicates, verbose=verbose)
     return
 
 
 @pytest.fixture
 def testdata_paths():
     return {
-        'caiman_2d': 'subject1/session1/caiman'
+        'caiman_2d': 'subject1/session1/0.avi'
     }
 
 
@@ -229,7 +251,11 @@ def recording_info(pipeline, ingest_sessions):
     yield
 
     if _tear_down:
-        miniscope.RecordingInfo.delete()
+        if verbose:
+            miniscope.RecordingInfo.delete()
+        else:
+            with QuietStdOut():
+                miniscope.RecordingInfo.delete()
 
 
 @pytest.fixture
@@ -239,23 +265,28 @@ def processing_tasks(pipeline, caiman2D_paramset, recording_info):
     miniscope = pipeline['miniscope']
     session = pipeline['session']
     get_miniscope_root_data_dir = pipeline['get_miniscope_root_data_dir']
-    root_dir = pathlib.Path(get_miniscope_root_data_dir())
 
-    for scan_key in (session.Session & miniscope.Recording_Info
-                     - miniscope.ProcessingTask).fetch('KEY'):
-        scan_file = root_dir / (miniscope.Recording_Info.File
-                                & scan_key).fetch('file_path')[0]
+    for scan_key in (session.Session * miniscope.Recording - miniscope.ProcessingTask
+                     ).fetch('KEY'):
+        scan_file = find_full_path(get_miniscope_root_data_dir(),
+                                   (miniscope.RecordingInfo.File & scan_key
+                                    ).fetch('file_path')[0])
+
         recording_dir = scan_file.parent
-        caiman_dir = (recording_dir / 'caiman').as_posix()
+        caiman_dir = pathlib.Path(recording_dir / 'caiman')
         if caiman_dir.exists():
             miniscope.ProcessingTask.insert1({**scan_key,
-                                              'paramset_id': 1,
+                                              'paramset_id': 0,
                                               'processing_output_dir': caiman_dir})
 
     yield
 
     if _tear_down:
-        miniscope.ProcessingTask.delete()
+        if verbose:
+            miniscope.ProcessingTask.delete()
+        else:
+            with QuietStdOut():
+                miniscope.ProcessingTask.delete()
 
 
 @pytest.fixture
@@ -271,7 +302,11 @@ def processing(processing_tasks, pipeline):
     yield
 
     if _tear_down:
-        miniscope.Processing.delete()
+        if verbose:
+            miniscope.Processing.delete()
+        else:
+            with QuietStdOut():
+                miniscope.Processing.delete()
 
 
 @pytest.fixture
@@ -284,4 +319,8 @@ def curations(processing, pipeline):
     yield
 
     if _tear_down:
-        miniscope.Curation.delete()
+        if verbose:
+            miniscope.Curation.delete()
+        else:
+            with QuietStdOut():
+                miniscope.Curation.delete()

@@ -1,39 +1,25 @@
-import numpy as np
-
 from . import (dj_config, pipeline, subjects_csv, ingest_subjects,
-               sessions_csv, ingest_sessions,
-               testdata_paths, caiman2D_paramset, caiman3D_paramset,
-               scan_info, processing_tasks, processing, curations)
+               sessions_csv, ingest_sessions, testdata_paths, caiman2D_paramset,
+               recording_info, processing_tasks, processing, curations)
+
+__all__ = ['dj_config', 'pipeline', 'subjects_csv', 'ingest_subjects', 'sessions_csv',
+           'ingest_sessions', 'testdata_paths', 'caiman2D_paramset', 'recording_info',
+           'processing_tasks', 'processing', 'curations']
 
 
-def test_scan_info_populate_scanimage_2D(testdata_paths, pipeline, scan_info):
-    scan = pipeline['scan']
-    rel_path = testdata_paths['scanimage_2d']
-    scan_key = (scan.ScanInfo & (scan.ScanInfo.ScanFile
-                                 & f'file_path LIKE "%{rel_path}%"')).fetch1('KEY')
-    nfields, nchannels, ndepths, nframes = (scan.ScanInfo & scan_key).fetch1(
-        'nfields', 'nchannels', 'ndepths', 'nframes')
+def test_recording_info_populate(testdata_paths, pipeline, recording_info):
+    miniscope = pipeline['miniscope']
+    rel_path = testdata_paths['caiman_2d']
+    scan_key = (miniscope.RecordingInfo & (miniscope.RecordingInfo.File
+                                           & f'file_path LIKE "%{rel_path}%"')
+                ).fetch1('KEY')
+    nchannels, nframes = (miniscope.RecordingInfo & scan_key
+                          ).fetch1('nchannels', 'nframes')
 
-    assert nfields == 1
-    assert nchannels == 2
-    assert ndepths == 1
-    assert nframes == 25000
-
-
-def test_scan_info_populate_scanimage_3D(testdata_paths, pipeline, scan_info):
-    scan = pipeline['scan']
-    rel_path = testdata_paths['scanimage_3d']
-    scan_key = (scan.ScanInfo & (scan.ScanInfo.ScanFile
-                                 & f'file_path LIKE "%{rel_path}%"')).fetch1('KEY')
-    nfields, nchannels, ndepths, nframes = (scan.ScanInfo & scan_key).fetch1(
-        'nfields', 'nchannels', 'ndepths', 'nframes')
-
-    assert nfields == 3
-    assert nchannels == 2
-    assert ndepths == 3
-    assert nframes == 2000
+    assert nchannels == 1
+    assert nframes == 111770
 
 
 def test_processing_populate(processing, pipeline):
-    imaging = pipeline['imaging']
-    assert len(imaging.Processing()) == 5
+    miniscope = pipeline['miniscope']
+    assert len(miniscope.Processing()) == 1

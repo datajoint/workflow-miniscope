@@ -1,15 +1,14 @@
-import pathlib
+from element_interface.utils import find_full_path, find_root_directory
 
 from . import (dj_config, pipeline, subjects_csv, ingest_subjects,
                sessions_csv, ingest_sessions,
-               testdata_paths, caiman2D_paramset, caiman3D_paramset,
-               scan_info, processing_tasks, processing, curations)
+               testdata_paths, caiman2D_paramset, recording_info, processing_tasks,
+               processing, curations)
 
 
 __all__ = ['dj_config', 'pipeline', 'subjects_csv', 'ingest_subjects', 'sessions_csv',
            'ingest_sessions', 'testdata_paths', 'caiman2D_paramset',
-           'caiman3D_paramset', 'scan_info', 'processing_tasks', 'processing',
-           'curations']
+           'recording_info', 'processing_tasks', 'processing', 'curations']
 
 
 def test_ingest_subjects(pipeline, ingest_subjects):
@@ -24,10 +23,13 @@ def test_ingest_sessions(pipeline, sessions_csv, ingest_sessions):
     assert len(session.Session()) == 1
 
     sessions, _ = sessions_csv
-    sess = sessions.iloc[3]
-    sess_dir = pathlib.Path(sess.session_dir).relative_to(get_miniscope_root_data_dir())
+    sess = sessions[1].split(",")[1]
+    sess_dir_full = find_full_path(get_miniscope_root_data_dir(), sess)
+    root_dir = find_root_directory(get_miniscope_root_data_dir(), sess_dir_full)
+    sess_dir = sess_dir_full.relative_to(root_dir)
     assert (session.SessionDirectory
-            & {'subject': sess.name}).fetch1('session_dir') == sess_dir.as_posix()
+            & {'subject': sessions[1].split(",")[0]}
+            ).fetch1('session_dir') == str(sess_dir)
 
 
 def test_paramset_insert(caiman2D_paramset, pipeline):

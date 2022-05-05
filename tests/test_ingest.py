@@ -36,7 +36,7 @@ def test_paramset_insert(caiman2D_paramset, pipeline):
     miniscope = pipeline['miniscope']
     from element_interface.utils import dict_to_uuid
 
-    method, desc, paramset_hash = (miniscope.ProcessingParamSet & {'paramset_idx': 1}
+    method, desc, paramset_hash = (miniscope.ProcessingParamSet & {'paramset_idx': 0}
                                    ).fetch1('processing_method', 'paramset_desc',
                                             'param_set_hash')
     assert method == 'caiman'

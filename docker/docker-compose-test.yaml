@@ -17,7 +17,7 @@ services:
     build:
       context: ../../
       dockerfile: ./workflow-miniscope/docker/Dockerfile.test
-    env_file: .env
+    env_file: .env # TEST_DATA_DIR
     image: workflow-miniscope-test:0.1.0
     container_name: workflow-miniscope-test
     environment:
@@ -39,6 +39,7 @@ services:
       - ../../element-lab:/main/element-lab
       - ../../element-animal:/main/element-animal
       - ../../element-session:/main/element-session
+      - ../../element-event:/main/element-event
       - ../../element-interface:/main/element-interface
       - ../../element-miniscope:/main/element-miniscope
       - ..:/main/workflow-miniscope

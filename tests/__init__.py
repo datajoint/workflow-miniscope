@@ -17,7 +17,7 @@ from element_interface.utils import find_full_path
 
 # ------------------- SOME CONSTANTS -------------------
 
-_tear_down = False
+_tear_down = True
 verbose = False
 
 test_user_data_dir = pathlib.Path('./tests/user_data')

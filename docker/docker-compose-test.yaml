@@ -39,6 +39,7 @@ services:
       - ../../element-lab:/main/element-lab
       - ../../element-animal:/main/element-animal
       - ../../element-session:/main/element-session
+      - ../../element-event:/main/element-event
       - ../../element-interface:/main/element-interface
       - ../../element-miniscope:/main/element-miniscope
       - ..:/main/workflow-miniscope

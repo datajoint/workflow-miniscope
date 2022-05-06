@@ -50,7 +50,7 @@ RUN pip install -e /main/element-session
 RUN pip install -e /main/element-event
 RUN pip install -e /main/element-interface
 RUN pip install -e /main/element-miniscope
-# RUN rm -f /main/workflow-miniscope/dj_local_conf.json
+RUN mv -f /main/workflow-miniscope/dj_local_conf.json /main/workflow-miniscope/unused_local_conf.json
 
 # Install the workflow
 RUN pip install /main/workflow-miniscope

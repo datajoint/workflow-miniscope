@@ -51,7 +51,7 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
                                                     metadata_filepath.stat().st_ctime)
                 with open(metadata_filepath) as json_file:
                     recording_metadata = json.load(json_file)
-                acquisition_hardware = recursive_search('deviceType', 
+                equipment = recursive_search('deviceType', 
                                                         recording_metadata)
                 break
             except OSError:
@@ -62,7 +62,8 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
         session_key = dict(subject=single_session['subject'], 
                            session_datetime=recording_time)
         if session_key not in session.Session():
-            hardware_list.append(dict(acquisition_hardware=acquisition_hardware))
+            hardware_list.append(dict(equipment=equipment,
+                                      modality='miniscope'))
 
             session_list.append(session_key)
 
@@ -71,7 +72,7 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
 
             recording_list.append(dict(**session_key, 
                                    recording_id=0, # Assumes one recording per session
-                                   acquisition_hardware=acquisition_hardware, 
+                                   equipment=equipment, 
                                    acquisition_software=acquisition_software,
                                    recording_directory=session_dir.as_posix()))
 

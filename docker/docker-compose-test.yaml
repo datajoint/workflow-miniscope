@@ -1,25 +1,32 @@
-# export COMPOSE_DOCKER_CLI_BUILD=0 # some machines need for smooth --build
-# .env file: TEST_DATA_DIR=<local parent directory of workflow_mini_data{1,2}>
-# docker-compose -f ./docker/docker-compose-test.yaml up --build
-# docker-compose -f ./docker/docker-compose-test.yaml down
+# docker-compose -f ./docker/docker-compose-test.yaml up --build --force-recreate --detach
+# docker-compose -f ./docker/docker-compose-test.yaml down --volumes
 
 version: "2.4"
-x-net: &net
-  networks:
-      - main
+
 services:
   db:
-    <<: *net
-    image: datajoint/mysql:5.7
-    container_name: workflow-miniscope-test-db
+    networks:
+      miniscope:
+    image: mysql:5-debian
+    platform: linux/amd64
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=simple
+      MYSQL_ROOT_PASSWORD: simple
+      MYSQL_USER: datajoint
+      MYSQL_PASSWORD: datajoint
+    volumes:
+      - mysql-miniscope:/var/lib/mysql
+    container_name: workflow-miniscope-test-db
+
   workflow:
-    <<: *net
+    networks:
+      miniscope:
     build:
-      context: ../../
-      dockerfile: ./workflow-miniscope/docker/Dockerfile.test
-    env_file: .env # TEST_DATA_DIR
+      context: ../.
+      dockerfile: ./docker/Dockerfile.test
+      args:
+        - GITHUB_USERNAME=cbroz1
     image: workflow-miniscope-test:0.1.0
     container_name: workflow-miniscope-test
     environment:
@@ -37,16 +44,29 @@ services:
         tail -f /dev/null
     volumes:
       - ${TEST_DATA_DIR}:/main/test_data
-      - ./apt_requirements.txt:/tmp/apt_requirements.txt
-      - ../../element-lab:/main/element-lab
-      - ../../element-animal:/main/element-animal
-      - ../../element-session:/main/element-session
-      - ../../element-event:/main/element-event
-      - ../../element-interface:/main/element-interface
-      - ../../element-miniscope:/main/element-miniscope
+      # - ./apt_requirements.txt:/tmp/apt_requirements.txt
+      # - ../element-lab:/main/element-lab
+      # - ../element-animal:/main/element-animal
+      # - ../element-session:/main/element-session
+      # - ../element-event:/main/element-event
+      # - ../element-interface:/main/element-interface
+      # - ../element-miniscope:/main/element-miniscope
       - ..:/main/workflow-miniscope
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_started
+
+  adminer:
+    networks:
+      miniscope:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8080
+
 networks:
-  main:
+  miniscope:
+    name: workflow-miniscope-network
+
+volumes:
+  mysql-miniscope:

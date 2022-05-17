@@ -57,6 +57,7 @@ def dj_config():
     if pathlib.Path('./dj_local_conf.json').exists():
         dj.config.load('./dj_local_conf.json')
     dj.config['safemode'] = False
+    dj.config["database.use_tls"] = False
     dj.config['custom'] = {
         'database.prefix': (os.environ.get('DATABASE_PREFIX') 
                             or dj.config['custom']['database.prefix']),

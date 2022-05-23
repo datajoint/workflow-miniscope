@@ -240,7 +240,11 @@ def caiman2D_paramset(pipeline):
     yield params_caiman_2d
 
     if _tear_down:
-        (miniscope.ProcessingParamSet & 'paramset_id = 0').delete()
+        if verbose:
+            (miniscope.ProcessingParamSet & 'paramset_id = 0').delete()
+        else:
+            with QuietStdOut():
+                (miniscope.ProcessingParamSet & 'paramset_id = 0').delete()
 
 
 @pytest.fixture

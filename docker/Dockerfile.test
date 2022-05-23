@@ -11,7 +11,7 @@ WORKDIR /main
 RUN git clone --branch master https://github.com/kabilar/CaImAn
 WORKDIR /main/CaImAn
 RUN conda install -n base -c conda-forge -y mamba
-RUN /bin/bash -c 'mamba env update --n base --file environment.yml'
+RUN /bin/bash -c 'mamba env update --n base --file environment-minimal.yml'
 RUN pip install .
 RUN python caimanmanager.py install --inplace
 

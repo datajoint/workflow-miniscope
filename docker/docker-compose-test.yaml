@@ -1,4 +1,4 @@
-# docker-compose -f ./docker/docker-compose-test.yaml up --build --force-recreate
+# docker-compose -f ./docker/docker-compose-test.yaml up --build --force-recreate --detached
 # docker-compose -f ./docker/docker-compose-test.yaml down --volumes
 
 version: "2.4"

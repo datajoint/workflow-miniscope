@@ -1,9 +1,9 @@
 from . import (dj_config, pipeline, subjects_csv, ingest_subjects,
-               sessions_csv, ingest_sessions, testdata_paths, caiman2D_paramset,
+               sessions_csv, ingest_sessions, testdata_paths, caiman_paramset,
                recording_info, processing_tasks, processing, curations)
 
 __all__ = ['dj_config', 'pipeline', 'subjects_csv', 'ingest_subjects', 'sessions_csv',
-           'ingest_sessions', 'testdata_paths', 'caiman2D_paramset', 'recording_info',
+           'ingest_sessions', 'testdata_paths', 'caiman_paramset', 'recording_info',
            'processing_tasks', 'processing', 'curations']
 
 

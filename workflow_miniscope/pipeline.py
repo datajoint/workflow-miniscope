@@ -2,7 +2,7 @@ import datajoint as dj
 
 from element_lab import lab
 from element_animal import subject
-from element_session import session
+from element_session import session_with_datetime as session
 from element_event import trial, event
 from element_miniscope import miniscope
 

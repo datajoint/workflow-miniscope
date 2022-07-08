@@ -20,6 +20,7 @@ services:
       dockerfile: ./docker/Dockerfile.test
       args:
         - GITHUB_USERNAME=datajoint
+    env_file: .env
     image: workflow-miniscope-test:0.1.0
     container_name: workflow-miniscope-test
     environment:

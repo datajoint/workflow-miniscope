@@ -68,32 +68,19 @@ def dj_config():
 
 @pytest.fixture(autouse=True)
 def test_data(dj_config):
-    test_data_dir = pathlib.Path(dj.config['custom']['miniscope_root_data_dir'])
-
-    test_data_exists = np.all([(test_data_dir / p).exists() for p in sessions_dirs])
+    mini_root_dirs = dj.config['custom']['miniscope_root_data_dir']
+    
+    test_data_exists = np.all([find_full_path(mini_root_dirs, p).exists() 
+                               for p in sessions_dirs])
 
     if not test_data_exists:
-        try:
-            dj.config['custom'].update({
-                'djarchive.client.endpoint': os.environ['DJARCHIVE_CLIENT_ENDPOINT'],
-                'djarchive.client.bucket': os.environ['DJARCHIVE_CLIENT_BUCKET'],
-                'djarchive.client.access_key': os.environ['DJARCHIVE_CLIENT_ACCESSKEY'],
-                'djarchive.client.secret_key': os.environ['DJARCHIVE_CLIENT_SECRETKEY']
-            })
-        except KeyError as e:
-            raise FileNotFoundError(
-                f'Test data not available at {test_data_dir}.'
-                f'\nAttempting to download from DJArchive,'
-                f' but no credentials found in environment variables.'
-                f'\nError: {str(e)}')
-
         import djarchive_client
 
-        client = djarchive_client.client()
-
-        client.download('workflow-miniscope-test-set',
-                        'v1',
-                        str(test_data_dir), create_target=False)
+        if not isinstance(mini_root_dirs, list):
+            mini_root_dirs = list(mini_root_dirs)
+        djarchive_client.client().download('workflow-miniscope-test-set',
+                                           'v1',
+                                           str(mini_root_dirs[0]), create_target=False)
     return
 
 
@@ -187,10 +174,10 @@ def testdata_paths():
 
 
 @pytest.fixture
-def caiman2D_paramset(pipeline):
+def caiman_paramset(pipeline):
     miniscope = pipeline['miniscope']
 
-    params_caiman_2d = dict(decay_time=0.4,
+    params_caiman = dict(decay_time=0.4,
                             pw_rigid=False,
                             max_shifts=(5, 5),
                             gSig_filt=(3, 3),
@@ -230,9 +217,9 @@ def caiman2D_paramset(pipeline):
         processing_method='caiman',
         paramset_id=0,
         paramset_desc='Calcium imaging analysis with CaImAn using default parameters',
-        params=params_caiman_2d)
+        params=params_caiman)
 
-    yield params_caiman_2d
+    yield params_caiman
 
     if _tear_down:
         if verbose:
@@ -259,9 +246,7 @@ def recording_info(pipeline, ingest_sessions):
 
 
 @pytest.fixture
-def processing_tasks(pipeline, caiman2D_paramset, recording_info):
-    global is_multi_scan_processing
-
+def processing_tasks(pipeline, caiman_paramset, recording_info):
     miniscope = pipeline['miniscope']
     session = pipeline['session']
     get_miniscope_root_data_dir = pipeline['get_miniscope_root_data_dir']

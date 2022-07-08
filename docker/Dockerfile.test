@@ -1,6 +1,5 @@
 FROM datajoint/djbase:py3.9-debian-8eb1715
 
-ARG GITHUB_USERNAME=datajoint
 USER anaconda:anaconda
 
 COPY ./docker/apt_requirements.txt /tmp/

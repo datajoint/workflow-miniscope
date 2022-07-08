@@ -12,36 +12,25 @@ def populate(display_progress=True, reserve_jobs=False, suppress_errors=False,
                          'suppress_errors': suppress_errors}
 
     if verbose:
-        print('\n---- Populate miniscope.ScanInfo ----')
-    miniscope.ScanInfo.populate(**populate_settings)
+        print("\n---- Populate imported and computed tables ----")
 
-    if verbose:
-        print('\n---- Populate miniscope.Processing ----')
+    miniscope.RecordingInfo.populate(**populate_settings)
+
     miniscope.Processing.populate(**populate_settings)
 
     if verbose:
         print('\n---- Populate miniscope.MotionCorrection ----')
     miniscope.MotionCorrection.populate(**populate_settings)
 
-    if verbose:
-        print('\n---- Populate miniscope.Segmentation ----')
     miniscope.Segmentation.populate(**populate_settings)
 
-    if verbose:
-        print('\n---- Populate miniscope.MaskClassification ----')
-    miniscope.MaskClassification.populate(**populate_settings)
-
-    if verbose:
-        print('\n---- Populate miniscope.Fluorescence ----')
     miniscope.Fluorescence.populate(**populate_settings)
 
-    if verbose:
-        print('\n---- Populate miniscope.Activity ----')
     miniscope.Activity.populate(**populate_settings)
 
     if verbose:
-        print('\n---- Successfully completed workflow_calcium_imaging/populate.py ----')
+        print('\n---- Successfully completed workflow_miniscope/populate.py ----')
 
 
 if __name__ == '__main__':
-    populate()
+    run()

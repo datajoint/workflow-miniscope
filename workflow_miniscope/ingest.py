@@ -20,8 +20,7 @@ def ingest_subjects(subject_csv_path='./user_data/subjects.csv',
     ingest_csv_to_table(csvs, tables, skip_duplicates=skip_duplicates, verbose=verbose)
 
 
-def ingest_sessions(session_csv_path='./user_data/sessions.csv', skip_duplicates=False,
-                    verbose=True):
+def ingest_sessions(session_csv_path='./user_data/sessions.csv', verbose=True):
     if verbose:
         print('\n---- Insert new `Session` and `Recording` ----')
     with open(session_csv_path, newline='') as f:
@@ -84,13 +83,13 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv', skip_duplicates
 
     if verbose:
         print(f'\n---- Insert {len(session_list)} entry(s) into session.Session ----')
-    session.Session.insert(session_list, skip_duplicates=skip_duplicates)
-    session.SessionDirectory.insert(session_dir_list, skip_duplicates=skip_duplicates)
+    session.Session.insert(session_list)
+    session.SessionDirectory.insert(session_dir_list)
 
     if verbose:
         print(f'\n---- Insert {len(recording_list)} entry(s) into '
               + 'miniscope.Recording ----')
-    miniscope.Recording.insert(recording_list, skip_duplicates=skip_duplicates)
+    miniscope.Recording.insert(recording_list)
 
     if verbose:
         print('\n---- Successfully completed ingest_sessions ----')

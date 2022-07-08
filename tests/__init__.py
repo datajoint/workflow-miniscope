@@ -13,7 +13,6 @@ import numpy as np
 import sys
 from element_interface.utils import find_full_path
 
-# from workflow_miniscope.paths import get_miniscope_root_data_dir
 
 # ------------------- SOME CONSTANTS -------------------
 
@@ -89,13 +88,11 @@ def test_data(dj_config):
                 f'\nError: {str(e)}')
 
         import djarchive_client
-        from workflow_miniscope import version
 
         client = djarchive_client.client()
-        workflow_version = version.__version__
 
         client.download('workflow-miniscope-test-set',
-                        workflow_version.replace('.', '_'),
+                        'v1',
                         str(test_data_dir), create_target=False)
     return
 
@@ -178,9 +175,7 @@ def sessions_csv():
 def ingest_sessions(ingest_subjects, sessions_csv):
     from workflow_miniscope.ingest import ingest_sessions
     _, sessions_csv_path = sessions_csv
-    # if not tear_down, skip duplicates
-    skip_duplicates = not _tear_down
-    ingest_sessions(sessions_csv_path, skip_duplicates=skip_duplicates, verbose=verbose)
+    ingest_sessions(sessions_csv_path, verbose=verbose)
     return
 
 

@@ -4,7 +4,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-def populate(display_progress=True, reserve_jobs=False, suppress_errors=False,
+def run(display_progress=True, reserve_jobs=False, suppress_errors=False,
              verbose=True):
 
     populate_settings = {'display_progress': display_progress,
@@ -18,8 +18,6 @@ def populate(display_progress=True, reserve_jobs=False, suppress_errors=False,
 
     miniscope.Processing.populate(**populate_settings)
 
-    if verbose:
-        print('\n---- Populate miniscope.MotionCorrection ----')
     miniscope.MotionCorrection.populate(**populate_settings)
 
     miniscope.Segmentation.populate(**populate_settings)

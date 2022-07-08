@@ -8,7 +8,7 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.13.7
 #   kernelspec:
-#     display_name: 'Python 3.7.9 64-bit (''workflow-calcium-imaging'': conda)'
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -71,6 +71,8 @@ session.Session.heading
 
 session_key = dict(subject='subject1', 
                    session_datetime='2021-01-01 00:00:01')
+
+miniscope.RecordingInfo.children(as_objects=False)
 
 session.Session.insert1(session_key)
 
@@ -198,6 +200,8 @@ miniscope.ProcessingTask.insert1(dict(**recording_key,
 # ## Populate `miniscope.Processing`
 
 miniscope.Processing.populate(**populate_settings)
+
+# %debug
 
 # ## Insert new Curation following the ProcessingTask
 #

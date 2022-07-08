@@ -62,5 +62,5 @@ networks:
   miniscope:
     name: workflow-miniscope-network
 
-volumes:
-  mysql-miniscope:
+# volumes:
+#   mysql-miniscope:

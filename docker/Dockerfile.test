@@ -1,5 +1,6 @@
 FROM datajoint/djbase:py3.9-debian-8eb1715
 
+ARG GITHUB_USERNAME=datajoint
 USER anaconda:anaconda
 
 COPY ./docker/apt_requirements.txt /tmp/
@@ -44,5 +45,6 @@ COPY --chown=anaconda:anaconda . ./
 RUN pip install -e .
 # end 2
 
-RUN rm -f ./dj_local_conf.json
+# Permission denied on rm
+RUN mv ./dj_local_conf.json ./dj_local_conf-Unused.json
 RUN pip install -r ./requirements_test.txt

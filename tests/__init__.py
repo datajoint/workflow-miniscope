@@ -48,10 +48,7 @@ class QuietStdOut:
         sys.stdout.close()
         sys.stdout = self._original_stdout
 
-if verbose:
-    vebose_context = nullcontext()
-else:
-    verbose_context = QuietStdOut()
+verbose_context = nullcontext() if verbose else QuietStdOut()
 
 # ------------------- FIXTURES -------------------
 

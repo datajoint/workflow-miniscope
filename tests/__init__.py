@@ -70,13 +70,14 @@ def dj_config():
 def test_data(dj_config):
     mini_root_dirs = dj.config['custom']['miniscope_root_data_dir']
     
-    test_data_exists = np.all([find_full_path(mini_root_dirs, p).exists() 
-                               for p in sessions_dirs])
+    test_data_exists = all(find_full_path(mini_root_dirs, p).exists() 
+                               for p in sessions_dirs)
 
     if not test_data_exists:
         import djarchive_client
 
-        if not isinstance(mini_root_dirs, list):
+        from collections import abc
+        if not isinstance(mini_root_dirs, abc.Sequence):
             mini_root_dirs = list(mini_root_dirs)
         djarchive_client.client().download('workflow-miniscope-test-set',
                                            'v1',
@@ -151,11 +152,8 @@ def sessions_csv():
 
     yield session_content, session_csv_path
     if _tear_down:
-        if verbose:
+        with contextlib.nullconext if verbose else QuietStdOut():
             session_csv_path.unlink()
-        else:
-            with QuietStdOut():
-                session_csv_path.unlink()
 
 
 @pytest.fixture
@@ -222,11 +220,8 @@ def caiman_paramset(pipeline):
     yield params_caiman
 
     if _tear_down:
-        if verbose:
+        with contextlib.nullcontext if verbose else QuietStdOut():
             (miniscope.ProcessingParamSet & 'paramset_id = 0').delete()
-        else:
-            with QuietStdOut():
-                (miniscope.ProcessingParamSet & 'paramset_id = 0').delete()
 
 
 @pytest.fixture
@@ -238,10 +233,7 @@ def recording_info(pipeline, ingest_sessions):
     yield
 
     if _tear_down:
-        if verbose:
-            miniscope.RecordingInfo.delete()
-        else:
-            with QuietStdOut():
+            with contextlib.nullcontext if verbose else QuietStdOut():
                 miniscope.RecordingInfo.delete()
 
 
@@ -267,11 +259,8 @@ def processing_tasks(pipeline, caiman_paramset, recording_info):
     yield
 
     if _tear_down:
-        if verbose:
+        with contextlib.nullcontext if verbose else QuietStdOut():
             miniscope.ProcessingTask.delete()
-        else:
-            with QuietStdOut():
-                miniscope.ProcessingTask.delete()
 
 
 @pytest.fixture

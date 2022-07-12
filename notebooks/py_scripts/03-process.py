@@ -72,8 +72,6 @@ session.Session.heading
 session_key = dict(subject='subject1', 
                    session_datetime='2021-01-01 00:00:01')
 
-miniscope.RecordingInfo.children(as_objects=False)
-
 session.Session.insert1(session_key)
 
 session.Session()

@@ -77,13 +77,13 @@ miniscope.RecordingInfo.File & session_key
 #
 # + The processing details for CaImAn are stored in `miniscope.ProcessingTask` and `miniscope.Processing` for the utilized `paramset_idx`.
 #
-# + After the motion correction and segmentation, the results may go through a curation process. 
+# + After the motion correction and segmentation, the results may go through a curation process.
 #     
-#     + If it did not go through curation, a copy of the `miniscope.ProcessingTask` entry is inserted into `miniscope.Curation` with the `curation_output_dir` identical to the `processing_output_dir`.
+# + If it did not go through curation, a copy of the `miniscope.ProcessingTask` entry is inserted into `miniscope.Curation` with the `curation_output_dir` identical to the `processing_output_dir`.
 #
-#     + If it did go through a curation, a new entry will be inserted into `miniscope.Curation`, with a `curation_output_dir` specified.
+# + If it did go through a curation, a new entry will be inserted into `miniscope.Curation`, with a `curation_output_dir` specified.
 #
-#     + `miniscope.Curation` supports multiple curations of an entry in `miniscope.ProcessingTask`.
+# + `miniscope.Curation` supports multiple curations of an entry in `miniscope.ProcessingTask`.
 
 miniscope.ProcessingParamSet()
 
@@ -97,7 +97,7 @@ miniscope.Curation & session_key
 #
 # + After processing and curation, results are passed to the `miniscope.MotionCorrection` and `miniscope.Segmentation` tables.
 #
-# + For the example data, the raw data is corrected with rigid and non-rigid motion correction which is stored in `miniscope.MotionCorrection.RigidMotionCorrection` and `miniscope.MotionCorrection.NonRigidMotionCorrection`, respectively. 
+# + For the example data, the raw data is corrected with rigid and non-rigid motion correction which is stored in `miniscope.MotionCorrection.RigidMotionCorrection` and `miniscope.MotionCorrection.NonRigidMotionCorrection`, respectively.
 #
 # + Lets first query the information for one curation.
 
@@ -115,13 +115,13 @@ miniscope.MotionCorrection.Block & curation_key & 'block_id=0'
 
 # + Summary images are stored in `imaging.MotionCorrection.Summary`
 #
-#     + Reference image - image used as an alignment template
+# + Reference image - image used as an alignment template
 #
-#     + Average image - mean of registered frames
+# + Average image - mean of registered frames
 #
-#     + Correlation image - correlation map (computed during region of interest \[ROI\] detection)
+# + Correlation image - correlation map (computed during region of interest \[ROI\] detection)
 #
-#     + Maximum projection image - max of registered frames
+# + Maximum projection image - max of registered frames
 
 miniscope.MotionCorrection.Summary & curation_key
 

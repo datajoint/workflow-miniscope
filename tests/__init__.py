@@ -6,11 +6,11 @@ run one test, debug:
 '''
 
 import os
+import sys
 import pytest
 import pathlib
 import datajoint as dj
-import numpy as np
-import sys
+from contextlib import nullcontext
 from element_interface.utils import find_full_path
 
 
@@ -48,6 +48,11 @@ class QuietStdOut:
         sys.stdout.close()
         sys.stdout = self._original_stdout
 
+if verbose:
+    vebose_context = nullcontext()
+else:
+    verbose_context = QuietStdOut()
+
 # ------------------- FIXTURES -------------------
 
 
@@ -75,8 +80,8 @@ def test_data(dj_config):
 
     if not test_data_exists:
         import djarchive_client
-
         from collections import abc
+
         if not isinstance(mini_root_dirs, abc.Sequence):
             mini_root_dirs = list(mini_root_dirs)
         djarchive_client.client().download('workflow-miniscope-test-set',
@@ -102,17 +107,11 @@ def pipeline():
            'get_miniscope_root_data_dir': pipeline.get_miniscope_root_data_dir}
 
     if _tear_down:
-        if verbose:
+        with verbose_context:
             pipeline.miniscope.Recording.delete()
             pipeline.subject.Subject.delete()
             pipeline.session.Session.delete()
             pipeline.lab.Lab.delete()
-        else:
-            with QuietStdOut():
-                pipeline.miniscope.Recording.delete()
-                pipeline.subject.Subject.delete()
-                pipeline.session.Session.delete()
-                pipeline.lab.Lab.delete()
 
 
 @pytest.fixture
@@ -125,11 +124,8 @@ def subjects_csv():
 
     yield subject_content, subject_csv_path
     if _tear_down:
-        if verbose:
+        with verbose_context:
             subject_csv_path.unlink()
-        else:
-            with QuietStdOut():
-                subject_csv_path.unlink()
 
 
 @pytest.fixture
@@ -152,7 +148,7 @@ def sessions_csv():
 
     yield session_content, session_csv_path
     if _tear_down:
-        with contextlib.nullconext if verbose else QuietStdOut():
+        with verbose_context:
             session_csv_path.unlink()
 
 
@@ -220,7 +216,7 @@ def caiman_paramset(pipeline):
     yield params_caiman
 
     if _tear_down:
-        with contextlib.nullcontext if verbose else QuietStdOut():
+        with verbose_context:
             (miniscope.ProcessingParamSet & 'paramset_id = 0').delete()
 
 
@@ -233,7 +229,7 @@ def recording_info(pipeline, ingest_sessions):
     yield
 
     if _tear_down:
-            with contextlib.nullcontext if verbose else QuietStdOut():
+        with verbose_context:
                 miniscope.RecordingInfo.delete()
 
 
@@ -259,7 +255,7 @@ def processing_tasks(pipeline, caiman_paramset, recording_info):
     yield
 
     if _tear_down:
-        with contextlib.nullcontext if verbose else QuietStdOut():
+        with verbose_context:
             miniscope.ProcessingTask.delete()
 
 
@@ -276,12 +272,8 @@ def processing(processing_tasks, pipeline):
     yield
 
     if _tear_down:
-        if verbose:
+        with verbose_context:
             miniscope.Processing.delete()
-        else:
-            with QuietStdOut():
-                miniscope.Processing.delete()
-
 
 @pytest.fixture
 def curations(processing, pipeline):
@@ -293,8 +285,5 @@ def curations(processing, pipeline):
     yield
 
     if _tear_down:
-        if verbose:
+        with verbose_context:
             miniscope.Curation.delete()
-        else:
-            with QuietStdOut():
-                miniscope.Curation.delete()

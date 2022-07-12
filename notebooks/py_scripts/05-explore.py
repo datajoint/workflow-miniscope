@@ -1,16 +1,15 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,py_scripts//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
 #       jupytext_version: 1.13.7
 #   kernelspec:
-#     display_name: ele-jup
+#     display_name: Python 3.8.11 ('ele')
 #     language: python
-#     name: ele-jup
+#     name: python3
 # ---
 
 # # DataJoint Workflow Miniscope
@@ -59,7 +58,7 @@ session.Session()
 
 # + Fetch the primary key for the session of interest which will be used later on in this notebook.
 
-session_key = (session.Session & 'subject = "subject1"' & 'session_datetime = "2021-01-01 00:00:01"').fetch1('KEY')
+session_key = (session.Session & 'subject = "subject3"' & 'session_datetime = "2021-04-30 12:22:15.032"').fetch1('KEY')
 
 # ### `Recording` and `RecordingInfo` tables
 #
@@ -69,7 +68,7 @@ miniscope.Recording & session_key
 
 miniscope.RecordingInfo & session_key
 
-miniscope.RecordingInfo.File & session_key
+miniscope.RecordingInfo.Field & session_key
 
 # ### `ProcessingParamSet`, `ProcessingTask`, `Processing`, and `Curation` tables
 #
@@ -77,13 +76,13 @@ miniscope.RecordingInfo.File & session_key
 #
 # + The processing details for CaImAn are stored in `miniscope.ProcessingTask` and `miniscope.Processing` for the utilized `paramset_idx`.
 #
-# + After the motion correction and segmentation, the results may go through a curation process.
+# + After the motion correction and segmentation, the results may go through a curation process. 
 #     
-# + If it did not go through curation, a copy of the `miniscope.ProcessingTask` entry is inserted into `miniscope.Curation` with the `curation_output_dir` identical to the `processing_output_dir`.
+#     + If it did not go through curation, a copy of the `miniscope.ProcessingTask` entry is inserted into `miniscope.Curation` with the `curation_output_dir` identical to the `processing_output_dir`.
 #
-# + If it did go through a curation, a new entry will be inserted into `miniscope.Curation`, with a `curation_output_dir` specified.
+#     + If it did go through a curation, a new entry will be inserted into `miniscope.Curation`, with a `curation_output_dir` specified.
 #
-# + `miniscope.Curation` supports multiple curations of an entry in `miniscope.ProcessingTask`.
+#     + `miniscope.Curation` supports multiple curations of an entry in `miniscope.ProcessingTask`.
 
 miniscope.ProcessingParamSet()
 
@@ -97,7 +96,7 @@ miniscope.Curation & session_key
 #
 # + After processing and curation, results are passed to the `miniscope.MotionCorrection` and `miniscope.Segmentation` tables.
 #
-# + For the example data, the raw data is corrected with rigid and non-rigid motion correction which is stored in `miniscope.MotionCorrection.RigidMotionCorrection` and `miniscope.MotionCorrection.NonRigidMotionCorrection`, respectively.
+# + For the example data, the raw data is corrected with rigid and non-rigid motion correction which is stored in `miniscope.MotionCorrection.RigidMotionCorrection` and `miniscope.MotionCorrection.NonRigidMotionCorrection`, respectively. 
 #
 # + Lets first query the information for one curation.
 
@@ -115,19 +114,19 @@ miniscope.MotionCorrection.Block & curation_key & 'block_id=0'
 
 # + Summary images are stored in `imaging.MotionCorrection.Summary`
 #
-# + Reference image - image used as an alignment template
+#     + Reference image - image used as an alignment template
 #
-# + Average image - mean of registered frames
+#     + Average image - mean of registered frames
 #
-# + Correlation image - correlation map (computed during region of interest \[ROI\] detection)
+#     + Correlation image - correlation map (computed during region of interest \[ROI\] detection)
 #
-# + Maximum projection image - max of registered frames
+#     + Maximum projection image - max of registered frames
 
-miniscope.MotionCorrection.Summary & curation_key
+miniscope.MotionCorrection.Summary & curation_key & 'field_idx=0'
 
 # + Lets fetch the `average_image` and plot it.
 
-average_image = (miniscope.MotionCorrection.Summary & curation_key).fetch1('average_image').reshape(600,600,1)
+average_image = (miniscope.MotionCorrection.Summary & curation_key & 'field_idx=0').fetch1('average_image')
 
 plt.imshow(average_image);
 
@@ -137,32 +136,31 @@ plt.imshow(average_image);
 #
 # + Each mask can be associated with a field by the attribute `mask_center_z`.  For example, masks with `mask_center_z=0` are in the field identified with `field_idx=0` in `miniscope.RecordingInfo`.
 
-mask_xpix, mask_ypix = (miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType 
-                        & curation_key & 'mask_npix > 130').fetch('mask_xpix','mask_ypix')
+mask_xpix, mask_ypix = (miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType & curation_key & 'mask_center_z=0' & 'mask_npix > 130').fetch('mask_xpix','mask_ypix')
 
 mask_image = np.zeros(np.shape(average_image), dtype=bool)
 for xpix, ypix in zip(mask_xpix, mask_ypix):
     mask_image[ypix, xpix] = True
 
 plt.imshow(average_image);
-plt.contour(mask_image.reshape(600,600), colors='white', linewidths=0.5);
+plt.contour(mask_image, colors='white', linewidths=0.5);
 
 # ### `MaskClassification` table
 #
 # + This table provides the `mask_type` and `confidence` for the mask classification.
 
-miniscope.MaskClassification.MaskType & curation_key & 'mask_id=13'
+miniscope.MaskClassification.MaskType & curation_key & 'mask=0'
 
 # ### `Fluorescence` and `Activity` tables
 #
 # + Lets fetch and plot the flourescence and activity traces for one mask.
 
-query_cells = (miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType & curation_key & 'mask_npix > 130').proj()
+query_cells = (miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType & curation_key & 'mask_center_z=0' & 'mask_npix > 130').proj()
 
 # +
-fluorescence_traces = (miniscope.Fluorescence.Trace & query_cells).fetch('fluorescence', order_by='mask_id')
+fluorescence_traces = (miniscope.Fluorescence.Trace & query_cells).fetch('fluorescence', order_by='mask')
 
-activity_traces = (miniscope.Activity.Trace & query_cells).fetch('activity_trace', order_by='mask_id')
+activity_traces = (miniscope.Activity.Trace & query_cells).fetch('activity_trace', order_by='mask')
 
 sampling_rate = (miniscope.RecordingInfo & curation_key).fetch1('fps') # [Hz]
 

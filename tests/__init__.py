@@ -90,11 +90,8 @@ def test_data(dj_config):
 @pytest.fixture
 def pipeline():
     """ Loads workflow_miniscope.pipeline lab, session, subject, miniscope"""
-    if verbose:
+    with verbose_context:
         from workflow_miniscope import pipeline
-    else:
-        with QuietStdOut():
-            from workflow_miniscope import pipeline
     
     yield {'lab': pipeline.lab,
            'subject': pipeline.subject,

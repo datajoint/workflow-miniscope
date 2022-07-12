@@ -1,16 +1,15 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,py_scripts//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
 #       jupytext_version: 1.13.7
 #   kernelspec:
-#     display_name: venv-nwb
+#     display_name: Python 3.8.11 ('ele')
 #     language: python
-#     name: venv-nwb
+#     name: python3
 # ---
 
 # # Download example dataset

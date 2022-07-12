@@ -11,6 +11,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: simple
     container_name: workflow-miniscope-test-db
+    volumes:
+      - mysql-miniscope:/var/lib/mysql
 
   workflow:
     networks:

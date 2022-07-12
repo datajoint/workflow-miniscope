@@ -19,9 +19,13 @@ convention, and directory lookup methods (see
 [workflow_miniscope/ingest.py](workflow_miniscope/ingest.py))
 3. Processing results.
 
-See the [Element Miniscope documentation](https://elements.datajoint.org/description/miniscope/) for the background information and development timeline.
+See the 
+[Element Miniscope documentation](https://elements.datajoint.org/description/miniscope/)
+ for the background information and development timeline.
 
-For more information on the DataJoint Elements project, please visit https://elements.datajoint.org.  This work is supported by the National Institutes of Health.
+For more information on the DataJoint Elements project, please visit 
+https://elements.datajoint.org.  This work is supported by the National Institutes of 
+Health.
 
 ## Workflow architecture
 
@@ -41,21 +45,35 @@ DataJoint Elements ([element-lab](https://github.com/datajoint/element-lab),
 
 ## Interacting with the DataJoint workflow
 
++ Our [YouTube tutorial](https://www.youtube.com/watch?v=nWUcPFZOSVw) walks through all 
+  the key details of this workflow.
+
 + Please refer to the following workflow-specific 
  [Jupyter notebooks](/notebooks) for an in-depth explanation of how to run the 
  workflow ([03-process.ipynb](notebooks/03-process.ipynb)) and explore the data 
  ([05-explore.ipynb](notebooks/05-explore.ipynb)).
 
+
 ## Citation
 
-+ If your work uses DataJoint and DataJoint Elements, please cite the respective Research Resource Identifiers (RRIDs) and manuscripts.
++ If your work uses DataJoint and DataJoint Elements, please cite the respective
+  Research Resource Identifiers (RRIDs) and manuscripts.
 
 + DataJoint for Python or MATLAB
-    + Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P, Hoenselaar A, Cotton RJ, Siapas AS, Tolias AS. DataJoint: managing big scientific data using MATLAB or Python. bioRxiv. 2015 Jan 1:031658. doi: https://doi.org/10.1101/031658
+    + Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P, Hoenselaar A, Cotton
+      RJ, Siapas AS, Tolias AS. DataJoint: managing big scientific data using MATLAB or
+      Python. bioRxiv. 2015 Jan 1:031658. doi: https://doi.org/10.1101/031658
 
-    + DataJoint ([RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543)) - DataJoint for `<Select Python or MATLAB>` (version `<Enter version number>`)
+    + DataJoint (
+      [RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543)) - DataJoint for `<Select Python or MATLAB>` (version 
+        `<Enter version number>`)
 
 + DataJoint Elements
-    + Yatsenko D, Nguyen T, Shen S, Gunalan K, Turner CA, Guzman R, Sasaki M, Sitonic D, Reimer J, Walker EY, Tolias AS. DataJoint Elements: Data Workflows for Neurophysiology. bioRxiv. 2021 Jan 1. doi: https://doi.org/10.1101/2021.03.30.437358
+    + Yatsenko D, Nguyen T, Shen S, Gunalan K, Turner CA, Guzman R, Sasaki M, Sitonic D,
+      Reimer J, Walker EY, Tolias AS. DataJoint Elements: Data Workflows for
+      Neurophysiology. bioRxiv. 2021 Jan 1. doi:
+      https://doi.org/10.1101/2021.03.30.437358
 
-    + DataJoint Elements ([RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894)) - Element Miniscope (version `<Enter version number>`)
+    + DataJoint Elements (
+      [RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894)) - Element Miniscope 
+      (version `<Enter version number>`)

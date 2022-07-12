@@ -17,6 +17,10 @@ if 'custom' not in dj.config:
 
 db_prefix = dj.config['custom'].get('database.prefix', '')
 
+__all__ = ['lab', 'subject', 'session', 'trial', 'event', 'miniscope',
+           'Source', 'Lab', 'Protocol', 'User', 'Location', 'Project', 'Subject',
+           'Session', 'get_miniscope_root_data_dir', 'get_session_directory']
+
 
 # Activate `lab`, `subject`, `session` schema ------------------------------------------
 
@@ -33,6 +37,7 @@ trial.activate(db_prefix + 'trial', db_prefix + 'event', linking_module=__name__
 
 # Declare table `Equipment` and `AnatomicalLocation` for use in element_miniscope ------
 
+
 @lab.schema
 class Equipment(dj.Manual):
     definition = """
@@ -41,6 +46,7 @@ class Equipment(dj.Manual):
     modality              : varchar(64)
     description=null      : varchar(256)
     """
+
 
 @lab.schema
 class AnatomicalLocation(dj.Manual):
@@ -51,5 +57,6 @@ class AnatomicalLocation(dj.Manual):
     """
 
 # Activate `miniscope` schema ----------------------------------------------------------
+
 
 miniscope.activate(db_prefix + 'miniscope',  linking_module=__name__)

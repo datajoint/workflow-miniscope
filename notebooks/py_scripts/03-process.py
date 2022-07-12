@@ -1,14 +1,13 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,py_scripts//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
 #       jupytext_version: 1.13.7
 #   kernelspec:
-#     display_name: 'Python 3.7.9 64-bit (''workflow-calcium-imaging'': conda)'
+#     display_name: Python 3.8.11 ('ele')
 #     language: python
 #     name: python3
 # ---
@@ -30,14 +29,13 @@
 import os
 if os.path.basename(os.getcwd())=='notebooks': os.chdir('..')
 import numpy as np
+import datajoint as dj
 
 # ## `Pipeline.py`
 #
 # + This script `activates` the DataJoint `Elements` and declares other required tables.
 
-import datajoint as dj
-from workflow_miniscope.pipeline import subject, session, miniscope, Equipment, \
-                                        AnatomicalLocation
+from workflow_miniscope.pipeline import *
 
 # ## Schema diagrams
 #
@@ -60,8 +58,8 @@ subject.Subject.insert1(dict(subject='subject1',
 # ## Insert an entry into `lab.Equipment`
 
 Equipment.insert1(dict(equipment='UCLA Miniscope',
-                       modality='Miniscope',
-                       description='V4, >1mm field of view, 1mm working distance'))
+                       modality='miniscope',
+                       description=''))
 
 # ## Insert an entry into `session.Session`
 
@@ -193,7 +191,7 @@ miniscope.ProcessingParamSet.insert_new_params(
 miniscope.ProcessingTask.insert1(dict(**recording_key,
                                       paramset_id=0,
                                       processing_output_dir='subject1/session1/caiman',
-                                      task_mode='load'))
+                                      task_mode='trigger'))
 
 # ## Populate `miniscope.Processing`
 

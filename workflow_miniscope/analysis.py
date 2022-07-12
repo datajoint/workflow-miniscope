@@ -1,7 +1,7 @@
 import datajoint as dj
 import numpy as np
 
-from workflow_miniscope.pipeline import db_prefix, session, miniscope, trial, event
+from workflow_miniscope.pipeline import db_prefix, session, miniscope, trial
 
 
 schema = dj.schema(db_prefix + 'analysis')
@@ -44,11 +44,11 @@ class ActivityAlignment(dj.Computed):
 
     def make(self, key):
         sess_time, rec_time, nframes, frame_rate = (miniscope.RecordingInfo
-                                                     * session.Session
-                                                     & key
-                                                     ).fetch1('session_datetime',
-                                                              'recording_datetime',
-                                                              'nframes', 'fps')
+                                                    * session.Session
+                                                    & key
+                                                    ).fetch1('session_datetime',
+                                                             'recording_datetime',
+                                                             'nframes', 'fps')
 
         # Estimation of frame timestamps with respect to the session-start
         # (to be replaced by timestamps retrieved from some synchronization routine)

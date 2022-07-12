@@ -20,9 +20,9 @@ def ingest_subjects(subject_csv_path='./user_data/subjects.csv',
     ingest_csv_to_table(csvs, tables, skip_duplicates=skip_duplicates, verbose=verbose)
 
 
-def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
-
-    print('\n---- Insert new `Session` and `Recording` ----')
+def ingest_sessions(session_csv_path='./user_data/sessions.csv', verbose=True):
+    if verbose:
+        print('\n---- Insert new `Session` and `Recording` ----')
     with open(session_csv_path, newline='') as f:
         input_sessions = list(csv.DictReader(f, delimiter=','))
 
@@ -39,7 +39,7 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
         session_path = find_full_path(get_miniscope_root_data_dir(),
                                       session_dir)
         recording_filepaths = [file_path.as_posix() for file_path 
-                                            in session_path.glob('*.avi')]
+                               in session_path.glob('*.avi')]
         if not recording_filepaths:
             raise FileNotFoundError(f'No .avi files found in '
                                     f'{session_path}')
@@ -62,7 +62,8 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
         session_key = dict(subject=single_session['subject'], 
                            session_datetime=recording_time)
         if session_key not in session.Session():
-            hardware_list.append(dict(acquisition_hardware=acquisition_hardware))
+            hardware_list.append(dict(equipment=acquisition_hardware,
+                                      modality='Miniscope'))
 
             session_list.append(session_key)
 
@@ -70,23 +71,28 @@ def ingest_sessions(session_csv_path='./user_data/sessions.csv'):
                                          session_dir=session_dir.as_posix()))
 
             recording_list.append(dict(**session_key, 
-                                   recording_id=0, # Assumes one recording per session
-                                   acquisition_hardware=acquisition_hardware, 
-                                   acquisition_software=acquisition_software,
-                                   recording_directory=session_dir.as_posix()))
+                                       recording_id=0,  # Assumes 1 recording per sess
+                                       equipment=acquisition_hardware,
+                                       acquisition_software=acquisition_software,
+                                       recording_directory=session_dir.as_posix()))
 
     new_equipment_n = len(set(val for dic in hardware_list for val in dic.values()))
-    print(f'\n---- Insert {new_equipment_n} entry(s) into lab.Equipment ----')
-    Equipment.insert(hardware_list, skip_duplicates=True)
+    if verbose:
+        print(f'\n---- Insert {new_equipment_n} entry(s) into lab.Equipment ----')
+    Equipment.insert(hardware_list, skip_duplicates=True)  # expect duplicates for equip
 
-    print(f'\n---- Insert {len(session_list)} entry(s) into session.Session ----')
+    if verbose:
+        print(f'\n---- Insert {len(session_list)} entry(s) into session.Session ----')
     session.Session.insert(session_list)
     session.SessionDirectory.insert(session_dir_list)
 
-    print(f'\n---- Insert {len(recording_list)} entry(s) into miniscope.Recording ----')
+    if verbose:
+        print(f'\n---- Insert {len(recording_list)} entry(s) into '
+              + 'miniscope.Recording ----')
     miniscope.Recording.insert(recording_list)
 
-    print('\n---- Successfully completed ingest_sessions ----')
+    if verbose:
+        print('\n---- Successfully completed ingest_sessions ----')
 
 
 def ingest_events(recording_csv_path='./user_data/behavior_recordings.csv',

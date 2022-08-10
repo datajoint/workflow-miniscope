@@ -5,8 +5,7 @@ import json
 
 from .pipeline import subject, session, Equipment, miniscope, trial, event
 from .paths import get_miniscope_root_data_dir
-from element_interface.utils import find_full_path, recursive_search, \
-                                    ingest_csv_to_table
+from element_interface.utils import find_full_path, ingest_csv_to_table
 
 
 def ingest_subjects(subject_csv_path='./user_data/subjects.csv',
@@ -131,6 +130,25 @@ def ingest_alignment(alignment_csv_path='./user_data/alignments.csv',
 
     ingest_csv_to_table(csvs, tables, skip_duplicates=skip_duplicates, verbose=verbose)
 
+def recursive_search(key, dictionary):
+    """
+    Search through a nested dictionary for a key and returns its value.  If there are
+    more than one key with the same name at different depths, the algorithm returns the
+    value of the least nested key.
+
+    recursive_search(key, dictionary)
+        :param key: key used to search through a nested dictionary
+        :param dictionary: nested dictionary
+        :return a: value of the input argument `key`
+    """
+    if key in dictionary:
+        return dictionary[key]
+    for value in dictionary.values():
+        if isinstance(value, dict):
+            a = recursive_search(key, value)
+            if a is not None:
+                return a
+    return None
 
 if __name__ == '__main__':
     ingest_subjects()

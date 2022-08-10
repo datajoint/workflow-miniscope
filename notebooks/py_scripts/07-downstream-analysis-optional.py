@@ -22,12 +22,17 @@
 # First, let's change directories to find the `dj_local_conf` file.
 
 import os
+
 # change to the upper level folder to detect dj_local_conf.json
-if os.path.basename(os.getcwd())=='notebooks': os.chdir('..')
-assert os.path.basename(os.getcwd())=='workflow-miniscope', (
-    "Please move to the workflow directory")
+if os.path.basename(os.getcwd()) == "notebooks":
+    os.chdir("..")
+assert (
+    os.path.basename(os.getcwd()) == "workflow-miniscope"
+), "Please move to the workflow directory"
 # We'll be working with long tables, so we'll make visualization easier with a limit
-import datajoint as dj; dj.config['display.limit']=10
+import datajoint as dj
+
+dj.config["display.limit"] = 10
 
 # Next, we populate the python namespace with the required schemas
 
@@ -37,9 +42,9 @@ from workflow_miniscope.pipeline import session, miniscope, trial, event
 # ## Trial and Event schemas
 # -
 
-# Tables in the `trial` and `event` schemas specify the structure of your experiment, including block, trial and event timing. 
+# Tables in the `trial` and `event` schemas specify the structure of your experiment, including block, trial and event timing.
 # - Session has a 1-to-1 mapping with a behavior recording
-# - A block is a continuous phase of an experiment that contains repeated instances of a condition, or trials. 
+# - A block is a continuous phase of an experiment that contains repeated instances of a condition, or trials.
 # - Events may occur within or outside of conditions, either instantaneous or continuous.
 #
 # The diagram below shows (a) the levels of hierarchy and (b) how the bounds may not completely overlap. A block may not fully capure trials and events may occur outside both blocks/trials.
@@ -56,8 +61,12 @@ from workflow_miniscope.pipeline import session, miniscope, trial, event
 
 # Let's load some example data. The `ingest.py` script has a series of loaders to help. If you've already run the other notebooks, you might skip `ingest_subjects` and `ingest_sessions`.
 
-from workflow_miniscope.ingest import ingest_subjects, ingest_sessions,\
-                                      ingest_events, ingest_alignment
+from workflow_miniscope.ingest import (
+    ingest_subjects,
+    ingest_sessions,
+    ingest_events,
+    ingest_alignment,
+)
 
 # If you've already run previous notebooks, no need to ingest subjects or sessions.
 
@@ -70,7 +79,7 @@ trial.Trial() & "subject='subject1'"
 
 # Each trial is paired with one or more events that take place during the trial window.
 
-trial.TrialEvent() & 'trial_id<5' & "subject='subject1'"
+trial.TrialEvent() & "trial_id<5" & "subject='subject1'"
 
 # Finally, the `AlignmentEvent` describes the event of interest and the window we'd like to see around it.
 
@@ -98,9 +107,9 @@ miniscope.Activity()
 
 # We'll isolate the scan of interest with the following key:
 
-activity_key = (miniscope.Activity & {'subject': 'subject1',
-                                      'extraction_method': 'caiman_dff'}
-                  ).fetch1('KEY')
+activity_key = (
+    miniscope.Activity & {"subject": "subject1", "extraction_method": "caiman_dff"}
+).fetch1("KEY")
 
 # Here, we can see all trials for this scan:
 
@@ -113,12 +122,16 @@ ctrl_trials
 
 # Here, we target the event of interest with another key:
 
-alignment_key = (event.AlignmentEvent & 'alignment_name = "center_button"'
-                ).fetch1('KEY')
+alignment_key = (event.AlignmentEvent & 'alignment_name = "center_button"').fetch1(
+    "KEY"
+)
 alignment_key
 
-alignment_condition = {**ca_activity_key, **alignment_key, 
-                       'trial_condition': 'ctrl_center_button'}
+alignment_condition = {
+    **ca_activity_key,
+    **alignment_key,
+    "trial_condition": "ctrl_center_button",
+}
 alignment_condition
 
 # Next, we add this to the `ActivityAlignment` table in the `analysis` schema
@@ -129,8 +142,9 @@ analysis.ActivityAlignmentCondition()
 
 # Using the [projection](https://docs.datajoint.org/python/v0.13/queries/08-Proj.html) method, we can generate a table of relevant trials by `trial_type` and `alignment_condition`
 
-sample = (analysis.ActivityAlignmentCondition * ctrl_trials 
-          & alignment_condition).proj()
+sample = (
+    analysis.ActivityAlignmentCondition * ctrl_trials & alignment_condition
+).proj()
 sample
 
 # And insert these trials into the `ActivityAlignmentCondition.Trial` part table
@@ -151,12 +165,16 @@ analysis.ActivityAlignmentCondition.Trial()
 # + a set of trials of interest to perform the analysis on - `stim` trials
 
 stim_trials = trial.Trial & ca_activity_key & 'trial_type = "stim"'
-alignment_condition = {**ca_activity_key, **alignment_key, 
-                       'trial_condition': 'stim_center_button'}
+alignment_condition = {
+    **ca_activity_key,
+    **alignment_key,
+    "trial_condition": "stim_center_button",
+}
 analysis.ActivityAlignmentCondition.insert1(alignment_condition, skip_duplicates=True)
 analysis.ActivityAlignmentCondition.Trial.insert(
     (analysis.ActivityAlignmentCondition * stim_trials & alignment_condition).proj(),
-    skip_duplicates=True)
+    skip_duplicates=True,
+)
 
 # Note the two entries in `ActivityAlignmentCondition.trial_condition`
 
@@ -185,7 +203,7 @@ help(analysis.ActivityAlignment().plot_aligned_activities)
 
 # For a refresher on the differences between masks, we can browse the `imaging.Segmentation.Mask` table.
 
-miniscope.Segmentation.Mask & 'mask_id<3'
+miniscope.Segmentation.Mask & "mask_id<3"
 
 # Then, we can directly compare the stimulus and control conditions relative to center button presses.
 
@@ -193,19 +211,29 @@ miniscope.Activity()
 
 from workflow_miniscope import analysis
 from workflow_miniscope.pipeline import session, miniscope, trial, event
-ca_activity_key = (miniscope.Activity & {'subject': 'subject1', 'recording_id': 0}
-                   & "extraction_method='caiman_dff'"
-                  ).fetch1('KEY')
-alignment_key = (event.AlignmentEvent & 'alignment_name = "center_button"'
-                ).fetch1('KEY')
-alignment_condition_ctrl = {**ca_activity_key, **alignment_key, 
-                            'trial_condition': 'ctrl_center_button'}
-alignment_condition_stim = {**ca_activity_key, **alignment_key, 
-                            'trial_condition': 'stim_center_button'}
 
-analysis.ActivityAlignment().plot_aligned_activities(alignment_condition_stim, roi=2,
-                                                     title='Stimulus Center Button');
-analysis.ActivityAlignment().plot_aligned_activities(alignment_condition_ctrl, roi=2,
-                                                     title='Control Center Button');
+ca_activity_key = (
+    miniscope.Activity
+    & {"subject": "subject1", "recording_id": 0}
+    & "extraction_method='caiman_dff'"
+).fetch1("KEY")
+alignment_key = (event.AlignmentEvent & 'alignment_name = "center_button"').fetch1(
+    "KEY"
+)
+alignment_condition_ctrl = {
+    **ca_activity_key,
+    **alignment_key,
+    "trial_condition": "ctrl_center_button",
+}
+alignment_condition_stim = {
+    **ca_activity_key,
+    **alignment_key,
+    "trial_condition": "stim_center_button",
+}
 
-
+analysis.ActivityAlignment().plot_aligned_activities(
+    alignment_condition_stim, roi=2, title="Stimulus Center Button"
+)
+analysis.ActivityAlignment().plot_aligned_activities(
+    alignment_condition_ctrl, roi=2, title="Control Center Button"
+)

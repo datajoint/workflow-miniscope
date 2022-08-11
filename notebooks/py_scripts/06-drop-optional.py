@@ -14,14 +14,16 @@
 
 # # Drop schemas
 #
-# + Schemas are not typically dropped in a production workflow with real data in it. 
+# + Schemas are not typically dropped in a production workflow with real data in it.
 # + At the developmental phase, it might be required for the table redesign.
 # + When dropping all schemas is needed, the following is the dependency order.
 
-# Change into the parent directory to find the `dj_local_conf.json` file. 
+# Change into the parent directory to find the `dj_local_conf.json` file.
 
 import os
-if os.path.basename(os.getcwd())=='notebooks': os.chdir('..')
+
+if os.path.basename(os.getcwd()) == "notebooks":
+    os.chdir("..")
 
 from workflow_miniscope.pipeline import *
 
@@ -31,5 +33,3 @@ from workflow_miniscope.pipeline import *
 # subject.schema.drop()
 # lab.schema.drop()
 # -
-
-

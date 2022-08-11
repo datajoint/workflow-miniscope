@@ -1,15 +1,16 @@
 from workflow_miniscope.pipeline import miniscope
 import warnings
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 
-def run(display_progress=True, reserve_jobs=False, suppress_errors=False,
-             verbose=True):
+def run(display_progress=True, reserve_jobs=False, suppress_errors=False, verbose=True):
 
-    populate_settings = {'display_progress': display_progress,
-                         'reserve_jobs': reserve_jobs,
-                         'suppress_errors': suppress_errors}
+    populate_settings = {
+        "display_progress": display_progress,
+        "reserve_jobs": reserve_jobs,
+        "suppress_errors": suppress_errors,
+    }
 
     if verbose:
         print("\n---- Populate imported and computed tables ----")
@@ -27,8 +28,8 @@ def run(display_progress=True, reserve_jobs=False, suppress_errors=False,
     miniscope.Activity.populate(**populate_settings)
 
     if verbose:
-        print('\n---- Successfully completed workflow_miniscope/populate.py ----')
+        print("\n---- Successfully completed workflow_miniscope/populate.py ----")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()

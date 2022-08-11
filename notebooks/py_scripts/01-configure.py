@@ -23,7 +23,9 @@
 # + As a convention, we set the configuration up in the root directory of the `workflow-miniscope` package and always start importing DataJoint and pipeline modules from there.
 
 import os
-if os.path.basename(os.getcwd())=='notebooks': os.chdir('..')
+
+if os.path.basename(os.getcwd()) == "notebooks":
+    os.chdir("..")
 
 import datajoint as dj
 
@@ -32,9 +34,10 @@ import datajoint as dj
 # Now let's set up the host, user and password in the `dj.config` global variable
 
 import getpass
-dj.config['database.host'] = '{YOUR_HOST}'
-dj.config['database.user'] = '{YOUR_USERNAME}'
-dj.config['database.password'] = getpass.getpass() # enter the password securily
+
+dj.config["database.host"] = "{YOUR_HOST}"
+dj.config["database.user"] = "{YOUR_USERNAME}"
+dj.config["database.password"] = getpass.getpass()  # enter the password securily
 
 # You should be able to connect to the database at this stage.
 
@@ -50,7 +53,7 @@ dj.conn()
 #
 # + The prefix could be configurated as follows in `dj.config`:
 
-dj.config['custom'] = {'database.prefix': 'neuro_'}
+dj.config["custom"] = {"database.prefix": "neuro_"}
 
 # ### Root directories for miniscope calcium imaging raw data and processed results
 #
@@ -67,9 +70,9 @@ dj.config['custom'] = {'database.prefix': 'neuro_'}
 # If using our example dataset, downloaded with this notebook [00-data-download](00-data-download-optional.ipynb), the root directory will be:
 
 # If there is only one root path:
-dj.config['custom']['miniscope_root_data_dir'] = '/tmp/example_data'
+dj.config["custom"]["miniscope_root_data_dir"] = "/tmp/example_data"
 # If there are multiple possible root paths:
-dj.config['custom']['miniscope_root_data_dir'] = ['/tmp/example_data']
+dj.config["custom"]["miniscope_root_data_dir"] = ["/tmp/example_data"]
 
 dj.config
 

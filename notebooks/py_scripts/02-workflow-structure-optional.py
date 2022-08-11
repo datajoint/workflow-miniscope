@@ -25,7 +25,8 @@
 # To load the local configuration, we will change the directory to the package root.
 
 import os
-os.chdir('..')
+
+os.chdir("..")
 
 # ## Schemas and tables
 #
@@ -56,40 +57,40 @@ miniscope.Processing()
 # + `dj.list_schemas()`: list all schemas a user could access.
 dj.list_schemas()
 
-# + `dj.Diagram()`: plot tables and dependencies in a schema. 
+# + `dj.Diagram()`: plot tables and dependencies in a schema.
 
 # + `dj.Diagram()`: plot tables and dependencies
 # plot diagram for all tables in a schema
 dj.Diagram(miniscope)
 # -
 
-# **Table tiers**: 
+# **Table tiers**:
 #
 # + Manual table
 #      + Visually represented with a green box.
 #      + Manually inserted table
-#      + Expect new entries daily, e.g. Subject, Recording.  
+#      + Expect new entries daily, e.g. Subject, Recording.
 # + Lookup table
 #      + Visually represented with a gray box.
 #      + Pre-inserted table
-#      + Commonly used for general facts or parameters. e.g. Strain, ProcessingParamSet.  
+#      + Commonly used for general facts or parameters. e.g. Strain, ProcessingParamSet.
 # + Imported table
 #      + Visually represented with a blue oval.
 #      + Auto-processing table
-#      + Processing depends on the importing of external files. e.g. `Processing` requires output files from CaImAn.  
+#      + Processing depends on the importing of external files. e.g. `Processing` requires output files from CaImAn.
 # + Computed table
 #      + Visually represented with a red circle.
 #      + Auto-processing table
-#      + Processing does not depend on files external to the database.     
+#      + Processing does not depend on files external to the database.
 # + Part table
 #      + Visually represented with plain text.
 #      + As an appendix to the master table, all the part entries of a given master entry represent a intact set of the master entry. e.g. `Mask` of a `Segmentation`.
 #
-# **Dependencies**:  
+# **Dependencies**:
 #
 # + One-to-one primary
 #      + Visually represented with a thick solid line.
-#      + Share the exact same primary key, meaning the child table inherits all the primary key fields from the parent table as its own primary key.     
+#      + Share the exact same primary key, meaning the child table inherits all the primary key fields from the parent table as its own primary key.
 # + One-to-many primary
 #      + Visually represented with a thin solid line.
 #      + Inherit the primary key from the parent table, but have additional field(s) as part of the primary key as well.
@@ -108,7 +109,7 @@ dj.Diagram(subject.Subject) + dj.Diagram(session.Session) + dj.Diagram(miniscope
 # + `heading`: [markdown]
 # # + `describe()`: show table definition with foreign key references.
 # -
-miniscope.Processing.describe();
+miniscope.Processing.describe()
 
 # + `heading`: show attribute definitions regardless of foreign key references
 
@@ -128,14 +129,14 @@ dj.Diagram(lab)
 dj.Diagram(subject)
 
 # + [subject](https://github.com/datajoint/element-animal): contains the basic information of subject, including Strain, Line, Subject, Zygosity, and SubjectDeath information.
-subject.Subject.describe();
+subject.Subject.describe()
 
 # + [`session`](https://github.com/datajoint/element-session): General information of experimental sessions.
 
 dj.Diagram(session)
 
 # + [session](https://github.com/datajoint/element-session): experimental session information
-session.Session.describe();
+session.Session.describe()
 
 # + [`miniscope`](https://github.com/datajoint/element-miniscope): miniscope raw recording and processed data
 

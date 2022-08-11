@@ -14,10 +14,11 @@
 
 # # DataJoint Workflow Miniscope
 #
-# + This notebook will describe the steps for interacting with the data ingested into `workflow-miniscope`.  
+# + This notebook will describe the steps for interacting with the data ingested into `workflow-miniscope`.
 
 import os
-os.chdir('..')
+
+os.chdir("..")
 
 # +
 import datajoint as dj
@@ -25,6 +26,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from workflow_miniscope.pipeline import lab, subject, session, miniscope
+
 # -
 
 # ## Workflow architecture
@@ -35,14 +37,14 @@ from workflow_miniscope.pipeline import lab, subject, session, miniscope
 # + [element-session](https://github.com/datajoint/element-session)
 # + [element-miniscope](https://github.com/datajoint/element-miniscope)
 #
-# For the architecture and detailed descriptions for each of those elements, please visit the respective links. 
+# For the architecture and detailed descriptions for each of those elements, please visit the respective links.
 #
 # Below is the diagram describing the core components of the fully assembled pipeline.
 #
 
 dj.Diagram(miniscope) + (dj.Diagram(session.Session) + 1) - 1
 
-# ## Browsing the data with DataJoint `query` and `fetch` 
+# ## Browsing the data with DataJoint `query` and `fetch`
 #
 # + DataJoint provides functions to query data and fetch.  For detailed tutorials, visit our [general tutorial site](https://codebook.datajoint.io/).
 #
@@ -58,7 +60,11 @@ session.Session()
 
 # + Fetch the primary key for the session of interest which will be used later on in this notebook.
 
-session_key = (session.Session & 'subject = "subject1"' & 'session_datetime = "2021-01-01 00:00:01"').fetch1('KEY')
+session_key = (
+    session.Session
+    & 'subject = "subject1"'
+    & 'session_datetime = "2021-01-01 00:00:01"'
+).fetch1("KEY")
 
 # ### `Recording` and `RecordingInfo` tables
 #
@@ -76,8 +82,8 @@ miniscope.RecordingInfo.File & session_key
 #
 # + The processing details for CaImAn are stored in `miniscope.ProcessingTask` and `miniscope.Processing` for the utilized `paramset_idx`.
 #
-# + After the motion correction and segmentation, the results may go through a curation process. 
-#     
+# + After the motion correction and segmentation, the results may go through a curation process.
+#
 #     + If it did not go through curation, a copy of the `miniscope.ProcessingTask` entry is inserted into `miniscope.Curation` with the `curation_output_dir` identical to the `processing_output_dir`.
 #
 #     + If it did go through a curation, a new entry will be inserted into `miniscope.Curation`, with a `curation_output_dir` specified.
@@ -96,11 +102,11 @@ miniscope.Curation & session_key
 #
 # + After processing and curation, results are passed to the `miniscope.MotionCorrection` and `miniscope.Segmentation` tables.
 #
-# + For the example data, the raw data is corrected with rigid and non-rigid motion correction which is stored in `miniscope.MotionCorrection.RigidMotionCorrection` and `miniscope.MotionCorrection.NonRigidMotionCorrection`, respectively. 
+# + For the example data, the raw data is corrected with rigid and non-rigid motion correction which is stored in `miniscope.MotionCorrection.RigidMotionCorrection` and `miniscope.MotionCorrection.NonRigidMotionCorrection`, respectively.
 #
 # + Lets first query the information for one curation.
 
-curation_key = (miniscope.Curation & session_key & 'curation_id=0').fetch1('KEY')
+curation_key = (miniscope.Curation & session_key & "curation_id=0").fetch1("KEY")
 
 curation_key
 
@@ -110,7 +116,7 @@ miniscope.MotionCorrection.NonRigidMotionCorrection & curation_key
 
 # + For non-rigid motion correction, the details for the individual blocks are stored in `imaging.MotionCorrection.Block`.
 
-miniscope.MotionCorrection.Block & curation_key & 'block_id=0'
+miniscope.MotionCorrection.Block & curation_key & "block_id=0"
 
 # + Summary images are stored in `imaging.MotionCorrection.Summary`
 #
@@ -126,9 +132,13 @@ miniscope.MotionCorrection.Summary & curation_key
 
 # + Lets fetch the `average_image` and plot it.
 
-average_image = (miniscope.MotionCorrection.Summary & curation_key).fetch1('average_image').reshape(600,600,1)
+average_image = (
+    (miniscope.MotionCorrection.Summary & curation_key)
+    .fetch1("average_image")
+    .reshape(600, 600, 1)
+)
 
-plt.imshow(average_image);
+plt.imshow(average_image)
 
 # ### `Segmentation` table
 #
@@ -136,58 +146,75 @@ plt.imshow(average_image);
 #
 # + Each mask can be associated with a field by the attribute `mask_center_z`.  For example, masks with `mask_center_z=0` are in the field identified with `field_idx=0` in `miniscope.RecordingInfo`.
 
-mask_xpix, mask_ypix = (miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType 
-                        & curation_key & 'mask_npix > 130').fetch('mask_xpix','mask_ypix')
+mask_xpix, mask_ypix = (
+    miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType
+    & curation_key
+    & "mask_npix > 130"
+).fetch("mask_xpix", "mask_ypix")
 
 mask_image = np.zeros(np.shape(average_image), dtype=bool)
 for xpix, ypix in zip(mask_xpix, mask_ypix):
     mask_image[ypix, xpix] = True
 
-plt.imshow(average_image);
-plt.contour(mask_image.reshape(600,600), colors='white', linewidths=0.5);
+plt.imshow(average_image)
+plt.contour(mask_image.reshape(600, 600), colors="white", linewidths=0.5)
 
 # ### `MaskClassification` table
 #
 # + This table provides the `mask_type` and `confidence` for the mask classification.
 
-miniscope.MaskClassification.MaskType & curation_key & 'mask_id=13'
+miniscope.MaskClassification.MaskType & curation_key & "mask_id=13"
 
 # ### `Fluorescence` and `Activity` tables
 #
 # + Lets fetch and plot the flourescence and activity traces for one mask.
 
-query_cells = (miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType & curation_key & 'mask_npix > 130').proj()
+query_cells = (
+    miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType
+    & curation_key
+    & "mask_npix > 130"
+).proj()
 
 # +
-fluorescence_traces = (miniscope.Fluorescence.Trace & query_cells).fetch('fluorescence', order_by='mask_id')
+fluorescence_traces = (miniscope.Fluorescence.Trace & query_cells).fetch(
+    "fluorescence", order_by="mask_id"
+)
 
-activity_traces = (miniscope.Activity.Trace & query_cells).fetch('activity_trace', order_by='mask_id')
+activity_traces = (miniscope.Activity.Trace & query_cells).fetch(
+    "activity_trace", order_by="mask_id"
+)
 
-sampling_rate = (miniscope.RecordingInfo & curation_key).fetch1('fps') # [Hz]
+sampling_rate = (miniscope.RecordingInfo & curation_key).fetch1("fps")  # [Hz]
 
 # +
 fig, ax = plt.subplots(1, 1, figsize=(16, 4))
 ax2 = ax.twinx()
 
 for f, a in zip(fluorescence_traces, activity_traces):
-    ax.plot(np.r_[:f.size] * 1/sampling_rate, f, 'k', label='fluorescence trace')    
-    ax2.plot(np.r_[:a.size] * 1/sampling_rate, a, 'r', alpha=0.5, label='deconvolved trace')
-    
+    ax.plot(np.r_[: f.size] * 1 / sampling_rate, f, "k", label="fluorescence trace")
+    ax2.plot(
+        np.r_[: a.size] * 1 / sampling_rate,
+        a,
+        "r",
+        alpha=0.5,
+        label="deconvolved trace",
+    )
+
     break
 
 ax.tick_params(labelsize=14)
 ax2.tick_params(labelsize=14)
 
-ax.legend(loc='upper left', prop={'size': 14})
-ax2.legend(loc='upper right', prop={'size': 14})
+ax.legend(loc="upper left", prop={"size": 14})
+ax2.legend(loc="upper right", prop={"size": 14})
 
-ax.set_xlabel('Time (s)')
-ax.set_ylabel('Activity (a.u.)')
-ax2.set_ylabel('Activity (a.u.)');
+ax.set_xlabel("Time (s)")
+ax.set_ylabel("Activity (a.u.)")
+ax2.set_ylabel("Activity (a.u.)")
 # -
 
 # ## Summary and Next Step
 #
-# + This notebook highlights the major tables in the workflow and visualize some of the ingested results. 
+# + This notebook highlights the major tables in the workflow and visualize some of the ingested results.
 #
 # + The next notebook [06-drop](06-drop-optional.ipynb) shows how to drop schemas and tables if needed.

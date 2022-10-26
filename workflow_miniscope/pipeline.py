@@ -55,6 +55,14 @@ trial.activate(db_prefix + "trial", db_prefix + "event", linking_module=__name__
 
 @lab.schema
 class Equipment(dj.Manual):
+    """Table for managing lab equipment.
+
+    Attributes:
+        device ( varchar(32) ): Device short name.
+        modality ( varchar(64) ): Modality for which this device is used.
+        description ( varchar(256) ): Optional. Description of device.
+    """
+
     definition = """
     equipment             : varchar(32)
     ---
@@ -65,6 +73,13 @@ class Equipment(dj.Manual):
 
 @lab.schema
 class AnatomicalLocation(dj.Manual):
+    """Lookup table for anatomical location
+
+    Attributes:
+        recording_location_id  ( varchar(16) ): Lookup id for location
+        anatomical_description ( varchar(256) ): Location full description
+    """
+
     definition = """
     recording_location_id : varchar(16)
     ---

@@ -3,6 +3,11 @@ from collections import abc
 
 
 def get_miniscope_root_data_dir():
+    """Return root directory for miniscope from 'miniscope_root_data_dir config
+
+    Returns:
+        path (any): List of path(s) if available or None
+    """
     mini_root_dirs = dj.config.get("custom", {}).get("miniscope_root_data_dir")
     if not mini_root_dirs:
         return None
@@ -13,6 +18,14 @@ def get_miniscope_root_data_dir():
 
 
 def get_session_directory(session_key: dict) -> str:
+    """Return relative path from SessionDirectory table given key
+
+    Args:
+        session_key (dict): Key uniquely identifying a session
+
+    Returns:
+        path (str): Relative path of session directory
+    """
     from .pipeline import session
 
     session_dir = (session.SessionDirectory & session_key).fetch1("session_dir")

@@ -5,6 +5,14 @@ warnings.filterwarnings("ignore")
 
 
 def run(display_progress=True, reserve_jobs=False, suppress_errors=False, verbose=True):
+    """Execute all populate commands in Element
+
+    Args:
+        display_progress (bool, optional): See DataJoint `populate`. Defaults to True.
+        reserve_jobs (bool, optional): See DataJoint `populate`. Defaults to False.
+        suppress_errors (bool, optional): See DataJoint `populate`. Defaults to False.
+        verbose (bool, optional): Print start/end statements. Defaults to True.
+    """
 
     populate_settings = {
         "display_progress": display_progress,

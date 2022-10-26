@@ -9,10 +9,18 @@ from element_interface.utils import find_full_path, ingest_csv_to_table
 
 
 def ingest_subjects(
-    subject_csv_path="./user_data/subjects.csv", skip_duplicates=True, verbose=True
+    subject_csv_path: str = "./user_data/subjects.csv",
+    skip_duplicates: bool = True,
+    verbose: bool = True,
 ):
-    """
-    Ingest subjects listed in the subject column of ./user_data/subjects.csv
+    """Ingest subjects listed in the subject column of ./user_data/subjects.csv
+
+    Args:
+        subject_csv_path (str, optional): Relative path to subject csv.
+            Defaults to "./user_data/subjects.csv".
+        skip_duplicates (bool, optional): See DataJoint `insert` function. Default True.
+        verbose (bool, optional): Print number inserted (i.e., table length change).
+            Defaults to True.
     """
     csvs = [subject_csv_path]
     tables = [subject.Subject()]
@@ -20,7 +28,22 @@ def ingest_subjects(
     ingest_csv_to_table(csvs, tables, skip_duplicates=skip_duplicates, verbose=verbose)
 
 
-def ingest_sessions(session_csv_path="./user_data/sessions.csv", verbose=True):
+def ingest_sessions(
+    session_csv_path: str = "./user_data/sessions.csv", verbose: bool = True
+):
+    """Ingest session list from csv
+
+    Args:
+        session_csv_path (str, optional): List of sessions.
+            Defaults to "./user_data/sessions.csv".
+        verbose (bool, optional): Print number inserted (i.e., table length change).
+            Defaults to True.
+
+    Raises:
+        NotImplementedError: Not implemented for acquisition software other than
+            Miniscope-DAQ-V3 or V4
+        FileNotFoundError: No .avi files found in session path
+    """
     if verbose:
         print("\n---- Insert new `Session` and `Recording` ----")
     with open(session_csv_path, newline="") as f:
@@ -110,18 +133,33 @@ def ingest_sessions(session_csv_path="./user_data/sessions.csv", verbose=True):
 
 
 def ingest_events(
-    recording_csv_path="./user_data/behavior_recordings.csv",
-    block_csv_path="./user_data/blocks.csv",
-    trial_csv_path="./user_data/trials.csv",
-    event_csv_path="./user_data/events.csv",
-    skip_duplicates=True,
-    verbose=True,
+    recording_csv_path: str = "./user_data/behavior_recordings.csv",
+    block_csv_path: str = "./user_data/blocks.csv",
+    trial_csv_path: str = "./user_data/trials.csv",
+    event_csv_path: str = "./user_data/events.csv",
+    skip_duplicates: bool = True,
+    verbose: bool = True,
 ):
-    """
-    Ingest each level of experiment heirarchy for element-trial:
+    """Ingest each level of experiment hierarchy for element-trial
+
+    Ingestion hierarchy includes:
         recording, block (i.e., phases of trials), trials (repeated units),
-        events (optionally 0-duration occurances within trial).
-    This ingestion function is duplicated across wf-array-ephys and wf-calcium-imaging
+        events (optionally 0-duration occurrences within trial).
+
+    Note: This ingestion function is duplicated across wf-array-ephys and wf-calcium-imaging
+
+    Args:
+        recording_csv_path (str, optional): Relative path to recording csv.
+            Defaults to "./user_data/behavior_recordings.csv".
+        block_csv_path (str, optional): Relative path to block csv.
+            Defaults to "./user_data/blocks.csv".
+        trial_csv_path (str, optional): Relative path to trial csv.
+            Defaults to "./user_data/trials.csv".
+        event_csv_path (str, optional): Relative path to event csv.
+            Defaults to "./user_data/events.csv".
+        skip_duplicates (bool, optional): See DataJoint `insert` function. Default True.
+        verbose (bool, optional): Print number inserted (i.e., table length change).
+            Defaults to True.
     """
     csvs = [
         recording_csv_path,
@@ -161,9 +199,21 @@ def ingest_events(
 
 
 def ingest_alignment(
-    alignment_csv_path="./user_data/alignments.csv", skip_duplicates=True, verbose=True
+    alignment_csv_path: str = "./user_data/alignments.csv",
+    skip_duplicates: bool = True,
+    verbose: bool = True,
 ):
-    """This is duplicated across wf-array-ephys and wf-calcium-imaging"""
+    """Ingest event alignment data from local CSVs
+
+    Note: This is duplicated across wf-array-ephys and wf-calcium-imaging
+
+    Args:
+        alignment_csv_path (str, optional): Relative path to event alignment csv.
+            Defaults to "./user_data/alignments.csv".
+        skip_duplicates (bool, optional): See DataJoint `insert` function. Default True.
+        verbose (bool, optional): Print number inserted (i.e., table length change).
+            Defaults to True.
+    """
 
     csvs = [alignment_csv_path]
     tables = [event.AlignmentEvent()]
@@ -171,16 +221,19 @@ def ingest_alignment(
     ingest_csv_to_table(csvs, tables, skip_duplicates=skip_duplicates, verbose=verbose)
 
 
-def recursive_search(key, dictionary):
-    """
+def recursive_search(key, dictionary) -> any:
+    """Return value for key in a nested dictionary
+
     Search through a nested dictionary for a key and returns its value.  If there are
     more than one key with the same name at different depths, the algorithm returns the
     value of the least nested key.
 
-    recursive_search(key, dictionary)
-        :param key: key used to search through a nested dictionary
-        :param dictionary: nested dictionary
-        :return a: value of the input argument `key`
+    Args:
+        key (str): Key used to search through a nested dictionary
+        dictionary (dict): Nested dictionary
+
+    Returns:
+        value (any): value of the input argument `key`
     """
     if key in dictionary:
         return dictionary[key]

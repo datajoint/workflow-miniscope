@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import datajoint as dj
 import numpy as np
 
@@ -9,6 +10,17 @@ schema = dj.schema(db_prefix + "analysis")
 
 @schema
 class ActivityAlignmentCondition(dj.Manual):
+    """Alignment activity table
+
+    Attributes:
+        miniscope.Activity (foreign key)
+        event.AlignmentEvent (foreign key)
+        trial_condition: varchar(128) # user-friendly name of condition
+        condition_description ( varchar(1000), nullable): condition description
+        bin_size (float, optional): Bin-size (in second) used to compute the PSTH
+            Default 0.04
+    """
+
     definition = """
     -> miniscope.Activity
     -> event.AlignmentEvent
@@ -27,6 +39,13 @@ class ActivityAlignmentCondition(dj.Manual):
 
 @schema
 class ActivityAlignment(dj.Computed):
+    """Computed table for alignment activity
+
+    Attributes:
+        ActivityAlignmentCondition (foreign key)
+        aligned_timestamps (longblob)
+    """
+
     definition = """
     -> ActivityAlignmentCondition
     ---
@@ -34,6 +53,14 @@ class ActivityAlignment(dj.Computed):
     """
 
     class AlignedTrialActivity(dj.Part):
+        """Calcium activity aligned to the event time within the designated window
+
+        Attributes:
+            miniscope.Activity.Trace (foreign key)
+            ActivityAlignmentCondition.Trial (foreign key)
+            aligned_trace (longblob): (s) Calcium activity aligned to the event time
+        """
+
         definition = """
         -> master
         -> miniscope.Activity.Trace
@@ -43,6 +70,11 @@ class ActivityAlignment(dj.Computed):
         """
 
     def make(self, key):
+        """Populate ActivityAlignment and AlignedTrialActivity
+
+        Args:
+            key (dict): Dict uniquely identifying one ActivityAlignmentCondition
+        """
         sess_time, rec_time, nframes, frame_rate = (
             miniscope.RecordingInfo * session.Session & key
         ).fetch1("session_datetime", "recording_datetime", "nframes", "fps")
@@ -96,18 +128,24 @@ class ActivityAlignment(dj.Computed):
         self.insert1({**key, "aligned_timestamps": aligned_timestamps})
         self.AlignedTrialActivity.insert(aligned_trial_activities)
 
-    def plot_aligned_activities(self, key, roi, axs=None, title=None):
+    def plot_aligned_activities(
+        self, key: dict, roi, axs: tuple = None, title: str = None
+    ) -> plt.figure.Figure:
+        """Plot event-aligned and trial-averaged calcium activities
+
+        Activities including: dF/F, neuropil-corrected dF/F, Calcium events, etc.
+
+        Args:
+            key (dict): key of ActivityAlignment master table
+            roi (_type_): miniscope segmentation mask
+            axs (tuple, optional): Definition of axes for plot.
+                Default is plt.subplots(2, 1, figsize=(12, 8))
+            title (str, optional): Optional title label. Defaults to None.
+
+        Returns:
+            fig (matplotlib.figure.Figure): Plot event-aligned and trial-averaged
+                calcium activities
         """
-        Plot event-aligned Calcium activities for all selected trials, and
-            trial-averaged Calcium activity
-            e.g. dF/F, neuropil-corrected dF/F, Calcium events, etc.
-        :param key: key of ActivityAlignment master table
-        :param roi: miniscope segmentation mask
-        :param axs: optional definition of axes for plot.
-                    Default is plt.subplots(2, 1, figsize=(12, 8))
-        :param title: Optional title label
-        """
-        import matplotlib.pyplot as plt
 
         fig = None
         if axs is None:

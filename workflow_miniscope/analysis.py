@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import datajoint as dj
 import numpy as np
 
@@ -52,13 +53,12 @@ class ActivityAlignment(dj.Computed):
     """
 
     class AlignedTrialActivity(dj.Part):
-        """
+        """Calcium activity aligned to the event time within the designated window
 
         Attributes:
             miniscope.Activity.Trace (foreign key)
             ActivityAlignmentCondition.Trial (foreign key)
-            aligned_trace: longblob  # (s) Calcium activity aligned to the event time
-
+            aligned_trace (longblob): (s) Calcium activity aligned to the event time
         """
 
         definition = """
@@ -70,10 +70,10 @@ class ActivityAlignment(dj.Computed):
         """
 
     def make(self, key):
-        """_summary_
+        """Populate ActivityAlignment and AlignedTrialActivity
 
         Args:
-            key (dict): _description_
+            key (dict): Dict uniquely identifying one ActivityAlignmentCondition
         """
         sess_time, rec_time, nframes, frame_rate = (
             miniscope.RecordingInfo * session.Session & key
@@ -128,26 +128,24 @@ class ActivityAlignment(dj.Computed):
         self.insert1({**key, "aligned_timestamps": aligned_timestamps})
         self.AlignedTrialActivity.insert(aligned_trial_activities)
 
-    def plot_aligned_activities(self, key, roi, axs=None, title=None):
-        """Plot event-aligned Calcium activities for all selected trials, and
-            trial-averaged Calcium activity
-            e.g. dF/F, neuropil-corrected dF/F, Calcium events, etc.
-        :param key:
-        :param roi:
-        :param axs: optional d
-                    Default is plt.subplots(2, 1, figsize=(12, 8))
-        :param title:
+    def plot_aligned_activities(
+        self, key: dict, roi, axs: tuple = None, title: str = None
+    ) -> plt.figure.Figure:
+        """Plot event-aligned and trial-averaged calcium activities
+
+        Activities including: dF/F, neuropil-corrected dF/F, Calcium events, etc.
 
         Args:
             key (dict): key of ActivityAlignment master table
             roi (_type_): miniscope segmentation mask
-            axs (_type_, optional): Definition of axes for plot. Defaults to None.
+            axs (tuple, optional): Definition of axes for plot.
+                Default is plt.subplots(2, 1, figsize=(12, 8))
             title (str, optional): Optional title label. Defaults to None.
 
         Returns:
-            _type_: _description_
+            fig (matplotlib.figure.Figure): Plot event-aligned and trial-averaged
+                calcium activities
         """
-        import matplotlib.pyplot as plt
 
         fig = None
         if axs is None:

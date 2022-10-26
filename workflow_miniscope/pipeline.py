@@ -64,10 +64,10 @@ class Equipment(dj.Manual):
     """
 
     definition = """
-    equipment             : varchar(32)
+    equipment             : varchar(32)  # Device short name.
     ---
-    modality              : varchar(64)
-    description=null      : varchar(256)
+    modality              : varchar(64)  # Modality for which this device is used.
+    description=null      : varchar(256) # Optional. Description of device.
     """
 
 
@@ -81,9 +81,9 @@ class AnatomicalLocation(dj.Manual):
     """
 
     definition = """
-    recording_location_id : varchar(16)
+    recording_location_id : varchar(16) # Lookup id for location
     ---
-    anatomical_description: varchar(256)
+    anatomical_description: varchar(256) # Location full description
     """
 
 

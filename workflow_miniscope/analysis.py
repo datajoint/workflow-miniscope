@@ -12,8 +12,8 @@ class ActivityAlignmentCondition(dj.Manual):
     """Alignment activity table
 
     Attributes:
-        miniscope.Activity (foreign key)
-        event.AlignmentEvent (foreign key)
+        miniscope.Activity (foreign key): Activity primary key
+        event.AlignmentEvent (foreign key): Alignment Event primary key
         trial_condition: varchar(128) # user-friendly name of condition
         condition_description ( varchar(1000), nullable): condition description
         bin_size (float, optional): Bin-size (in second) used to compute the PSTH

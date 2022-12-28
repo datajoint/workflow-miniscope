@@ -1,13 +1,11 @@
 import datajoint as dj
-
-from element_lab import lab
 from element_animal import subject
-from element_session import session_with_datetime as session
-from element_event import trial, event
-from element_miniscope import miniscope
-
-from element_lab.lab import Source, Lab, Protocol, User, Location, Project
 from element_animal.subject import Subject
+from element_event import event, trial
+from element_lab import lab
+from element_lab.lab import Lab, Location, Project, Protocol, Source, User
+from element_miniscope import miniscope
+from element_session import session_with_datetime as session
 from element_session.session_with_datetime import Session
 
 from .paths import get_miniscope_root_data_dir, get_session_directory

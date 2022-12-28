@@ -1,20 +1,17 @@
-from element_interface.utils import find_full_path, find_root_directory
-
 from . import (
-    dj_config,
-    pipeline,
-    subjects_csv,
-    ingest_subjects,
-    sessions_csv,
-    ingest_sessions,
-    testdata_paths,
     caiman_paramset,
-    recording_info,
-    processing_tasks,
-    processing,
     curations,
+    dj_config,
+    ingest_sessions,
+    ingest_subjects,
+    pipeline,
+    processing,
+    processing_tasks,
+    recording_info,
+    sessions_csv,
+    subjects_csv,
+    testdata_paths,
 )
-
 
 __all__ = [
     "dj_config",
@@ -40,7 +37,7 @@ def test_ingest_subjects(pipeline, ingest_subjects):
 def test_ingest_sessions(pipeline, sessions_csv, ingest_sessions):
     session = pipeline["session"]
     miniscope = pipeline["miniscope"]
-    get_miniscope_root_data_dir = pipeline["get_miniscope_root_data_dir"]
+    # get_miniscope_root_data_dir = pipeline["get_miniscope_root_data_dir"]
 
     assert len(session.Session()) == 1
     assert len(miniscope.Recording()) == 1

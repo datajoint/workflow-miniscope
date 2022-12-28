@@ -1,5 +1,6 @@
-from workflow_miniscope.pipeline import miniscope
 import warnings
+
+from workflow_miniscope.pipeline import miniscope
 
 warnings.filterwarnings("ignore")
 

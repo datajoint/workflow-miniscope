@@ -1,5 +1,6 @@
-import datajoint as dj
 from collections import abc
+
+import datajoint as dj
 
 
 def get_miniscope_root_data_dir():

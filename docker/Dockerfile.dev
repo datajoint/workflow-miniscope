@@ -6,7 +6,7 @@ COPY ./workflow-miniscope/docker/apt_requirements.txt /tmp/
 RUN /entrypoint.sh echo "Installed dependencies."
 
 # Install CaImAn
-RUN git clone --branch master https://github.com/kabilar/CaImAn 
+RUN git clone --branch master https://github.com/kabilar/CaImAn
 WORKDIR /main/CaImAn
 RUN conda install -n base -c conda-forge -y mamba
 RUN /bin/bash -c 'mamba env update --n base --file environment.yml'

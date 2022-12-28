@@ -5,17 +5,18 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.13.7
+#       jupytext_version: 1.14.1
 #   kernelspec:
-#     display_name: ele-jup
+#     display_name: ele
 #     language: python
-#     name: ele-jup
+#     name: python3
 # ---
 
 # # DataJoint Workflow Miniscope
 #
 # + This notebook will describe the steps for interacting with the data ingested into `workflow-miniscope`.
 
+# +
 import os
 
 os.chdir("..")
@@ -25,7 +26,7 @@ import datajoint as dj
 import matplotlib.pyplot as plt
 import numpy as np
 
-from workflow_miniscope.pipeline import lab, subject, session, miniscope
+from workflow_miniscope.pipeline import miniscope, session, subject
 
 # -
 

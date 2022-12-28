@@ -1,9 +1,8 @@
-import matplotlib.pyplot as plt
 import datajoint as dj
+import matplotlib.pyplot as plt
 import numpy as np
 
-from workflow_miniscope.pipeline import db_prefix, session, miniscope, trial
-
+from workflow_miniscope.pipeline import db_prefix, miniscope, session, trial
 
 schema = dj.schema(db_prefix + "analysis")
 
@@ -81,8 +80,8 @@ class ActivityAlignment(dj.Computed):
 
         # Estimation of frame timestamps with respect to the session-start
         # (to be replaced by timestamps retrieved from some synchronization routine)
-        rec_start = (rec_time - sess_time).total_seconds() if rec_time else 0
-        frame_timestamps = np.arange(nframes) / frame_rate + rec_start
+        # rec_start = (rec_time - sess_time).total_seconds() if rec_time else 0
+        # frame_timestamps = np.arange(nframes) / frame_rate + rec_start
 
         trialized_event_times = trial.get_trialized_alignment_event_times(
             key, trial.Trial & (ActivityAlignmentCondition.Trial & key)

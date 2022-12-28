@@ -68,7 +68,8 @@ ENV/
 .spy*project
 .ropeproject
 
-# datajoint, notes, nwb export
+# datajoint, notes, nwb export, ipynb temp files
 dj_local_c*.json
 temp*
 *nwb
+**-jvsc-*.py

@@ -41,8 +41,8 @@ class ActivityAlignment(dj.Computed):
     """Computed table for alignment activity
 
     Attributes:
-        ActivityAlignmentCondition (foreign key)
-        aligned_timestamps (longblob)
+        ActivityAlignmentCondition (foreign key): Activity Alignment Condition key
+        aligned_timestamps (longblob): aligned timestamps
     """
 
     definition = """
@@ -55,8 +55,8 @@ class ActivityAlignment(dj.Computed):
         """Calcium activity aligned to the event time within the designated window
 
         Attributes:
-            miniscope.Activity.Trace (foreign key)
-            ActivityAlignmentCondition.Trial (foreign key)
+            miniscope.Activity.Trace (foreign key): Activity trace primary key
+            ActivityAlignmentCondition.Trial (foreign key): Alignment condition key
             aligned_trace (longblob): (s) Calcium activity aligned to the event time
         """
 
@@ -136,7 +136,7 @@ class ActivityAlignment(dj.Computed):
 
         Args:
             key (dict): key of ActivityAlignment master table
-            roi (_type_): miniscope segmentation mask
+            roi (int): miniscope segmentation mask
             axs (tuple, optional): Definition of axes for plot.
                 Default is plt.subplots(2, 1, figsize=(12, 8))
             title (str, optional): Optional title label. Defaults to None.
@@ -153,9 +153,9 @@ class ActivityAlignment(dj.Computed):
             ax0, ax1 = axs
 
         aligned_timestamps = (self & key).fetch1("aligned_timestamps")
-        trial_ids, aligned_spikes = (
-            self.AlignedTrialActivity & key & {"mask_id": roi}
-        ).fetch("trial_id", "aligned_trace", order_by="trial_id")
+        _, aligned_spikes = (self.AlignedTrialActivity & key & {"mask_id": roi}).fetch(
+            "trial_id", "aligned_trace", order_by="trial_id"
+        )
 
         aligned_spikes = np.vstack(aligned_spikes)
 

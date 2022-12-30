@@ -4,7 +4,6 @@ about: Create a report to help us improve
 title: ''
 labels: 'bug'
 assignees: ''
-
 ---
 
 ## Bug Report
@@ -15,7 +14,9 @@ A clear and concise description of what is the overall operation that is intende
 performed that resulted in an error.
 
 ### Reproducibility
+
 Include:
+
 - OS (WIN | MACOS | Linux)
 - DataJoint Element Version
 - MySQL Version
@@ -24,15 +25,19 @@ Include:
 - Complete error stack as a result of evaluating the above steps
 
 ### Expected Behavior
+
 A clear and concise description of what you expected to happen.
 
 ### Screenshots
+
 If applicable, add screenshots to help explain your problem.
 
 ### Additional Research and Context
+
 Add any additional research or context that was conducted in creating this report.
 
 For example:
+
 - Related GitHub issues and PR's either within this repository or in other relevant
   repositories.
 - Specific links to specific lines or a focus within source code.

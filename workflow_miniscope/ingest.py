@@ -1,11 +1,12 @@
-import pathlib
 import csv
-from datetime import datetime
 import json
+import pathlib
+from datetime import datetime
 
-from .pipeline import subject, session, Equipment, miniscope, trial, event
-from .paths import get_miniscope_root_data_dir
 from element_interface.utils import find_full_path, ingest_csv_to_table
+
+from .paths import get_miniscope_root_data_dir
+from .pipeline import Equipment, event, miniscope, session, subject, trial
 
 
 def ingest_subjects(

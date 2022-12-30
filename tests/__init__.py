@@ -6,13 +6,13 @@ run one test, debug:
 """
 
 import os
-import sys
-import pytest
 import pathlib
-import datajoint as dj
+import sys
 from contextlib import nullcontext
-from element_interface.utils import find_full_path
 
+import datajoint as dj
+import pytest
+from element_interface.utils import find_full_path
 
 # ------------------- SOME CONSTANTS -------------------
 
@@ -82,8 +82,9 @@ def test_data(dj_config):
     )
 
     if not test_data_exists:
-        import djarchive_client
         from collections import abc
+
+        import djarchive_client
 
         if not isinstance(mini_root_dirs, abc.Sequence):
             mini_root_dirs = list(mini_root_dirs)

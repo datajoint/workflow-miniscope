@@ -1,9 +1,8 @@
-import matplotlib.pyplot as plt
 import datajoint as dj
+import matplotlib.pyplot as plt
 import numpy as np
 
-from workflow_miniscope.pipeline import db_prefix, session, miniscope, trial
-
+from workflow_miniscope.pipeline import db_prefix, miniscope, session, trial
 
 schema = dj.schema(db_prefix + "analysis")
 
@@ -13,8 +12,8 @@ class ActivityAlignmentCondition(dj.Manual):
     """Alignment activity table
 
     Attributes:
-        miniscope.Activity (foreign key)
-        event.AlignmentEvent (foreign key)
+        miniscope.Activity (foreign key): Activity primary key
+        event.AlignmentEvent (foreign key): Alignment Event primary key
         trial_condition: varchar(128) # user-friendly name of condition
         condition_description ( varchar(1000), nullable): condition description
         bin_size (float, optional): Bin-size (in second) used to compute the PSTH
@@ -42,8 +41,8 @@ class ActivityAlignment(dj.Computed):
     """Computed table for alignment activity
 
     Attributes:
-        ActivityAlignmentCondition (foreign key)
-        aligned_timestamps (longblob)
+        ActivityAlignmentCondition (foreign key): Activity Alignment Condition key
+        aligned_timestamps (longblob): aligned timestamps
     """
 
     definition = """
@@ -56,8 +55,8 @@ class ActivityAlignment(dj.Computed):
         """Calcium activity aligned to the event time within the designated window
 
         Attributes:
-            miniscope.Activity.Trace (foreign key)
-            ActivityAlignmentCondition.Trial (foreign key)
+            miniscope.Activity.Trace (foreign key): Activity trace primary key
+            ActivityAlignmentCondition.Trial (foreign key): Alignment condition key
             aligned_trace (longblob): (s) Calcium activity aligned to the event time
         """
 
@@ -81,8 +80,8 @@ class ActivityAlignment(dj.Computed):
 
         # Estimation of frame timestamps with respect to the session-start
         # (to be replaced by timestamps retrieved from some synchronization routine)
-        rec_start = (rec_time - sess_time).total_seconds() if rec_time else 0
-        frame_timestamps = np.arange(nframes) / frame_rate + rec_start
+        # rec_start = (rec_time - sess_time).total_seconds() if rec_time else 0
+        # frame_timestamps = np.arange(nframes) / frame_rate + rec_start
 
         trialized_event_times = trial.get_trialized_alignment_event_times(
             key, trial.Trial & (ActivityAlignmentCondition.Trial & key)
@@ -137,7 +136,7 @@ class ActivityAlignment(dj.Computed):
 
         Args:
             key (dict): key of ActivityAlignment master table
-            roi (_type_): miniscope segmentation mask
+            roi (int): miniscope segmentation mask
             axs (tuple, optional): Definition of axes for plot.
                 Default is plt.subplots(2, 1, figsize=(12, 8))
             title (str, optional): Optional title label. Defaults to None.
@@ -154,9 +153,9 @@ class ActivityAlignment(dj.Computed):
             ax0, ax1 = axs
 
         aligned_timestamps = (self & key).fetch1("aligned_timestamps")
-        trial_ids, aligned_spikes = (
-            self.AlignedTrialActivity & key & {"mask_id": roi}
-        ).fetch("trial_id", "aligned_trace", order_by="trial_id")
+        _, aligned_spikes = (self.AlignedTrialActivity & key & {"mask_id": roi}).fetch(
+            "trial_id", "aligned_trace", order_by="trial_id"
+        )
 
         aligned_spikes = np.vstack(aligned_spikes)
 

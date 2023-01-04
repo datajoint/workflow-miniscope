@@ -1,43 +1,49 @@
-import warnings
+import logging
+from contextlib import nullcontext
+
+from element_interface.utils import QuietStdOut
 
 from workflow_miniscope.pipeline import miniscope
 
-warnings.filterwarnings("ignore")
+logger = logging.getLogger("datajoint")
 
 
-def run(display_progress=True, reserve_jobs=False, suppress_errors=False, verbose=True):
-    """Execute all populate commands in Element
+def run(
+    verbose: bool = True,
+    display_progress: bool = True,
+    reserve_jobs: bool = False,
+    suppress_errors: bool = False,
+):
+    """Run all `make` methods from Element Miniscope
 
     Args:
-        display_progress (bool, optional): See DataJoint `populate`. Defaults to True.
-        reserve_jobs (bool, optional): See DataJoint `populate`. Defaults to False.
-        suppress_errors (bool, optional): See DataJoint `populate`. Defaults to False.
-        verbose (bool, optional): Print start/end statements. Defaults to True.
+        verbose (bool, optional): Print which table is in being populated. Default True.
+        display_progress (bool, optional): tqdm progress bar. Defaults to True.
+        reserve_jobs (bool, optional): Reserves job to populate in asynchronous fashion.
+            Defaults to False.
+        suppress_errors (bool, optional): Suppress errors that would halt execution.
+            Defaults to False.
     """
-
     populate_settings = {
         "display_progress": display_progress,
         "reserve_jobs": reserve_jobs,
         "suppress_errors": suppress_errors,
     }
 
-    if verbose:
-        print("\n---- Populate imported and computed tables ----")
+    tables = [
+        miniscope.RecordingInfo(),
+        miniscope.Processing(),
+        miniscope.MotionCorrection(),
+        miniscope.Segmentation(),
+        miniscope.Fluorescence(),
+        miniscope.Activity(),
+    ]
 
-    miniscope.RecordingInfo.populate(**populate_settings)
-
-    miniscope.Processing.populate(**populate_settings)
-
-    miniscope.MotionCorrection.populate(**populate_settings)
-
-    miniscope.Segmentation.populate(**populate_settings)
-
-    miniscope.Fluorescence.populate(**populate_settings)
-
-    miniscope.Activity.populate(**populate_settings)
-
-    if verbose:
-        print("\n---- Successfully completed workflow_miniscope/populate.py ----")
+    with nullcontext() if verbose else QuietStdOut():
+        for table in tables:
+            logger.info(f"\n---- Populating {table.table_name} ----")
+            table.populate(**populate_settings)
+            logger.info("\n---- Successfully completed miniscope/populate.py ----")
 
 
 if __name__ == "__main__":

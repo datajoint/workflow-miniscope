@@ -13,11 +13,11 @@ def test_ingest_subjects(pipeline, ingest_data):
     assert len(session.Session()) == 1
     assert len(miniscope.Recording()) == 1
 
-    sess_data = ingest_data["sessions.csv"]["content"][1].split(",")
+    session_data = ingest_data["sessions.csv"]["content"][1].split(",")
 
-    assert (session.SessionDirectory & {"subject": sess_data[0]}).fetch1(
+    assert (session.SessionDirectory & {"subject": session_data[0]}).fetch1(
         "session_dir"
-    ) == sess_data[1]
+    ) == session_data[1]
 
 
 def test_paramset_insert(pipeline, caiman_paramset):

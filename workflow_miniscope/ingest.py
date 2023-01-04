@@ -112,7 +112,7 @@ def ingest_sessions(
             recording_list.append(
                 dict(
                     **session_key,
-                    recording_id=0,  # Assumes 1 recording per sess
+                    recording_id=0,  # Assumes 1 recording per session
                     device=acquisition_hardware,
                     acq_software=acq_software,
                 )

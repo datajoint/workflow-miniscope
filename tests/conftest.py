@@ -25,7 +25,7 @@ session_dirs = ["subject1/session1"]
 
 def pytest_addoption(parser):
     """
-    Permit constants when calling pytest at commandline e.g., pytest --dj-verbose False
+    Permit constants when calling pytest at command line e.g., pytest --dj-verbose False
 
     Arguments:
         --dj-verbose (bool):  Default True. Pass print statements from Elements.
@@ -172,8 +172,8 @@ def ingest_data(setup, pipeline, test_data):
     if len(pipeline["miniscope"].Recording()) == 0:
         for csv_filename, csv_dict in all_csvs.items():
             csv_path = test_user_data_dir / csv_filename  # add prefix for rel path
-            write_csv(csv_path, csv_dict["content"])  # write content at rel path
-            csv_dict["funct"](csv_path, verbose=verbose, skip_duplicates=True)
+            write_csv(csv_dict["content"], csv_path)  # write content at rel path
+            csv_dict["func"](csv_path, verbose=verbose, skip_duplicates=True)
 
     yield all_csvs
 

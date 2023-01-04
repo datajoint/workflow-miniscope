@@ -1,42 +1,16 @@
-from . import (
-    caiman_paramset,
-    curations,
-    dj_config,
-    ingest_sessions,
-    ingest_subjects,
-    pipeline,
-    processing,
-    processing_tasks,
-    recording_info,
-    sessions_csv,
-    subjects_csv,
-    testdata_paths,
-)
-
-__all__ = [
-    "dj_config",
-    "pipeline",
-    "subjects_csv",
-    "ingest_subjects",
-    "sessions_csv",
-    "ingest_sessions",
-    "testdata_paths",
-    "caiman_paramset",
-    "recording_info",
-    "processing_tasks",
-    "processing",
-    "curations",
-]
+"""Tests table population
+"""
 
 
-def test_recording_info_populate(testdata_paths, pipeline, recording_info):
+def test_recording_info(pipeline, recording_info):
     miniscope = pipeline["miniscope"]
-    rel_path = testdata_paths["caiman_2d"]
-    scan_key = (
+    rel_path = recording_info["caiman_2d"]
+
+    recording_key = (
         miniscope.RecordingInfo
         & (miniscope.RecordingInfo.File & f'file_path LIKE "%{rel_path}%"')
     ).fetch1("KEY")
-    nchannels, nframes = (miniscope.RecordingInfo & scan_key).fetch1(
+    nchannels, nframes = (miniscope.RecordingInfo & recording_key).fetch1(
         "nchannels", "nframes"
     )
 

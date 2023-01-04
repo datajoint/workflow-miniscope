@@ -1,0 +1,8 @@
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-sv -p no:warnings"
+testpaths = [
+    "tests",
+]
+norecursedirs = ["docs", "*.egg-info", ".git"]
+# PYTHONDONTWRITEBYTECODE=1 # env variable

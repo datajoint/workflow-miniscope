@@ -2,11 +2,20 @@
 alias ll='ls -aGg'
 export $(grep -v '^#' /main/.env | xargs)
 
-echo "INSALL OPTION:" $INSTALL_OPTION
+# Install Caiman: WARNING - installation is not often successful on startup.
+# Instead, docker exec into the container and environment-minimal.yml command with half
+# of dependencies commented out, and then run again for the other half.
 cd /main/
+git clone --branch master https://github.com/datajoint-company/CaImAn
+cd /main/CaImAn
+conda install -n base -c conda-forge -y mamba
+mamba env update --n base --file environment-minimal.yml
+pip install .
+
+cd /main/
+echo "INSALL OPTION:" $INSTALL_OPTION
 
 # Always get djarchive
-echo "----------- DJARCHIVE HERE --------------"
 pip install --no-deps git+https://github.com/datajoint/djarchive-client.git
 
 if [ "$INSTALL_OPTION" == "local-all" ]; then # all local installs, mapped from host
@@ -32,9 +41,4 @@ if [[ "$TEST_CMD" == *pytest* ]]; then
     pip install pytest
     pip install pytest-cov
     pip install opencv-python
-    echo "----------- CAIMAN HERE --------------" # Install Caiman
-    wget 'https://raw.githubusercontent.com/datajoint-company/CaImAn/master/environment-minimal.yml' -O /tmp/CaImAn_env.yml
-    conda install -n base -c conda-forge -y mamba
-    mamba env update --n base --file /tmp/CaImAn_env.yml
-    cd /main/
 fi

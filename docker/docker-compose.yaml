@@ -10,6 +10,8 @@
 # docker exec -it workflow-miniscope /bin/bash
 # docker compose -f ./docker/docker-compose.yaml down --volumes
 
+# WARNING: This docker container sometimes times out when installing CaImAn.
+
 version: "2.4"
 
 services:

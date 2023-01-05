@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.1
+#       jupytext_version: 1.14.4
 #   kernelspec:
 #     display_name: Python 3.9.13 ('ele')
 #     language: python
@@ -32,8 +32,8 @@ from pathlib import Path
 # change to the upper level folder to detect dj_local_conf.json
 if os.path.basename(os.getcwd()) == "notebooks":
     os.chdir("..")
+from workflow_miniscope.pipeline import session, miniscope
 from workflow_miniscope import process
-from workflow_miniscope.pipeline import miniscope, session
 
 # %% [markdown]
 # We'll be using the `process.py`'s `run` function automatically loop through all `make` functions, as a shortcut for calling each individually.
@@ -62,7 +62,7 @@ for table in table_list:
 #
 
 # %%
-from workflow_miniscope.ingest import ingest_sessions, ingest_subjects
+from workflow_miniscope.ingest import ingest_subjects, ingest_sessions
 
 ingest_subjects()
 ingest_sessions()
@@ -140,7 +140,6 @@ process.run()
 
 # %%
 from element_interface.utils import find_full_path
-
 from workflow_miniscope.pipeline import get_miniscope_root_data_dir
 
 scan_key = (session.Session * miniscope.Recording).fetch("KEY", limit=1)[0]

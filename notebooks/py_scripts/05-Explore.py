@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.14.1
+#       jupytext_version: 1.14.4
 #   kernelspec:
 #     display_name: ele
 #     language: python
@@ -14,7 +14,7 @@
 
 # # DataJoint Workflow Miniscope
 #
-# + This notebook will describe the steps for interacting with the data ingested into `workflow-miniscope`.
+# + This notebook will describe the steps for interacting with the data ingested into `workflow-miniscope`.  
 
 # +
 import os
@@ -26,8 +26,7 @@ import datajoint as dj
 import matplotlib.pyplot as plt
 import numpy as np
 
-from workflow_miniscope.pipeline import miniscope, session, subject
-
+from workflow_miniscope.pipeline import subject, session, miniscope
 # -
 
 # ## Workflow architecture
@@ -38,14 +37,14 @@ from workflow_miniscope.pipeline import miniscope, session, subject
 # + [element-session](https://github.com/datajoint/element-session)
 # + [element-miniscope](https://github.com/datajoint/element-miniscope)
 #
-# For the architecture and detailed descriptions for each of those elements, please visit the respective links.
+# For the architecture and detailed descriptions for each of those elements, please visit the respective links. 
 #
 # Below is the diagram describing the core components of the fully assembled pipeline.
 #
 
 dj.Diagram(miniscope) + (dj.Diagram(session.Session) + 1) - 1
 
-# ## Browsing the data with DataJoint `query` and `fetch`
+# ## Browsing the data with DataJoint `query` and `fetch` 
 #
 # + DataJoint provides functions to query data and fetch.  For detailed tutorials, visit our [general tutorial site](https://codebook.datajoint.io/).
 #
@@ -83,8 +82,8 @@ miniscope.RecordingInfo.File & session_key
 #
 # + The processing details for CaImAn are stored in `miniscope.ProcessingTask` and `miniscope.Processing` for the utilized `paramset_idx`.
 #
-# + After the motion correction and segmentation, the results may go through a curation process.
-#
+# + After the motion correction and segmentation, the results may go through a curation process. 
+#     
 #     + If it did not go through curation, a copy of the `miniscope.ProcessingTask` entry is inserted into `miniscope.Curation` with the `curation_output_dir` identical to the `processing_output_dir`.
 #
 #     + If it did go through a curation, a new entry will be inserted into `miniscope.Curation`, with a `curation_output_dir` specified.
@@ -103,7 +102,7 @@ miniscope.Curation & session_key
 #
 # + After processing and curation, results are passed to the `miniscope.MotionCorrection` and `miniscope.Segmentation` tables.
 #
-# + For the example data, the raw data is corrected with rigid and non-rigid motion correction which is stored in `miniscope.MotionCorrection.RigidMotionCorrection` and `miniscope.MotionCorrection.NonRigidMotionCorrection`, respectively.
+# + For the example data, the raw data is corrected with rigid and non-rigid motion correction which is stored in `miniscope.MotionCorrection.RigidMotionCorrection` and `miniscope.MotionCorrection.NonRigidMotionCorrection`, respectively. 
 #
 # + Lets first query the information for one curation.
 
@@ -139,7 +138,7 @@ average_image = (
     .reshape(600, 600, 1)
 )
 
-plt.imshow(average_image)
+plt.imshow(average_image);
 
 # ### `Segmentation` table
 #
@@ -158,7 +157,7 @@ for xpix, ypix in zip(mask_xpix, mask_ypix):
     mask_image[ypix, xpix] = True
 
 plt.imshow(average_image)
-plt.contour(mask_image.reshape(600, 600), colors="white", linewidths=0.5)
+plt.contour(mask_image.reshape(600, 600), colors="white", linewidths=0.5);
 
 # ### `MaskClassification` table
 #
@@ -211,11 +210,11 @@ ax2.legend(loc="upper right", prop={"size": 14})
 
 ax.set_xlabel("Time (s)")
 ax.set_ylabel("Activity (a.u.)")
-ax2.set_ylabel("Activity (a.u.)")
+ax2.set_ylabel("Activity (a.u.)");
 # -
 
 # ## Summary and Next Step
 #
-# + This notebook highlights the major tables in the workflow and visualize some of the ingested results.
+# + This notebook highlights the major tables in the workflow and visualize some of the ingested results. 
 #
 # + The next notebook [06-drop](06-drop-optional.ipynb) shows how to drop schemas and tables if needed.

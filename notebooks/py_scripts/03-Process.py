@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.14.1
+#       jupytext_version: 1.14.4
 #   kernelspec:
 #     display_name: ele
 #     language: python
@@ -34,15 +34,6 @@ import os
 if os.path.basename(os.getcwd()) == "notebooks":
     os.chdir("..")
 import datajoint as dj
-
-from workflow_miniscope.pipeline import (
-    AnatomicalLocation,
-    Equipment,
-    miniscope,
-    session,
-    subject,
-)
-
 # -
 
 # ## `Pipeline.py`
@@ -50,6 +41,13 @@ from workflow_miniscope.pipeline import (
 # - This script `activates` the DataJoint `Elements` and declares other required tables.
 #
 
+from workflow_miniscope.pipeline import (
+    subject,
+    session,
+    AnatomicalLocation,
+    Equipment,
+    miniscope,
+)
 
 # ## Schema diagrams
 #

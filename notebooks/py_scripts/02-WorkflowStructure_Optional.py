@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.14.1
+#       jupytext_version: 1.14.4
 #   kernelspec:
 #     display_name: ele
 #     language: python
@@ -38,8 +38,7 @@ os.chdir("..")
 #
 
 import datajoint as dj
-
-from workflow_miniscope.pipeline import lab, miniscope, session, subject
+from workflow_miniscope.pipeline import lab, subject, session, miniscope
 
 # - Each module contains a schema object that enables interaction with the schema in the database.
 #

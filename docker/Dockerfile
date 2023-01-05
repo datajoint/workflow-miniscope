@@ -23,3 +23,10 @@ RUN chmod 755 /main/setup.sh
 RUN chmod 755 /main/.env
 RUN /main/setup.sh
 RUN rm -f ./dj_local_conf.json
+
+# Install Caiman
+RUN git clone --branch master https://github.com/datajoint-company/CaImAn
+WORKDIR /main/CaImAn
+RUN conda install -n base -c conda-forge -y mamba
+RUN /bin/bash -c 'mamba env update --n base --file environment.yml'
+RUN pip install .

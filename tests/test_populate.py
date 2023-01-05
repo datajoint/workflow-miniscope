@@ -1,5 +1,6 @@
 """Tests table population
 """
+import pytest
 
 
 def test_recording_info(pipeline, recording_info):
@@ -18,6 +19,29 @@ def test_recording_info(pipeline, recording_info):
     assert nframes == 111770
 
 
-def test_processing_populate(processing, pipeline):
+def test_processing_populate(pipeline, processing):
     miniscope = pipeline["miniscope"]
     assert len(miniscope.Processing()) == 1
+
+
+def test_curation_populate(pipeline, curations):
+    miniscope = pipeline["miniscope"]
+    assert len(miniscope.Curation()) == 1
+
+
+def test_results(pipeline, post_curation):
+    mini = pipeline["miniscope"]
+
+    names = ["MotionCorrection average image", "Fluorescence Trace", "Activity Trace"]
+    means = [
+        mini.MotionCorrection.Summary.fetch("average_image", limit=1)[0][0][0].mean(),
+        mini.Fluorescence.Trace.fetch("fluorescence", limit=1)[0].mean(),
+        mini.Activity.Trace.fetch("activity_trace", limit=1)[0].mean(),
+    ]
+    expected = [27.94, 335, 335]
+    permitted_delta = [0.1, 1, 1]
+
+    for n, m, e, d in zip(names, means, expected, permitted_delta):
+        assert m == pytest.approx(  # assert mean is within delta of expected value
+            e, d
+        ), f"Issues with data for {n}. Expected {e} ±{d}, Found {m}"

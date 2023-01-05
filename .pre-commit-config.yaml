@@ -1,5 +1,5 @@
 default_stages: [commit, push]
-exclude: (^.github/|^docs/|^images/)
+exclude: (^.github/|^docs/|^images/|py_scripts/*py)
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -22,6 +22,7 @@ repos:
       - id: black-jupyter
         args:
           - --line-length=88
+          - --exclude=notebooks/py_scripts
 
   # isort
   - repo: https://github.com/pycqa/isort

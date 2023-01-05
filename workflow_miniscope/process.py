@@ -1,6 +1,7 @@
 import logging
 from contextlib import nullcontext
 
+from datajoint.utils import to_camel_case
 from element_interface.utils import QuietStdOut
 
 from workflow_miniscope.pipeline import miniscope
@@ -41,9 +42,9 @@ def run(
 
     with nullcontext() if verbose else QuietStdOut():
         for table in tables:
-            logger.info(f"\n---- Populating {table.table_name} ----")
+            logger.info(f"---- Populating {to_camel_case(table.table_name)} ----")
             table.populate(**populate_settings)
-            logger.info("\n---- Successfully completed miniscope/populate.py ----")
+        logger.info("---- Successfully completed miniscope/populate.py ----")
 
 
 if __name__ == "__main__":

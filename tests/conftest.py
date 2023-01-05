@@ -42,7 +42,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--dj-teardown",
         action="store",
-        default="False",  # "True", # TODO: default true
+        default="True",
         help="Verbose for dj items: True or False",
         choices=("True", "False"),
     )
@@ -54,7 +54,7 @@ def pytest_addoption(parser):
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(autouse=True, scope="session")
 def setup(request):
     """Take passed commandline variables, set as global"""
     global verbose, _tear_down, test_user_data_dir, verbose_context
@@ -76,7 +76,7 @@ def setup(request):
 
 
 @pytest.fixture(autouse=True, scope="session")
-def dj_config():
+def dj_config(setup):
     """If dj_local_config exists, load"""
     if Path("./dj_local_conf.json").exists():
         dj.config.load("./dj_local_conf.json")
@@ -124,8 +124,23 @@ def test_data(setup, dj_config):
     return
 
 
+@pytest.fixture(scope="function")
+def element_helper_funcs():
+    from element_miniscope.miniscope import (
+        get_loader_result,
+        get_miniscope_root_data_dir,
+        get_session_directory,
+    )
+
+    yield {
+        "get_miniscope_root_data_dir": get_miniscope_root_data_dir,
+        "get_session_directory": get_session_directory,
+        "get_loader_result": get_loader_result,
+    }
+
+
 @pytest.fixture(autouse=True, scope="session")
-def pipeline(setup):
+def pipeline():
     """Loads workflow_miniscope.pipeline lab, session, subject, miniscope"""
     with verbose_context:
         from workflow_miniscope import pipeline
@@ -137,6 +152,7 @@ def pipeline(setup):
         "miniscope": pipeline.miniscope,
         "Device": pipeline.Device,
         "get_miniscope_root_data_dir": pipeline.get_miniscope_root_data_dir,
+        "get_session_directory": pipeline.get_session_directory,
     }
 
     if _tear_down:
@@ -179,12 +195,12 @@ def ingest_data(setup, pipeline, test_data):
 
     if _tear_down:
         with verbose_context:
-            for csv_info in all_csvs:
-                csv_path = test_user_data_dir / csv_info[1]
+            for csv in all_csvs:
+                csv_path = test_user_data_dir / csv
                 csv_path.unlink()
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def caiman_paramset(pipeline):
     miniscope = pipeline["miniscope"]
 
@@ -242,20 +258,40 @@ def caiman_paramset(pipeline):
             (miniscope.ProcessingParamSet & "paramset_id = 0").delete()
 
 
-@pytest.fixture
-def recording_info(pipeline, ingest_data):
-    miniscope = pipeline["miniscope"]
+def populate_tables(tables):
+    populate_settings = {
+        "display_progress": verbose,
+        "reserve_jobs": False,
+        "suppress_errors": True,
+    }
 
-    miniscope.RecordingInfo.populate()
+    with verbose_context:
+        for table in tables:
+            errors = table.populate(**populate_settings)
 
-    yield {"caiman_2d": f"{session_dirs[0]}/0.avi"}
+            if errors:
+                logger.warning(
+                    f"Populate ERROR: {len(errors)} errors in "
+                    + f'"{table}.populate()" - {errors[0][-1]}'
+                )
 
+
+def populate_clear(tables):
     if _tear_down:
         with verbose_context:
-            miniscope.RecordingInfo.delete()
+            for table in tables:
+                table.delete()
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
+def recording_info(pipeline, ingest_data):
+    tables = [pipeline["miniscope"].RecordingInfo()]
+    populate_tables(tables)
+    yield {"caiman_2d": f"{session_dirs[0]}/0.avi"}
+    populate_clear(tables)
+
+
+@pytest.fixture(scope="session")
 def processing_tasks(pipeline, caiman_paramset, recording_info):
     miniscope = pipeline["miniscope"]
     session = pipeline["session"]
@@ -283,34 +319,32 @@ def processing_tasks(pipeline, caiman_paramset, recording_info):
             miniscope.ProcessingTask.delete()
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def processing(processing_tasks, pipeline):
-    miniscope = pipeline["miniscope"]
-
-    errors = miniscope.Processing.populate(suppress_errors=True)
-
-    if errors:
-        logger.warning(
-            f"Populate ERROR: {len(errors)} errors in "
-            + f'"miniscope.Processing.populate()" - {errors[0][-1]}'
-        )
-
+    tables = [pipeline["miniscope"].Processing()]
+    populate_tables(tables)
     yield
-
-    if _tear_down:
-        with verbose_context:
-            miniscope.Processing.delete()
+    populate_clear(tables)
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def curations(processing, pipeline):
     miniscope = pipeline["miniscope"]
-
     for key in (miniscope.Processing - miniscope.Curation).fetch("KEY"):
         miniscope.Curation().create1_from_processing_task(key)
-
     yield
+    populate_clear([miniscope.Curation()])
 
-    if _tear_down:
-        with verbose_context:
-            miniscope.Curation.delete()
+
+@pytest.fixture(scope="session")
+def post_curation(pipeline, curations):
+    miniscope = pipeline["miniscope"]
+    tables = [
+        miniscope.MotionCorrection(),
+        miniscope.Segmentation(),
+        miniscope.Fluorescence(),
+        miniscope.Activity(),
+    ]
+    populate_tables(tables)
+    yield
+    populate_clear(tables)

@@ -7,12 +7,7 @@ from pathlib import Path
 import datajoint as dj
 import djarchive_client
 import pytest
-from element_interface.utils import (
-    QuietStdOut,
-    find_full_path,
-    value_to_bool,
-    write_csv,
-)
+from element_interface.utils import QuietStdOut, find_full_path, value_to_bool
 
 from workflow_miniscope.ingest import ingest_sessions, ingest_subjects
 
@@ -188,7 +183,9 @@ def ingest_data(setup, pipeline, test_data):
     if len(pipeline["miniscope"].Recording()) == 0:
         for csv_filename, csv_dict in all_csvs.items():
             csv_path = test_user_data_dir / csv_filename  # add prefix for rel path
-            write_csv(csv_dict["content"], csv_path)  # write content at rel path
+            with open(csv_path, "w") as f:  # write content at rel path
+                for line in csv_dict["content"]:
+                    f.write(line + "\n")
             csv_dict["func"](csv_path, verbose=verbose, skip_duplicates=True)
 
     yield all_csvs

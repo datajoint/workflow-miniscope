@@ -9,6 +9,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 + Update - Move `recursive_search` function
 + Update - Revise pytest/docker structure
 + Update - Add reference schema for supplemental tables
++ Add - Visualization notebook
 
 ## 0.2.0 - 2022-07-11
 

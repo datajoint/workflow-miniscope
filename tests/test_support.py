@@ -1,17 +1,17 @@
-"""Tests Element support funcs
+"""Tests Element support functions
 """
 import pytest
 from datajoint.errors import DataJointError
 
 
-def test_root_dir(element_helper_funcs):
-    root_dir = element_helper_funcs["get_miniscope_root_data_dir"]
+def test_root_dir(element_helper_functions):
+    root_dir = element_helper_functions["get_miniscope_root_data_dir"]
     assert isinstance(root_dir(), list), "Check typing enforcement on root dir func"
 
 
-def test_session_dir(pipeline, element_helper_funcs):
+def test_session_dir(pipeline, element_helper_functions):
     session = pipeline["session"]
-    get_session_directory = element_helper_funcs["get_session_directory"]
+    get_session_directory = element_helper_functions["get_session_directory"]
 
     key = session.SessionDirectory.fetch(limit=1, as_dict=True)[0]
     dir = key.pop("session_dir")
@@ -19,10 +19,10 @@ def test_session_dir(pipeline, element_helper_funcs):
     assert dir == get_session_directory(key), "Check Element get_session_directory"
 
 
-def test_loader(pipeline, element_helper_funcs):
+def test_loader(pipeline, element_helper_functions):
     from element_interface.caiman_loader import CaImAn
 
-    get_loader_result = element_helper_funcs["get_loader_result"]
+    get_loader_result = element_helper_functions["get_loader_result"]
     table = pipeline["miniscope"].ProcessingTask
     method, loaded_output = get_loader_result(table.fetch("KEY")[0], table)
 

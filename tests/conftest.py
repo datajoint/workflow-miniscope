@@ -119,7 +119,7 @@ def test_data(setup, dj_config):
 
 
 @pytest.fixture(scope="function")
-def element_helper_funcs():
+def element_helper_functions():
     from element_miniscope.miniscope import (
         get_loader_result,
         get_miniscope_root_data_dir,

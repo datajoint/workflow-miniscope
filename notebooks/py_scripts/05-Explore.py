@@ -167,7 +167,7 @@ miniscope.MaskClassification.MaskType & curation_key & "mask_id=13"
 
 # ### `Fluorescence` and `Activity` tables
 #
-# + Lets fetch and plot the flourescence and activity traces for one mask.
+# + Lets fetch and plot the fluorescence and activity traces for one mask.
 
 query_cells = (
     miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType

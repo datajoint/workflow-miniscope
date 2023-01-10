@@ -7,7 +7,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 + Add - Apply `black` formatting to codebase
 + Update - Move `recursive_search` function
-+ Update - Revise pytest/docker structure
++ Update - Revise Pytests/docker structure
 + Update - Add reference schema for supplemental tables
 + Add - Visualization notebook
 

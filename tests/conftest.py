@@ -110,7 +110,7 @@ def test_data(setup, dj_config):
             mini_root_dirs = list(mini_root_dirs)
 
         djarchive_client.client().download(
-            "workflow-miniscope-test-set",
+            "workflow-miniscope",
             "v1",
             str(mini_root_dirs[0]),
             create_target=False,

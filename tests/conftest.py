@@ -15,7 +15,6 @@ from workflow_miniscope.ingest import ingest_sessions, ingest_subjects
 
 logger = logging.getLogger("datajoint")
 session_dirs = ["subject1/session1"]
-# pytest_plugins = "cov"
 
 
 def pytest_addoption(parser):
@@ -145,6 +144,7 @@ def pipeline():
         "subject": pipeline.subject,
         "session": pipeline.session,
         "miniscope": pipeline.miniscope,
+        "miniscope_report": pipeline.miniscope_report,
         "Device": pipeline.Device,
         "get_miniscope_root_data_dir": pipeline.get_miniscope_root_data_dir,
         "get_session_directory": pipeline.get_session_directory,
@@ -153,10 +153,21 @@ def pipeline():
     if _tear_down:
         with verbose_context:
             pipeline.miniscope.Recording.delete()
+            pipeline.miniscope_report.QualityMetrics.delete()
             pipeline.Device.delete()
             pipeline.subject.Subject.delete()
             pipeline.session.Session.delete()
             pipeline.lab.Lab.delete()
+
+
+@pytest.fixture(scope="session")
+def plots(setup, pipeline):
+    from element_miniscope.plotting.qc import QualityMetricFigs
+
+    miniscope = pipeline["miniscope"]
+    key = miniscope.Curation.fetch("KEY", limit=1)[0]
+
+    yield {"qc": QualityMetricFigs(miniscope, key)}
 
 
 @pytest.fixture(scope="session")
@@ -336,11 +347,13 @@ def curations(processing, pipeline):
 @pytest.fixture(scope="session")
 def post_curation(pipeline, curations):
     miniscope = pipeline["miniscope"]
+    miniscope_report = pipeline["miniscope_report"]
     tables = [
         miniscope.MotionCorrection(),
         miniscope.Segmentation(),
         miniscope.Fluorescence(),
         miniscope.Activity(),
+        miniscope_report.QualityMetrics(),
     ]
     populate_tables(tables)
     yield

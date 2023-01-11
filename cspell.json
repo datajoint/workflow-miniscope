@@ -1,0 +1,53 @@
+// cSpell Settings
+//https://github.com/streetsidesoftware/vscode-spell-checker
+{
+    "version": "0.2", // Version of the setting file.  Always 0.2
+    "language": "en", // language - current active spelling language
+    "enabledLanguageIds": [
+        "markdown", "yaml"
+    ],
+    // flagWords - list of words to be always considered incorrect
+    // This is useful for offensive words and common spelling errors.
+    // For example "hte" should be "the"
+    "flagWords": [],
+    "allowCompoundWords": true,
+    "ignorePaths": [
+    ],
+    "words": [
+        "Theo",
+        "filt",
+        "djarchive",
+        "tsub",
+        "ssub",
+        "stim",
+        "trialized",
+        "rval",
+        "curations",
+        "npix",
+        "nchannels",
+        "nframes",
+        "nsamples",
+        "neuropil",
+        "POSIX",
+        "deconvolution",
+        "neuro",
+        "pyplot",
+        "imshow",
+        "xpix",
+        "ypix",
+        "dtype",
+        "twinx",
+        "deconvolved",
+        "xlabel",
+        "ylabel",
+        "PSTH",
+        "iterrows",
+        "cmap",
+        "axvline",
+        "axvline",
+        "xlim",
+        "ephys",
+        "tqdm",
+        "Pytests"
+    ]
+}

@@ -74,13 +74,13 @@ class ActivityAlignment(dj.Computed):
         Args:
             key (dict): Dict uniquely identifying one ActivityAlignmentCondition
         """
-        sess_time, rec_time, nframes, frame_rate = (
+        session_time, rec_time, nframes, frame_rate = (
             miniscope.RecordingInfo * session.Session & key
         ).fetch1("session_datetime", "recording_datetime", "nframes", "fps")
 
         # Estimation of frame timestamps with respect to the session-start
         # (to be replaced by timestamps retrieved from some synchronization routine)
-        # rec_start = (rec_time - sess_time).total_seconds() if rec_time else 0
+        # rec_start = (rec_time - session_time).total_seconds() if rec_time else 0
         # frame_timestamps = np.arange(nframes) / frame_rate + rec_start
 
         trialized_event_times = trial.get_trialized_alignment_event_times(

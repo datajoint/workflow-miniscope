@@ -1,12 +1,15 @@
 import csv
 import json
+import logging
 import pathlib
 from datetime import datetime
 
 from element_interface.utils import find_full_path, ingest_csv_to_table
 
 from .paths import get_miniscope_root_data_dir
-from .pipeline import Equipment, event, miniscope, session, subject, trial
+from .pipeline import Device, event, miniscope, session, subject, trial
+
+logger = logging.getLogger("datajoint")
 
 
 def ingest_subjects(
@@ -30,34 +33,38 @@ def ingest_subjects(
 
 
 def ingest_sessions(
-    session_csv_path: str = "./user_data/sessions.csv", verbose: bool = True
+    session_csv_path: str = "./user_data/sessions.csv",
+    skip_duplicates: bool = False,
+    verbose: bool = True,
 ):
     """Ingest session list from csv
 
     Args:
-        session_csv_path (str, optional): List of sessions.
+        session_csv_path (str, optional): Relative path to CSV of sessions.
             Defaults to "./user_data/sessions.csv".
-        verbose (bool, optional): Print number inserted (i.e., table length change).
-            Defaults to True.
+        skip_duplicates (bool, optional): See DataJoint `insert` function. Default False.
+        verbose (bool, optional): Print number inserted. Defaults to True.
 
     Raises:
-        NotImplementedError: Not implemented for acquisition software other than
-            Miniscope-DAQ-V3 or V4
+        NotImplementedError: Only software Miniscope-DAQ-V3 or V4 implemented
         FileNotFoundError: No .avi files found in session path
     """
-    if verbose:
-        print("\n---- Insert new `Session` and `Recording` ----")
+    if not verbose:  # If non verbose, set logging to warn, reset later
+        prev_loglevel = logger.level
+        logger.setLevel("WARN")
+
+    logger.info("---- Insert new `Session` and `Recording` ----")
+
     with open(session_csv_path, newline="") as f:
         input_sessions = list(csv.DictReader(f, delimiter=","))
 
     session_list, session_dir_list, recording_list, hardware_list = [], [], [], []
 
     for single_session in input_sessions:
-        acquisition_software = single_session["acquisition_software"]
-        if acquisition_software not in ["Miniscope-DAQ-V3", "Miniscope-DAQ-V4"]:
+        acq_software = single_session["acq_software"]
+        if acq_software not in ["Miniscope-DAQ-V3", "Miniscope-DAQ-V4"]:
             raise NotImplementedError(
-                f"Not implemented for acquisition software of "
-                f"type {acquisition_software}."
+                f"Not implemented for acquisition software of " f"type {acq_software}."
             )
 
         # Folder structure: root / subject / session / .avi (raw)
@@ -82,7 +89,7 @@ def ingest_sessions(
                 )
                 break
             except OSError:
-                print(
+                logger.warning(
                     f"Could not find `deviceType` in Miniscope-DAQ json: "
                     f"{metadata_filepath}"
                 )
@@ -93,7 +100,7 @@ def ingest_sessions(
         )
         if session_key not in session.Session():
             hardware_list.append(
-                dict(equipment=acquisition_hardware, modality="Miniscope")
+                dict(device=acquisition_hardware, modality="Miniscope")
             )
 
             session_list.append(session_key)
@@ -105,32 +112,34 @@ def ingest_sessions(
             recording_list.append(
                 dict(
                     **session_key,
-                    recording_id=0,  # Assumes 1 recording per sess
-                    equipment=acquisition_hardware,
-                    acquisition_software=acquisition_software,
-                    recording_directory=session_dir.as_posix(),
+                    recording_id=0,  # Assumes 1 recording per session
+                    device=acquisition_hardware,
+                    acq_software=acq_software,
                 )
             )
 
-    new_equipment_n = len(set(val for dic in hardware_list for val in dic.values()))
-    if verbose:
-        print(f"\n---- Insert {new_equipment_n} entry(s) into lab.Equipment ----")
-    Equipment.insert(hardware_list, skip_duplicates=True)  # expect duplicates for equip
+    insert_string = "---- Inserting %s entry(s) into %s ----"  # defer number/table name
 
-    if verbose:
-        print(f"\n---- Insert {len(session_list)} entry(s) into session.Session ----")
-    session.Session.insert(session_list)
-    session.SessionDirectory.insert(session_dir_list)
+    prev_len = len(Device())
+    Device.insert(hardware_list, skip_duplicates=True)  # expect duplicates for Device
+    added_len = len(Device()) - prev_len
+    logger.info(insert_string % (added_len, "reference.Device"))
 
-    if verbose:
-        print(
-            f"\n---- Insert {len(recording_list)} entry(s) into "
-            + "miniscope.Recording ----"
-        )
-    miniscope.Recording.insert(recording_list)
+    prev_len = len(session.Session())
+    session.Session.insert(session_list, skip_duplicates=skip_duplicates)
+    session.SessionDirectory.insert(session_dir_list, skip_duplicates=skip_duplicates)
+    added_len = len(session.Session()) - prev_len
+    logger.info(insert_string % (added_len, "session.Session"))
 
-    if verbose:
-        print("\n---- Successfully completed ingest_sessions ----")
+    prev_len = len(miniscope.Recording())
+    miniscope.Recording.insert(recording_list, skip_duplicates=skip_duplicates)
+    added_len = len(miniscope.Recording()) - prev_len
+    logger.info(insert_string % (added_len, "miniscope.Recording"))
+
+    logger.info("---- Successfully completed ingest_sessions ----")
+
+    if not verbose:
+        logger.setLevel(prev_loglevel)
 
 
 def ingest_events(

@@ -1,0 +1,65 @@
+# .env file. Careful that vscode black does not add spaces around '='
+#   COMPOSE_PROJECT_NAME='mini'
+#   TEST_DATA_DIR=<local dir for data>
+#   GITHUB_USERNAME=datajoint
+#   INSTALL_OPTION=local-all, local-mini, or git
+#   TEST_CMD="pytest" # pytest --dj-{verbose,teardown} False  # options
+#                     # to do nothing, set as "True"
+# export COMPOSE_DOCKER_CLI_BUILD=0 # some machines need for smooth --build
+# docker compose --env-file ./docker/.env -f ./docker/docker-compose.yaml up --build --force-recreate
+# docker exec -it workflow-miniscope /bin/bash
+# docker compose -f ./docker/docker-compose.yaml down --volumes
+
+# WARNING: This docker container sometimes times out when installing CaImAn.
+
+version: "2.4"
+
+services:
+  db:
+    networks:
+      mini:
+    image: datajoint/mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: simple
+    container_name: workflowminiscope-db
+
+  workflow:
+    networks:
+      mini:
+    build:
+      context: ../../
+      dockerfile: ./workflow-miniscope/docker/Dockerfile
+      args:
+        - GITHUB_USERNAME=${GITHUB_USERNAME}
+    image: workflow-miniscope:0.2.1
+    container_name: workflow-miniscope
+    environment:
+      - DJ_HOST=db
+      - DJ_USER=root
+      - DJ_PASS=simple
+      - MINI_ROOT_DATA_DIR=/main/test_data/
+      - DATABASE_PREFIX=test_
+      - COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
+      - GITHUB_USERNAME=${GITHUB_USERNAME}
+      - INSTALL_OPTION=${INSTALL_OPTION}
+      - TEST_CMD=${TEST_CMD}
+    command:
+      - bash
+      - -c
+      - |
+        eval ${TEST_CMD}
+        tail -f /dev/null
+    volumes:
+      - ${TEST_DATA_DIR}:/main/test_data/
+      - ../../workflow-miniscope/docker/apt_requirements.txt:/tmp/apt_requirements.txt
+      - ../../element-lab:/main/element-lab
+      - ../../element-animal:/main/element-animal
+      - ../../element-session:/main/element-session
+      - ../../element-miniscope:/main/element-miniscope
+      - ../../workflow-miniscope:/main/workflow-miniscope
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  mini:

@@ -10,6 +10,7 @@ Element is a modular pipeline for data storage and processing with corresponding
 database tables that can be combined with other Elements to assemble a fully functional
 pipeline.
 
-Installation and usage instructions can be found at the [Element documentation](https://datajoint.com/docs/elements/element-miniscope).
+Installation and usage instructions can be found at the
+[Element documentation](https://datajoint.com/docs/elements/element-miniscope).
 
 ![element miniscope diagram](images/attached_miniscope_element.svg)

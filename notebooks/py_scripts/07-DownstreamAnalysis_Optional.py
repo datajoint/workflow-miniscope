@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.14.1
+#       jupytext_version: 1.14.4
 #   kernelspec:
 #     display_name: ele
 #     language: python
@@ -42,13 +42,7 @@ dj.config["display.limit"] = 10
 # Next, we populate the python namespace with the required schemas
 #
 
-from workflow_miniscope.ingest import (
-    ingest_alignment,
-    ingest_events,
-    ingest_sessions,
-    ingest_subjects,
-)
-from workflow_miniscope.pipeline import event, miniscope, trial
+from workflow_miniscope.pipeline import miniscope, trial, event
 
 # + [markdown] jp-MarkdownHeadingCollapsed=true jp-MarkdownHeadingCollapsed=true tags=[]
 # ## Trial and Event schemas
@@ -61,7 +55,7 @@ from workflow_miniscope.pipeline import event, miniscope, trial
 # - A block is a continuous phase of an experiment that contains repeated instances of a condition, or trials.
 # - Events may occur within or outside of conditions, either instantaneous or continuous.
 #
-# The diagram below shows (a) the levels of hierarchy and (b) how the bounds may not completely overlap. A block may not fully capure trials and events may occur outside both blocks/trials.
+# The diagram below shows (a) the levels of hierarchy and (b) how the bounds may not completely overlap. A block may not fully capture trials and events may occur outside both blocks/trials.
 #
 
 # ```
@@ -78,6 +72,12 @@ from workflow_miniscope.pipeline import event, miniscope, trial
 # Let's load some example data. The `ingest.py` script has a series of loaders to help. If you've already run the other notebooks, you might skip `ingest_subjects` and `ingest_sessions`.
 #
 
+from workflow_miniscope.ingest import (
+    ingest_subjects,
+    ingest_sessions,
+    ingest_events,
+    ingest_alignment,
+)
 
 # If you've already run previous notebooks, no need to ingest subjects or sessions.
 #
@@ -251,7 +251,7 @@ miniscope.Activity()
 
 # +
 from workflow_miniscope import analysis
-from workflow_miniscope.pipeline import event, miniscope, trial
+from workflow_miniscope.pipeline import miniscope, trial, event
 
 activity_key = (
     miniscope.Activity
@@ -279,3 +279,5 @@ analysis.ActivityAlignment().plot_aligned_activities(
 analysis.ActivityAlignment().plot_aligned_activities(
     alignment_condition_ctrl, roi=2, title="Control Center Button"
 )
+
+

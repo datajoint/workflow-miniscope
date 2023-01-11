@@ -1,0 +1,8 @@
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-sv --cov-report term-missing --cov=element_miniscope -p no:warnings"
+testpaths = [
+    "tests",
+]
+norecursedirs = ["docs", "*.egg-info", ".git"]
+# PYTHONDONTWRITEBYTECODE=1 # Setting this will speed up pytest

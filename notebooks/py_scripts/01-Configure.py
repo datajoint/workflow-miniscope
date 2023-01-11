@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.14.1
+#       jupytext_version: 1.14.4
 #   kernelspec:
 #     display_name: ele
 #     language: python
@@ -30,9 +30,6 @@ if os.path.basename(os.getcwd()) == "notebooks":
     os.chdir("..")
 # -
 
-# +
-import getpass
-
 import datajoint as dj
 
 # ## Configure database host address and credentials
@@ -40,10 +37,12 @@ import datajoint as dj
 # Now let's set up the host, user and password in the `dj.config` global variable
 #
 
+# +
+import getpass
 
 dj.config["database.host"] = "{YOUR_HOST}"
 dj.config["database.user"] = "{YOUR_USERNAME}"
-dj.config["database.password"] = getpass.getpass()  # enter the password securily
+dj.config["database.password"] = getpass.getpass()  # enter the password securely
 # -
 
 # You should be able to connect to the database at this stage.
@@ -59,7 +58,7 @@ dj.conn()
 #
 # - Giving a prefix to schema could help on the configuration of privilege settings. For example, if we set prefix `neuro_`, every schema created with the current workflow will start with `neuro_`, e.g. `neuro_lab`, `neuro_subject`, `neuro_session`, and `neuro_miniscope`.
 #
-# - The prefix could be configurated as follows in `dj.config`:
+# - The prefix could be configured as follows in `dj.config`:
 #
 
 dj.config["custom"] = {"database.prefix": "neuro_"}

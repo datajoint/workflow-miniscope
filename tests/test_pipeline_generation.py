@@ -1,20 +1,31 @@
-from . import dj_config, pipeline
+"""Tests table architecture and connections: Subject, Session, Miniscope
+"""
 
 
-def test_generate_pipeline(pipeline):
-    subject = pipeline['subject']
-    session = pipeline['session']
-    miniscope = pipeline['miniscope']
-    Equipment = pipeline['Equipment']
+def test_upstream_pipeline(pipeline):
+    session = pipeline["session"]
+    subject = pipeline["subject"]
 
-    subject_tbl, *_ = session.Session.parents(as_objects=True)
+    # test connection Subject->Session
+    assert subject.Subject.full_table_name == session.Session.parents()[0]
 
-    # Test Element connection from lab, subject to Session
-    assert subject_tbl.full_table_name == subject.Subject.full_table_name
+    # test required attribute
+    assert "session_dir" in session.SessionDirectory.heading.secondary_attributes
 
-    # Test Element connection from Session to miniscope
-    session_tbl, equipment_tbl, _ = miniscope.Recording.parents(as_objects=True)
-    assert session_tbl.full_table_name == session.Session.full_table_name
-    assert equipment_tbl.full_table_name == Equipment.full_table_name
-    assert 'mask_npix' in miniscope.Segmentation.Mask.heading.secondary_attributes
-    assert 'activity_trace' in miniscope.Activity.Trace.heading.secondary_attributes
+
+def test_miniscope_pipeline(pipeline):
+    session = pipeline["session"]
+    miniscope = pipeline["miniscope"]
+    Device = pipeline["Device"]
+
+    # test connection miniscope.Recording
+    recording_parent_links = miniscope.Recording.parents()
+    recording_parent_list = [session.Session, Device, miniscope.AcquisitionSoftware]
+    for parent in recording_parent_list:
+        assert (
+            parent.full_table_name in recording_parent_links
+        ), f"miniscope.Recording.parents() did not include {parent.full_table_name}"
+
+    # test attributes
+    assert "mask_npix" in miniscope.Segmentation.Mask.heading.secondary_attributes
+    assert "activity_trace" in miniscope.Activity.Trace.heading.secondary_attributes

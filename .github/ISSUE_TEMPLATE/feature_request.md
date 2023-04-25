@@ -32,9 +32,11 @@ Do you currently have a work-around for this? Provide any alternative solutions 
 features you've considered.
 
 ### Related Errors
+
 Add any errors as a direct result of not exposing this feature.
 
 Please include steps to reproduce provided errors as follows:
+
 - OS (WIN | MACOS | Linux)
 - DataJoint Element Version
 - MySQL Version
@@ -43,12 +45,15 @@ Please include steps to reproduce provided errors as follows:
 - Complete error stack as a result of evaluating the above steps
 
 ### Screenshots
+
 If applicable, add screenshots to help explain your feature.
 
 ### Additional Research and Context
+
 Add any additional research or context that was conducted in creating this feature request.
 
 For example:
+
 - Related GitHub issues and PR's either within this repository or in other relevant
   repositories.
 - Specific links to specific lines or a focus within source code.

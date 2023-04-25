@@ -30,6 +30,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 docker-compose.y*ml
+!docker/docker-compose.y*ml
 
 # C extension, Translations
 # editors: vscode, emacs, Mac
@@ -68,7 +69,9 @@ ENV/
 .spy*project
 .ropeproject
 
-# datajoint, notes, nwb export
+# datajoint, notes, nwb export, ipynb temp files
 dj_local_c*.json
 temp*
 *nwb
+**-jvsc-*.py
+/tests/user_data/*

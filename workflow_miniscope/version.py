@@ -1,2 +1,3 @@
-"""Package metadata"""
-__version__ = '0.1.0'
+"""Package metadata."""
+# Also update in docker-compose.yaml
+__version__ = "0.2.1"

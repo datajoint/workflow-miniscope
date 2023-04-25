@@ -1,30 +1,32 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,py_scripts//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.13.7
+#       jupytext_version: 1.14.4
 #   kernelspec:
-#     display_name: 'Python 3.7.9 64-bit (''workflow-calcium-imaging'': conda)'
-#     name: python379jvsc74a57bd01a512f474e195e32ad84236879d3bb44800a92b431919ef0b10d543f5012a23c
+#     display_name: ele
+#     language: python
+#     name: python3
 # ---
 
 # # DataJoint Workflow Miniscope
 #
 # + This notebook will describe the steps for interacting with the data ingested into `workflow-miniscope`.  
 
+# +
 import os
-os.chdir('..')
+
+os.chdir("..")
 
 # +
 import datajoint as dj
 import matplotlib.pyplot as plt
 import numpy as np
 
-from workflow_miniscope.pipeline import lab, subject, session, miniscope
+from workflow_miniscope.pipeline import subject, session, miniscope
 # -
 
 # ## Workflow architecture
@@ -58,7 +60,11 @@ session.Session()
 
 # + Fetch the primary key for the session of interest which will be used later on in this notebook.
 
-session_key = (session.Session & 'subject = "subject3"' & 'session_datetime = "2021-04-30 12:22:15.032"').fetch1('KEY')
+session_key = (
+    session.Session
+    & 'subject = "subject1"'
+    & 'session_datetime = "2021-01-01 00:00:01"'
+).fetch1("KEY")
 
 # ### `Recording` and `RecordingInfo` tables
 #
@@ -68,7 +74,7 @@ miniscope.Recording & session_key
 
 miniscope.RecordingInfo & session_key
 
-miniscope.RecordingInfo.Field & session_key
+miniscope.RecordingInfo.File & session_key
 
 # ### `ProcessingParamSet`, `ProcessingTask`, `Processing`, and `Curation` tables
 #
@@ -100,7 +106,7 @@ miniscope.Curation & session_key
 #
 # + Lets first query the information for one curation.
 
-curation_key = (miniscope.Curation & session_key & 'curation_id=0').fetch1('KEY')
+curation_key = (miniscope.Curation & session_key & "curation_id=0").fetch1("KEY")
 
 curation_key
 
@@ -110,7 +116,7 @@ miniscope.MotionCorrection.NonRigidMotionCorrection & curation_key
 
 # + For non-rigid motion correction, the details for the individual blocks are stored in `imaging.MotionCorrection.Block`.
 
-miniscope.MotionCorrection.Block & curation_key & 'block_id=0'
+miniscope.MotionCorrection.Block & curation_key & "block_id=0"
 
 # + Summary images are stored in `imaging.MotionCorrection.Summary`
 #
@@ -122,11 +128,15 @@ miniscope.MotionCorrection.Block & curation_key & 'block_id=0'
 #
 #     + Maximum projection image - max of registered frames
 
-miniscope.MotionCorrection.Summary & curation_key & 'field_idx=0'
+miniscope.MotionCorrection.Summary & curation_key
 
 # + Lets fetch the `average_image` and plot it.
 
-average_image = (miniscope.MotionCorrection.Summary & curation_key & 'field_idx=0').fetch1('average_image')
+average_image = (
+    (miniscope.MotionCorrection.Summary & curation_key)
+    .fetch1("average_image")
+    .reshape(600, 600, 1)
+)
 
 plt.imshow(average_image);
 
@@ -136,53 +146,71 @@ plt.imshow(average_image);
 #
 # + Each mask can be associated with a field by the attribute `mask_center_z`.  For example, masks with `mask_center_z=0` are in the field identified with `field_idx=0` in `miniscope.RecordingInfo`.
 
-mask_xpix, mask_ypix = (miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType & curation_key & 'mask_center_z=0' & 'mask_npix > 130').fetch('mask_xpix','mask_ypix')
+mask_xpix, mask_ypix = (
+    miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType
+    & curation_key
+    & "mask_npix > 130"
+).fetch("mask_xpix", "mask_ypix")
 
 mask_image = np.zeros(np.shape(average_image), dtype=bool)
 for xpix, ypix in zip(mask_xpix, mask_ypix):
     mask_image[ypix, xpix] = True
 
-plt.imshow(average_image);
-plt.contour(mask_image, colors='white', linewidths=0.5);
+plt.imshow(average_image)
+plt.contour(mask_image.reshape(600, 600), colors="white", linewidths=0.5);
 
 # ### `MaskClassification` table
 #
 # + This table provides the `mask_type` and `confidence` for the mask classification.
 
-miniscope.MaskClassification.MaskType & curation_key & 'mask=0'
+miniscope.MaskClassification.MaskType & curation_key & "mask_id=13"
 
 # ### `Fluorescence` and `Activity` tables
 #
-# + Lets fetch and plot the flourescence and activity traces for one mask.
+# + Lets fetch and plot the fluorescence and activity traces for one mask.
 
-query_cells = (miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType & curation_key & 'mask_center_z=0' & 'mask_npix > 130').proj()
+query_cells = (
+    miniscope.Segmentation.Mask * miniscope.MaskClassification.MaskType
+    & curation_key
+    & "mask_npix > 130"
+).proj()
 
 # +
-fluorescence_traces = (miniscope.Fluorescence.Trace & query_cells).fetch('fluorescence', order_by='mask')
+fluorescence_traces = (miniscope.Fluorescence.Trace & query_cells).fetch(
+    "fluorescence", order_by="mask_id"
+)
 
-activity_traces = (miniscope.Activity.Trace & query_cells).fetch('activity_trace', order_by='mask')
+activity_traces = (miniscope.Activity.Trace & query_cells).fetch(
+    "activity_trace", order_by="mask_id"
+)
 
-sampling_rate = (miniscope.RecordingInfo & curation_key).fetch1('fps') # [Hz]
+sampling_rate = (miniscope.RecordingInfo & curation_key).fetch1("fps")  # [Hz]
 
 # +
 fig, ax = plt.subplots(1, 1, figsize=(16, 4))
 ax2 = ax.twinx()
 
 for f, a in zip(fluorescence_traces, activity_traces):
-    ax.plot(np.r_[:f.size] * 1/sampling_rate, f, 'k', label='fluorescence trace')    
-    ax2.plot(np.r_[:a.size] * 1/sampling_rate, a, 'r', alpha=0.5, label='deconvolved trace')
-    
+    ax.plot(np.r_[: f.size] * 1 / sampling_rate, f, "k", label="fluorescence trace")
+    ax2.plot(
+        np.r_[: a.size] * 1 / sampling_rate,
+        a,
+        "r",
+        alpha=0.5,
+        label="deconvolved trace",
+    )
+
     break
 
 ax.tick_params(labelsize=14)
 ax2.tick_params(labelsize=14)
 
-ax.legend(loc='upper left', prop={'size': 14})
-ax2.legend(loc='upper right', prop={'size': 14})
+ax.legend(loc="upper left", prop={"size": 14})
+ax2.legend(loc="upper right", prop={"size": 14})
 
-ax.set_xlabel('Time (s)')
-ax.set_ylabel('Activity (a.u.)')
-ax2.set_ylabel('Activity (a.u.)');
+ax.set_xlabel("Time (s)")
+ax.set_ylabel("Activity (a.u.)")
+ax2.set_ylabel("Activity (a.u.)");
 # -
 
 # ## Summary and Next Step

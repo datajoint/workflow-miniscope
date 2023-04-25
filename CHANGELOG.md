@@ -3,13 +3,14 @@
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## 0.2.1 - Unreleased
+## [0.2.1] - 2023-04-24
 
 + Add - Apply `black` formatting to codebase
 + Update - Move `recursive_search` function
 + Update - Revise Pytests/docker structure
 + Update - Add reference schema for supplemental tables
 + Add - Visualization notebook
++ Add - GitHub Actions workflows
 
 ## 0.2.0 - 2022-07-11
 
@@ -35,8 +36,4 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 + Add - Version
 
-[0.2.1]: https://github.com/datajoint/element-miniscope/releases/tag/0.2.1
-[0.2.0]: https://github.com/datajoint/element-miniscope/releases/tag/0.2.0
-[0.1.0]: https://github.com/datajoint/element-miniscope/releases/tag/0.1.0
-[0.0.2]: https://github.com/datajoint/element-miniscope/releases/tag/0.0.2
-[0.0.1]: https://github.com/datajoint/element-miniscope/releases/tag/0.0.1
+[0.2.1]: https://github.com/datajoint/workflow-miniscope/releases/tag/0.2.1

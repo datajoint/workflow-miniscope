@@ -12,7 +12,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 + Add - Visualization notebook
 + Add - GitHub Actions workflows
 
-## 0.2.0 - 2022-07-11
+## [0.2.0] - 2022-07-11
 
 + Update - Docker and Compose files
 + Update - Requirements for latest releases of Elements
@@ -37,3 +37,4 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 + Add - Version
 
 [0.2.1]: https://github.com/datajoint/workflow-miniscope/releases/tag/0.2.1
+[0.2.0]: https://github.com/datajoint/workflow-miniscope/releases/tag/0.2.0

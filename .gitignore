@@ -29,7 +29,6 @@ nosetests.xml
 coverage.xml
 .hypothesis/
 .pytest_cache/
-docker-compose.y*ml
 !docker/docker-compose.y*ml
 
 # C extension, Translations

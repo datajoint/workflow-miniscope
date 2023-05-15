@@ -75,5 +75,7 @@ temp*
 **-jvsc-*.py
 /tests/user_data/*
 
+example_data
+
 # vscode
 *.code-workspace

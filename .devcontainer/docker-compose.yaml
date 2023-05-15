@@ -5,7 +5,7 @@ services:
       file: ./local-data/docker-compose.yaml
       service: app
     environment:
-      - DJ_PUBLIC_S3_LOCATION=djhub.vathes.datapub.elements:/workflow-miniscope-v2
+      - DJ_PUBLIC_S3_LOCATION=djhub.vathes.datapub.elements:/miniscope-v2
     devices:
       - /dev/fuse
     cap_add:

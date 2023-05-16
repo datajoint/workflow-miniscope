@@ -6,7 +6,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 ## [0.3.0] - 2023-05-15
 
 + Add - Dev Containers
-+ Add - Quality metrics
++ Add - Quality metrics notebook and pytests
 
 ## [0.2.1] - 2023-04-24
 

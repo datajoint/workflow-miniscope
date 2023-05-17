@@ -30,6 +30,3 @@ ENV DJ_PASS simple
 
 ENV MINISCOPE_ROOT_DATA_DIR /workspaces/workflow-miniscope/example_data
 ENV DATABASE_PREFIX neuro_
-
-USER vscode
-CMD bash -c "sudo rm /var/run/docker.pid; sudo dockerd"

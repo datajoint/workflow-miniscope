@@ -5,7 +5,6 @@ from contextlib import nullcontext
 from pathlib import Path
 
 import datajoint as dj
-import djarchive_client
 import pytest
 from element_interface.utils import QuietStdOut, find_full_path, value_to_bool
 

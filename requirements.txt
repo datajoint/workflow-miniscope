@@ -1,8 +1,8 @@
 datajoint>=0.13.0
 element-animal>=0.1.2
-element-event>=0.2.2
+element-event>=0.2.0
 element-interface>=0.5.0
 element-lab>=0.1.1
-element-miniscope>=0.3.0
+element-miniscope @ git+https://github.com/kabilar/element-miniscope
 element-session>=0.1.2
 ipykernel>=6.0.1

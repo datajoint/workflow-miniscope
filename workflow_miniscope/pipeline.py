@@ -5,7 +5,6 @@ from element_event import event, trial
 from element_lab import lab
 from element_lab.lab import Lab, Project, Protocol, Source, User
 from element_miniscope import miniscope, miniscope_report
-from element_miniscope.plotting.qc import QualityMetricFigs
 from element_session import session_with_datetime as session
 from element_session.session_with_datetime import Session
 
@@ -34,22 +33,15 @@ __all__ = [
     "Project",
     "Subject",
     "Session",
-    "QualityMetricFigs",
     "get_miniscope_root_data_dir",
     "get_session_directory",
 ]
 
-# Activate `lab`, `subject`, `session` schema ------------------------------------------
+# Activate schemas
 
 Experimenter = lab.User
 lab.activate(db_prefix + "lab")
 subject.activate(db_prefix + "subject", linking_module=__name__)
 session.activate(db_prefix + "session", linking_module=__name__)
-
-# Activate "event" and "trial" schema ---------------------------------
-
 trial.activate(db_prefix + "trial", db_prefix + "event", linking_module=__name__)
-
-# Activate `miniscope` schema ----------------------------------------------------------
-
 miniscope.activate(db_prefix + "miniscope", linking_module=__name__)

@@ -49,6 +49,32 @@ def test_results(pipeline, post_curation):
         ), f"Issues with data for {n}. Expected {e} ±{d}, Found {m}"
 
 
+def test_miniscope_quality_metrics_populate(pipeline):
+    """
+    Assert correct values for entries in the miniscope.ProcessingQualityMetrics table.
+    Run the `demo_prepare.ipynb` notebook, prior to running this test.
+    """
+    import datetime
+
+    miniscope = pipeline["miniscope"]
+
+    key = dict(
+        subject="subject1",
+        session_datetime=datetime.datetime(2023, 5, 11, 12, 00, 00),
+        recording_id=0,
+        paramset_id=0,
+        curation_id=0,
+        mask=2,
+    )
+
+    miniscope.ProcessingQualityMetrics.populate(key)
+
+    trace_metrics = (miniscope.ProcessingQualityMetrics.Trace() & key).fetch1()
+
+    assert round(trace_metrics["skewness"], 2) == -0.50
+    assert round(trace_metrics["variance"], 2) == 56.58
+
+
 def test_plots(pipeline, plots, post_curation):
     metrics = pipeline["miniscope_report"].QualityMetrics
     qc = plots["qc"]

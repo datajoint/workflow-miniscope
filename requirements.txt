@@ -1,8 +1,10 @@
 datajoint>=0.13.0
-djarchive-client @ git+https://github.com/datajoint/djarchive-client.git
 element-animal>=0.1.2
-element-event
+element-event>=0.2.0
 element-interface>=0.5.0
 element-lab>=0.1.1
-element-miniscope
+element-miniscope>=0.3.0
 element-session>=0.1.2
+ipykernel>=6.0.1
+opencv-python
+plotly

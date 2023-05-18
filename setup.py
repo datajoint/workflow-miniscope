@@ -7,9 +7,9 @@ pkg_name = "workflow_miniscope"
 here = path.abspath(path.dirname(__file__))
 
 long_description = """"
-# Workflow for miniscope calcium imaging data acquired with Miniscope-DAQ-V3/V4 software and analyzed with MiniAn.
+# Workflow for miniscope calcium imaging data acquired with Miniscope-DAQ-V3/V4 software and analyzed with CaImAn.
 
-Build a complete imaging workflow using the DataJoint elements
+Build a complete imaging workflow using the DataJoint Elements
 + [element-lab](https://github.com/datajoint/element-lab)
 + [element-animal](https://github.com/datajoint/element-animal)
 + [element-session](https://github.com/datajoint/element-session)
@@ -25,7 +25,7 @@ with open(path.join(here, pkg_name, "version.py")) as f:
 setup(
     name="workflow-miniscope",
     version=__version__,  # noqa: F821
-    description="Miniscope calcium imaging workflow using the DataJoint elements",
+    description="Miniscope calcium imaging workflow using the DataJoint Elements",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="DataJoint",

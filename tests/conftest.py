@@ -5,11 +5,8 @@ from contextlib import nullcontext
 from pathlib import Path
 
 import datajoint as dj
-import djarchive_client
 import pytest
 from element_interface.utils import QuietStdOut, find_full_path, value_to_bool
-
-from workflow_miniscope.ingest import ingest_sessions, ingest_subjects
 
 # ------------------- SOME CONSTANTS -------------------
 
@@ -104,17 +101,6 @@ def test_data(setup, dj_config):
         find_full_path(mini_root_dirs, p).exists() for p in session_dirs
     )
 
-    if not test_data_exists:
-
-        if not isinstance(mini_root_dirs, abc.Sequence):
-            mini_root_dirs = list(mini_root_dirs)
-
-        djarchive_client.client().download(
-            "workflow-miniscope",
-            "v1",
-            str(mini_root_dirs[0]),
-            create_target=False,
-        )
     return
 
 
@@ -168,44 +154,6 @@ def plots(setup, pipeline):
     key = miniscope.Curation.fetch("KEY", limit=1)[0]
 
     yield {"qc": QualityMetricFigs(miniscope, key)}
-
-
-@pytest.fixture(scope="session")
-def ingest_data(setup, pipeline, test_data):
-    """For each input, generates csv in test_user_data_dir and ingests in schema"""
-    # CSV as list of 3: filename, relevant tables, content
-    all_csvs = {
-        "subjects.csv": {
-            "func": ingest_subjects,
-            "content": [
-                "subject,sex,subject_birth_date,subject_description",
-                "subject1,M,2021-01-01 00:00:01,Theo",
-            ],
-        },
-        "sessions.csv": {
-            "func": ingest_sessions,
-            "content": [
-                "subject,session_dir,acq_software",
-                f"subject1,{session_dirs[0]},Miniscope-DAQ-V4",
-            ],
-        },
-    }
-    # If data in last table, presume didn't tear down last time, skip insert
-    if len(pipeline["miniscope"].Recording()) == 0:
-        for csv_filename, csv_dict in all_csvs.items():
-            csv_path = test_user_data_dir / csv_filename  # add prefix for rel path
-            with open(csv_path, "w") as f:  # write content at rel path
-                for line in csv_dict["content"]:
-                    f.write(line + "\n")
-            csv_dict["func"](csv_path, verbose=verbose, skip_duplicates=True)
-
-    yield all_csvs
-
-    if _tear_down:
-        with verbose_context:
-            for csv in all_csvs:
-                csv_path = test_user_data_dir / csv
-                csv_path.unlink()
 
 
 @pytest.fixture(scope="session")
